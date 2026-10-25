@@ -228,6 +228,15 @@ more often, and a spot you got wrong comes back after 5 more hands, then at doub
 until you've nailed it. **Drill my leaks** (in the Preflop filters) serves nothing but weak areas
 and due reviews.
 
+## Why this hand (phase 9)
+
+Under every Preflop result there is a fold-out "Why this hand?". It describes the hand in plain
+words (pair, suited, connected, blockers), gives its all-in equity against a random hand and its
+rank among the 169 starting hands (from the computed equity table), and says where it sits in
+this chart: how often the chart plays it, how many hands it plays more often, and the weakest
+hand of the same kind the chart still plays. Everything is computed from the cards and the chart;
+it is a description, not extra advice.
+
 ## Real preflop charts (phase 7)
 
 `data/charts/nlhe/pokalab/` holds nine 6-max 100bb charts read straight from

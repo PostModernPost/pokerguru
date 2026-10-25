@@ -1,7 +1,7 @@
 # Roadmap: possible future phases
 
 Ordered by how much each would help a relatively new player, most useful first. Phases 1-5
-from the original brief are done. None of these is started; this is a menu, not a plan.
+from the original brief are done, as are 6, 7 and the why-this-hand part of 8 (see `docs/decisions.md`).
 
 The one recurring constraint: **the program never invents strategy** (CLAUDE.md ground rule 1).
 Anything marked "needs a source" means Adam has to pick where the strategy comes from; anything
@@ -11,7 +11,7 @@ marked "computed" the program can work out from the rules and the math.
 |---|---|---|---|---|
 | 6 | **Real cash-game charts** | Replace the fake sample charts with real preflop ranges for 6-max and 9-handed, 100bb. The importer and the drill are ready; only the data is missing. | Preflop is the decision you make most often, and the only drill that currently can't teach you anything. Everything else in the app is already real. | **Needs a source** (a chart pack or book you trust). |
 | 7 | **Hand-strength and pot-odds basics drill** | Quick-fire questions: "what's your hand?" on a board (Hold'em and Omaha), "how many outs?", "what are the pot odds here?" with the math shown. | Reading your own hand fast and correctly is the first skill, and the equity drill assumes you already can. Counting outs is the bridge between "I have a draw" and "should I call". | Computed. |
-| 8 | **Why-this-hand explanations** | On the result screen, show what the hand has going for it in plain words: pair, suited, connected, blockers, how it ranks against the rest of the range in this spot (top 10%, middle, bottom). Plus a one-tap glossary for every term (done: see below). | Charts tell you *what*; a beginner needs a sense of *why* so it transfers to spots the chart doesn't cover. This describes the hand, it doesn't invent advice. | Computed from the chart and the cards. |
+| 8 | **Why-this-hand explanations** (done) | On the result screen, show what the hand has going for it in plain words: pair, suited, connected, blockers, how it ranks against the rest of the range in this spot (top 10%, middle, bottom). Plus a one-tap glossary for every term (done: see below). | Charts tell you *what*; a beginner needs a sense of *why* so it transfers to spots the chart doesn't cover. This describes the hand, it doesn't invent advice. | Computed from the chart and the cards. |
 | 9 | **Multi-player push/fold** | 3-handed and full-table shove-or-fold charts, including facing a shove with players still to act behind you. | Short-stack tournament play is where new players bleed chips fastest, and heads-up charts only cover the very end of a tournament. | Computed (a real piece of work: multi-way equities and callers behind callers). |
 | 10 | **Hand reading: ranges, not hands** | In the equity drill, the villain holds a *range* (e.g. "the hands a button opener has") instead of a random hand. Start with ranges taken from the charts already in the app. | "Equity against a random hand" is a warm-up. Real decisions are against what an opponent would actually play. | Ranges come from the loaded charts, so no new strategy is invented. |
 | 11 | **Session mode and goals** | Timed or fixed-length sessions, a daily streak, "ten hands before work", a session summary screen. | Habit beats intensity. New players improve by drilling a little every day. | None needed. |

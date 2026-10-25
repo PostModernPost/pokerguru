@@ -121,6 +121,15 @@ the program computes itself.
 | Table drawing | The Preflop seat strip became a drawn table: seats in clockwise seating order with you at the bottom, dealer button, blinds and bets as chips, folded seats greyed, action order numbered. Pure SVG, no library. | `web/table.js` |
 | Glossary and the table | The glossary linker skips SVG, otherwise it wrapped position names inside the drawing and they vanished. | `SKIP` in `web/glossary.js` |
 
+## Phase 9 (why this hand)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| What it says | A fold-out "Why this hand?" under the Preflop result with four kinds of fact: what the hand is made of (pair, broadway, suited, connected, wheel ace, ace blocker); its all-in equity against one random hand and its rank 1-169; how often this chart plays it and how many hands it plays more often; and, within the same hand family (pairs, suited aces, ...), the weakest hand the chart still plays and the strongest it folds. | `trainer/game/hand_features.py` |
+| Where the numbers come from | The equity rank uses the computed 169x169 all-in table from phase 4 (no new strategy); the chart facts come from the chart you were graded against. The block says so in a footnote and is labelled as description, not advice. | same file |
+| Folded by default | It's a `<details>` block, closed on each new result, so the grade and frequencies stay the first thing you see on a phone. | `web/index.html`, `web/app.js` |
+| Glossary in footnotes | Footnote lines no longer get glossary links; a linked word at a line end was pushing the full stop onto the next line. | `SKIP` in `web/glossary.js` |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

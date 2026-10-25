@@ -27,6 +27,7 @@ from trainer.drills.equity import EquityService
 from trainer.drills.plo import NutsService
 from trainer.drills.preflop import DRILL_TYPE, LeakProfile, NoMatchingChart, next_spot, review_key, spot_from_chart
 from trainer.game.hand_classes import HAND_CATEGORIES, grid, hand_category
+from trainer.game.hand_features import why_this_hand
 from trainer.game.positions import POSITIONS, SPOT_TYPES
 from trainer.graders.preflop_chart import action_label, format_pct, grade
 from trainer.progress.store import Attempt, AttemptStore
@@ -257,6 +258,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
             ],
             "best_actions": [result.labels[a] for a in result.best_actions],
             "explanation": result.explanation,
+            "why": why_this_hand(chart, spot.hand_class),
             "hand_class": result.hand_class,
             "hero_cards": list(spot.hero_cards),
             "actions": [{"id": a, "label": result.labels[a]} for a in chart.actions],

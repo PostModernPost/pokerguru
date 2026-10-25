@@ -65,6 +65,10 @@ def test_answer_grades_and_records(ctx):
     assert sum(f["freq"] for f in res["frequencies"]) == pytest.approx(1.0)
     assert len(res["range"]) == 169 and len(res["grid"]) == 13
     assert res["summary"]["total"] == 1
+    why = res["why"]
+    assert why["lines"][0].startswith(res["hand_class"] + " is ")
+    assert 1 <= why["equity_rank"] <= 169 and 0 < why["equity_vs_random"] < 1
+    assert 0 <= why["chart"]["play_frequency"] <= 1
     [row] = store.recent()
     assert row["chart_id"] == s["chart_id"]
     assert row["hero_cards"] == "".join(s["hero_cards"])

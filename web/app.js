@@ -243,6 +243,10 @@ function renderResult(spot, r) {
       el("span", { class: "pct" }, f.pct)));
   }
   $("explanation").textContent = r.explanation;
+  const why = $("why-lines"); why.replaceChildren();
+  for (const line of (r.why ? r.why.lines : [])) why.append(el("li", {}, line));
+  $("why").hidden = !r.why;
+  $("why").open = false;
 
   const legend = $("legend"); legend.replaceChildren();
   for (const a of r.actions) {

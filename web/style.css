@@ -168,6 +168,11 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 .freq-row .pct { text-align: right; font-variant-numeric: tabular-nums; }
 
 .explanation { color: var(--muted); margin: 8px 0; line-height: 1.4; }
+.why { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 6px 0 12px; }
+.why summary { cursor: pointer; font-weight: 600; padding: 6px 0; min-height: 32px; }
+.why ul { margin: 6px 0 4px; padding-left: 18px; line-height: 1.45; }
+.why li { margin-bottom: 6px; }
+.why .footnote { margin: 4px 0 2px; }
 
 .range-title { margin-top: 18px; }
 .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: .8rem; color: var(--muted); margin-bottom: 8px; }
@@ -392,6 +397,7 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
       "hand legend"
       "freqs grid"
       "expl grid"
+      "why grid"
       "tips grid"
       "next grid"
       "source source";
@@ -400,6 +406,7 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
   #result-screen:has(.range-grid) > .result-hand { grid-area: hand; }
   #result-screen:has(.range-grid) > .freqs { grid-area: freqs; }
   #result-screen:has(.range-grid) > .explanation { grid-area: expl; }
+  #result-screen:has(.range-grid) > .why { grid-area: why; }
   #result-screen:has(.range-grid) > .tips { grid-area: tips; }
   #result-screen:has(.range-grid) > #next-btn { grid-area: next; }
   #result-screen:has(.range-grid) > .range-title { grid-area: range-title; margin-top: 0; }
