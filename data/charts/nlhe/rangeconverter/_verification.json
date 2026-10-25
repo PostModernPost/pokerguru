@@ -1,0 +1,1086 @@
+{
+  "date": "2026-10-25",
+  "primary": "https://rangeconverter.com/articles/poker-charts-9-max-100bb-no-limit-texas-holdem",
+  "pdf": "https://rangeconverter.com/downloads/9-max-100bb-Poker-Charts-No-Limit-Texas-Holdem-Cash",
+  "pdf_sha256": "0feb70db01ab74db6d6a8cb6e9761358f6eb04879468452f8429e027c6770b27",
+  "agreement_min": 0.85,
+  "charts": [
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9586,
+          "mean_play_frequency_diff": 0.0503,
+          "width_a": 0.0988,
+          "width_b": 0.0905
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9467,
+          "mean_play_frequency_diff": 0.0503,
+          "width_a": 0.0988,
+          "width_b": 0.083
+        },
+        {
+          "publisher": "Preflop Wizard",
+          "primary_action_agreement": 0.9172,
+          "mean_play_frequency_diff": 0.0858,
+          "width_a": 0.0988,
+          "width_b": 0.1252
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9527,
+          "mean_play_frequency_diff": 0.0503,
+          "width_a": 0.1094,
+          "width_b": 0.0995
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9527,
+          "mean_play_frequency_diff": 0.0325,
+          "width_a": 0.1094,
+          "width_b": 0.1176
+        },
+        {
+          "publisher": "PokerCoaching (Jonathan Little)",
+          "primary_action_agreement": 0.9586,
+          "mean_play_frequency_diff": 0.0325,
+          "width_a": 0.1094,
+          "width_b": 0.1207
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9527,
+          "mean_play_frequency_diff": 0.0592,
+          "width_a": 0.1357,
+          "width_b": 0.1056
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9645,
+          "mean_play_frequency_diff": 0.0355,
+          "width_a": 0.1357,
+          "width_b": 0.1252
+        },
+        {
+          "publisher": "PokerCoaching (Jonathan Little)",
+          "primary_action_agreement": 0.9822,
+          "mean_play_frequency_diff": 0.0237,
+          "width_a": 0.1357,
+          "width_b": 0.1327
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9586,
+          "mean_play_frequency_diff": 0.0651,
+          "width_a": 0.1516,
+          "width_b": 0.1116
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9645,
+          "mean_play_frequency_diff": 0.0296,
+          "width_a": 0.1516,
+          "width_b": 0.1704
+        },
+        {
+          "publisher": "PokerCoaching (Jonathan Little)",
+          "primary_action_agreement": 0.9704,
+          "mean_play_frequency_diff": 0.0355,
+          "width_a": 0.1516,
+          "width_b": 0.1614
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-HJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9467,
+          "mean_play_frequency_diff": 0.0556,
+          "width_a": 0.1958,
+          "width_b": 0.19
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9763,
+          "mean_play_frequency_diff": 0.0201,
+          "width_a": 0.1958,
+          "width_b": 0.2051
+        },
+        {
+          "publisher": "PokerCoaching (Jonathan Little)",
+          "primary_action_agreement": 0.9822,
+          "mean_play_frequency_diff": 0.0213,
+          "width_a": 0.1958,
+          "width_b": 0.1961
+        },
+        {
+          "publisher": "Preflop Wizard",
+          "primary_action_agreement": 0.9172,
+          "mean_play_frequency_diff": 0.097,
+          "width_a": 0.1958,
+          "width_b": 0.1674
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-CO",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8757,
+          "mean_play_frequency_diff": 0.1124,
+          "width_a": 0.2519,
+          "width_b": 0.3122
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.929,
+          "mean_play_frequency_diff": 0.0533,
+          "width_a": 0.2519,
+          "width_b": 0.2157
+        },
+        {
+          "publisher": "PokerCoaching (Jonathan Little)",
+          "primary_action_agreement": 0.9527,
+          "mean_play_frequency_diff": 0.0414,
+          "width_a": 0.2519,
+          "width_b": 0.264
+        },
+        {
+          "publisher": "Preflop Wizard",
+          "primary_action_agreement": 0.9231,
+          "mean_play_frequency_diff": 0.071,
+          "width_a": 0.2519,
+          "width_b": 0.2278
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-BTN",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8935,
+          "mean_play_frequency_diff": 0.1036,
+          "width_a": 0.4012,
+          "width_b": 0.4751
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9882,
+          "mean_play_frequency_diff": 0.0089,
+          "width_a": 0.4012,
+          "width_b": 0.4087
+        },
+        {
+          "publisher": "PokerCoaching (Jonathan Little)",
+          "primary_action_agreement": 0.9882,
+          "mean_play_frequency_diff": 0.0148,
+          "width_a": 0.4012,
+          "width_b": 0.4087
+        },
+        {
+          "publisher": "Preflop Wizard",
+          "primary_action_agreement": 0.9467,
+          "mean_play_frequency_diff": 0.0503,
+          "width_a": 0.4012,
+          "width_b": 0.4057
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-rfi-SB",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8757,
+          "mean_play_frequency_diff": 0.1331,
+          "width_a": 0.4646,
+          "width_b": 0.3997
+        },
+        {
+          "publisher": "RunoutPoker",
+          "primary_action_agreement": 0.9822,
+          "mean_play_frequency_diff": 0.0089,
+          "width_a": 0.4646,
+          "width_b": 0.4781
+        },
+        {
+          "publisher": "Preflop Wizard",
+          "primary_action_agreement": 0.8107,
+          "mean_play_frequency_diff": 0.1923,
+          "width_a": 0.4646,
+          "width_b": 0.3363
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-UTG1-vs-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9645,
+          "mean_play_frequency_diff": 0.0266,
+          "width_a": 0.043,
+          "width_b": 0.0468
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-UTG2-vs-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9704,
+          "mean_play_frequency_diff": 0.0178,
+          "width_a": 0.0452,
+          "width_b": 0.0437
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-UTG2-vs-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9586,
+          "mean_play_frequency_diff": 0.0296,
+          "width_a": 0.0558,
+          "width_b": 0.0437
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-LJ-vs-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9527,
+          "mean_play_frequency_diff": 0.0237,
+          "width_a": 0.0566,
+          "width_b": 0.0543
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-LJ-vs-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9408,
+          "mean_play_frequency_diff": 0.0296,
+          "width_a": 0.0626,
+          "width_b": 0.0543
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-LJ-vs-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9408,
+          "mean_play_frequency_diff": 0.0296,
+          "width_a": 0.0694,
+          "width_b": 0.0543
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-HJ-vs-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.929,
+          "mean_play_frequency_diff": 0.0385,
+          "width_a": 0.0679,
+          "width_b": 0.0694
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-HJ-vs-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9349,
+          "mean_play_frequency_diff": 0.0385,
+          "width_a": 0.0747,
+          "width_b": 0.0694
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-HJ-vs-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9349,
+          "mean_play_frequency_diff": 0.0444,
+          "width_a": 0.0777,
+          "width_b": 0.0694
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-HJ-vs-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9349,
+          "mean_play_frequency_diff": 0.0444,
+          "width_a": 0.0845,
+          "width_b": 0.0694
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-CO-vs-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8876,
+          "mean_play_frequency_diff": 0.0651,
+          "width_a": 0.0769,
+          "width_b": 0.095
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-CO-vs-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9053,
+          "mean_play_frequency_diff": 0.068,
+          "width_a": 0.0852,
+          "width_b": 0.095
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-CO-vs-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8994,
+          "mean_play_frequency_diff": 0.071,
+          "width_a": 0.1003,
+          "width_b": 0.095
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-CO-vs-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9172,
+          "mean_play_frequency_diff": 0.0621,
+          "width_a": 0.1011,
+          "width_b": 0.095
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-CO-vs-HJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9053,
+          "mean_play_frequency_diff": 0.0562,
+          "width_a": 0.1139,
+          "width_b": 0.095
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BTN-vs-UTG",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8107,
+          "mean_play_frequency_diff": 0.1154,
+          "width_a": 0.1071,
+          "width_b": 0.1704
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BTN-vs-UTG1",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7988,
+          "mean_play_frequency_diff": 0.1154,
+          "width_a": 0.1131,
+          "width_b": 0.1704
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BTN-vs-UTG2",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8166,
+          "mean_play_frequency_diff": 0.1006,
+          "width_a": 0.1214,
+          "width_b": 0.1704
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BTN-vs-LJ",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8107,
+          "mean_play_frequency_diff": 0.0976,
+          "width_a": 0.135,
+          "width_b": 0.1704
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BTN-vs-HJ",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8166,
+          "mean_play_frequency_diff": 0.0976,
+          "width_a": 0.1478,
+          "width_b": 0.1704
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BTN-vs-CO",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8047,
+          "mean_play_frequency_diff": 0.0947,
+          "width_a": 0.1644,
+          "width_b": 0.1704
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-UTG",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9349,
+          "mean_play_frequency_diff": 0.0503,
+          "width_a": 0.0475,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9349,
+          "mean_play_frequency_diff": 0.0473,
+          "width_a": 0.049,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9408,
+          "mean_play_frequency_diff": 0.0325,
+          "width_a": 0.0618,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9349,
+          "mean_play_frequency_diff": 0.0325,
+          "width_a": 0.0716,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-HJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.929,
+          "mean_play_frequency_diff": 0.0355,
+          "width_a": 0.0792,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-CO",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9231,
+          "mean_play_frequency_diff": 0.0414,
+          "width_a": 0.0943,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-SB-vs-BTN",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8698,
+          "mean_play_frequency_diff": 0.0858,
+          "width_a": 0.141,
+          "width_b": 0.0724
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-UTG",
+      "status": "single_source",
+      "corroboration": []
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-UTG1",
+      "status": "single_source",
+      "corroboration": []
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-UTG2",
+      "status": "single_source",
+      "corroboration": []
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokalab (6-max, same seats left to act)",
+          "primary_action_agreement": 0.9053,
+          "mean_play_frequency_diff": 0.034,
+          "width_a": 0.217,
+          "width_b": 0.2174
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-HJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokalab (6-max, same seats left to act)",
+          "primary_action_agreement": 0.8757,
+          "mean_play_frequency_diff": 0.0344,
+          "width_a": 0.2423,
+          "width_b": 0.2495
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-CO",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokalab (6-max, same seats left to act)",
+          "primary_action_agreement": 0.8757,
+          "mean_play_frequency_diff": 0.029,
+          "width_a": 0.2936,
+          "width_b": 0.2999
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-BTN",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokalab (6-max, same seats left to act)",
+          "primary_action_agreement": 0.8698,
+          "mean_play_frequency_diff": 0.0279,
+          "width_a": 0.3803,
+          "width_b": 0.4035
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_open-BB-vs-SB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokalab (6-max, same seats left to act)",
+          "primary_action_agreement": 0.7219,
+          "mean_play_frequency_diff": 0.1522,
+          "width_a": 0.6872,
+          "width_b": 0.5156
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-UTG1",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.92,
+          "hands_compared": 25
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.96,
+          "hands_compared": 25
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9615,
+          "hands_compared": 26
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-HJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9231,
+          "hands_compared": 26
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-CO",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9231,
+          "hands_compared": 26
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-BTN",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.92,
+          "hands_compared": 25
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-SB",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9615,
+          "hands_compared": 26
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG-vs-BB",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.92,
+          "hands_compared": 25
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-UTG2",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8889,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-LJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9259,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-HJ",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8889,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-CO",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9259,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-BTN",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8889,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-SB",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9259,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG1-vs-BB",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.9259,
+          "hands_compared": 27
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG2-vs-LJ",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8387,
+          "hands_compared": 31
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG2-vs-HJ",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8387,
+          "hands_compared": 31
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG2-vs-CO",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8065,
+          "hands_compared": 31
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG2-vs-BTN",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8065,
+          "hands_compared": 31
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG2-vs-SB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7742,
+          "hands_compared": 31
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-UTG2-vs-BB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7742,
+          "hands_compared": 31
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-LJ-vs-HJ",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8421,
+          "hands_compared": 38
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-LJ-vs-CO",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8158,
+          "hands_compared": 38
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-LJ-vs-BTN",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8158,
+          "hands_compared": 38
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-LJ-vs-SB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8158,
+          "hands_compared": 38
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-LJ-vs-BB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8421,
+          "hands_compared": 38
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-HJ-vs-CO",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8889,
+          "hands_compared": 45
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-HJ-vs-BTN",
+      "status": "verified",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8667,
+          "hands_compared": 45
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-HJ-vs-SB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7556,
+          "hands_compared": 45
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-HJ-vs-BB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7778,
+          "hands_compared": 45
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-CO-vs-BTN",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7288,
+          "hands_compared": 59
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-CO-vs-SB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7288,
+          "hands_compared": 59
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-CO-vs-BB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.8305,
+          "hands_compared": 59
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-BTN-vs-SB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.6628,
+          "hands_compared": 86
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-BTN-vs-BB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7442,
+          "hands_compared": 86
+        }
+      ]
+    },
+    {
+      "id": "rangeconverter-nlhe-cash-9max-100bb-vs_3bet-SB-vs-BB",
+      "status": "contested",
+      "corroboration": [
+        {
+          "publisher": "Pokerspot",
+          "primary_action_agreement": 0.7216,
+          "hands_compared": 97
+        }
+      ]
+    }
+  ]
+}

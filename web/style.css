@@ -192,6 +192,7 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
   overflow: hidden;
 }
 .cell.hero { outline: 3px solid var(--accent); outline-offset: -3px; position: relative; z-index: 1; }
+.cell.out { opacity: .3; }
 
 .source { color: var(--muted); font-size: .8rem; margin-top: 12px; word-break: break-word; }
 .source .fake { color: #ff9b94; font-weight: 700; }

@@ -121,6 +121,18 @@ the program computes itself.
 | Table drawing | The Preflop seat strip became a drawn table: seats in clockwise seating order with you at the bottom, dealer button, blinds and bets as chips, folded seats greyed, action order numbered. Pure SVG, no library. | `web/table.js` |
 | Glossary and the table | The glossary linker skips SVG, otherwise it wrapped position names inside the drawing and they vanished. | `SKIP` in `web/glossary.js` |
 
+## Phase 10 (live full-ring charts)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| Source | RangeConverter's free 9-max 100bb PDF: the only free source found that covers every seat for all three spot types with mixed frequencies, and it names its assumptions (live, 3bb opens). | `scripts/import_rangeconverter.py` |
+| Reading pictures | The PDF has no text, so the grids are read by colour. The reader is checked against the percentages printed on the charts (within 1 point) before anything is written; the PDF's SHA-256 is recorded. | `scripts/rangeconverter_grids.py`, `RFI_PRINTED` |
+| Seat names | RangeConverter's UTG, UTG1, MP, LJ, HJ, CO, BTN, SB, BB map to the brief's UTG, UTG1, UTG2, LJ, HJ, CO, BTN, SB, BB. | `RC_TO_OURS` |
+| Corroboration | Pokerspot (9-max, every spot type), RunoutPoker, PokerCoaching (8-max mapped by players left to act) and Preflop Wizard (opening ranges), Pokalab 6-max for BB vs LJ/HJ/CO/BTN/SB (same seats left to act). 85% main-action agreement with at least one = verified; else contested (†); none = single source (*). | `AGREEMENT_MIN`, `load_corroboration` |
+| Why so many "facing a 3-bet" charts are contested | Pokerspot publishes one response per seat regardless of who 3-bet; RangeConverter has one per 3-bettor. They agree 57-83% on the hands you open. Shown with the footnote rather than hidden, per Adam. | |
+| Hands you wouldn't hold | Charts can carry `deal_weights`; facing a 3-bet, a hand you never open has weight 0 and is never dealt, a hand you open half the time is dealt half as often. The range grid dims weight-0 hands. | `Chart.deal_weights`, `deal_for_chart` |
+| 9-max samples | Deleted; every 9-handed spot has a real chart. The remaining samples (6-max facing a 3-bet, non-BB facing an open) stay off unless switched on in Filters. | `scripts/make_sample_charts.py` |
+
 ## Phase 9 (why this hand)
 
 | Decision | Choice | How to change / why |

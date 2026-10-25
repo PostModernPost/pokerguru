@@ -274,9 +274,13 @@ function renderResult(spot, r) {
   const grid = $("range-grid"); grid.replaceChildren();
   for (const row of r.grid) {
     for (const hand of row) {
+      // Facing a 3-bet, hands you would not have opened are dimmed: you never hold them here.
+      const w = r.deal_weights ? r.deal_weights[hand] : 1;
       const cell = el("div", {
-        class: `cell${hand === r.hand_class ? " hero" : ""}`,
-        title: hand + ": " + r.actions.map((a, i) => `${a.label} ${Math.round(r.range[hand][i] * 100)}%`).join(", "),
+        class: `cell${hand === r.hand_class ? " hero" : ""}${w === 0 ? " out" : ""}`,
+        title: hand + ": " + (w === 0 ? "not opened from here" :
+          r.actions.map((a, i) => `${a.label} ${Math.round(r.range[hand][i] * 100)}%`).join(", ") +
+          (w < 1 ? ` (opened ${Math.round(w * 100)}% of the time)` : "")),
         style: `background:${gradientFor(r.range[hand], r.actions)}`,
       }, hand);
       grid.append(cell);

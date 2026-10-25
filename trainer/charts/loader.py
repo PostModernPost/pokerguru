@@ -47,6 +47,10 @@ class Chart:
     source: dict[str, str]
     hands: dict[str, dict[str, float]]  # all 169 classes, missing ones filled with fold
     missing_hands: tuple[str, ...] = ()
+    # Optional: how likely each hand is to be dealt in this spot (0..1). Used for spots the
+    # hero only reaches with some hands, e.g. facing a 3-bet after opening: a hand the hero
+    # never opens has weight 0 and is never dealt. Missing = every hand weight 1.
+    deal_weights: dict[str, float] | None = None
     path: str | None = field(default=None, compare=False)
 
     @property
@@ -151,6 +155,23 @@ def chart_from_dict(data: Any, where: str = "<chart>") -> Chart:
             _fail(where, f"{hand}: frequencies add up to {total:g}, not 1.0")
         hands[hand] = {a: float(f) for a, f in freqs.items()}
 
+    deal_weights = None
+    raw_weights = data.get("deal_weights")
+    if raw_weights is not None:
+        if not isinstance(raw_weights, dict):
+            _fail(where, "'deal_weights' must be an object of hand -> weight 0..1")
+        deal_weights = {}
+        for hand, w in raw_weights.items():
+            if hand not in HAND_CLASS_SET:
+                _fail(where, f"deal_weights: {hand!r} is not a hand class")
+            if not _is_number(w) or w < 0 or w > 1:
+                _fail(where, f"deal_weights: {hand} must be 0..1, got {w!r}")
+            deal_weights[hand] = float(w)
+        if not any(deal_weights.values()):
+            _fail(where, "deal_weights: every hand has weight 0, nothing could be dealt")
+        for h in ALL_HAND_CLASSES:
+            deal_weights.setdefault(h, 1.0)
+
     missing = tuple(h for h in ALL_HAND_CLASSES if h not in hands)
     if missing:
         shown = ", ".join(missing[:12]) + (" ..." if len(missing) > 12 else "")
@@ -172,6 +193,7 @@ def chart_from_dict(data: Any, where: str = "<chart>") -> Chart:
         source=source,
         hands={h: hands[h] for h in ALL_HAND_CLASSES},
         missing_hands=missing,
+        deal_weights=deal_weights,
         path=None,
     )
 
@@ -271,7 +293,10 @@ def spot_key(c: Chart) -> tuple:
 
 def dump_chart_json(data: dict) -> str:
     """Chart dict as JSON text, one hand per line so files are easy to read and diff."""
-    head = {k: v for k, v in data.items() if k != "hands"}
+    head = {k: v for k, v in data.items() if k not in ("hands", "deal_weights")}
     lines = json.dumps(head, indent=2)[:-2].rstrip()  # drop the closing brace
     hand_lines = [f"    {json.dumps(h)}: {json.dumps(f)}" for h, f in data["hands"].items()]
-    return lines + ',\n  "hands": {\n' + ",\n".join(hand_lines) + "\n  }\n}\n"
+    out = lines + ',\n  "hands": {\n' + ",\n".join(hand_lines) + "\n  }"
+    if data.get("deal_weights") is not None:
+        out += ',\n  "deal_weights": ' + json.dumps(data["deal_weights"], separators=(",", ":"))
+    return out + "\n}\n"

@@ -20,7 +20,7 @@ from dataclasses import dataclass
 
 from trainer.charts.loader import Chart, ChartLibrary
 from trainer.game.dealing import deal, deal_hand_class
-from trainer.game.hand_classes import HAND_CATEGORIES, hand_category, hands_in_category
+from trainer.game.hand_classes import ALL_HAND_CLASSES, HAND_CATEGORIES, combo_count, hand_category, hands_in_category
 from trainer.progress.store import AttemptStore
 from trainer.scenarios.preflop import PreflopSpot, build_preflop_spot
 
@@ -52,6 +52,24 @@ def spot_from_chart(chart: Chart, hero_cards: tuple[str, ...] | str) -> PreflopS
         open_size_bb=facing.get("open_size_bb") if chart.spot_type in ("vs_open", "vs_3bet") else None,
         threebet_size_bb=facing.get("threebet_size_bb") if chart.spot_type == "vs_3bet" else None,
     )
+
+
+def deal_for_chart(rng: random.Random, chart: Chart, hand_classes: list[str] | None = None) -> tuple[str, ...]:
+    """Deal hero's cards for this chart.
+
+    Plain random cards normally. If the chart carries deal_weights (hands the hero only
+    sometimes has in this spot), pick the hand class with probability proportional to
+    combos x weight, so a hand the hero never opens is never dealt facing a 3-bet.
+    `hand_classes` restricts the choice to a category (for leak drilling).
+    """
+    if chart.deal_weights is None and hand_classes is None:
+        return deal(rng, 2)
+    pool = hand_classes if hand_classes is not None else list(ALL_HAND_CLASSES)
+    weights = [combo_count(h) * (chart.deal_weights or {}).get(h, 1.0) for h in pool]
+    if not any(weights):
+        pool = list(ALL_HAND_CLASSES)
+        weights = [combo_count(h) * (chart.deal_weights or {}).get(h, 1.0) for h in pool]
+    return deal_hand_class(rng, rng.choices(pool, weights=weights)[0])
 
 
 def review_key(chart_id: str, hand_class: str) -> str:
@@ -132,7 +150,7 @@ def next_spot(
                               + ".")
     if store is None:
         chart = rng.choice(charts)
-        return chart, spot_from_chart(chart, deal(rng, 2)), "random"
+        return chart, spot_from_chart(chart, deal_for_chart(rng, chart)), "random"
 
     profile = LeakProfile.from_store(store)
     by_id = {c.id: c for c in charts}
@@ -161,9 +179,9 @@ def next_spot(
     # 3. Pick the hand: from a weighted category, or a plain deal.
     if leaks_only and weak_cats:
         cat = rng.choice(weak_cats)
-        return chart, spot_from_chart(chart, deal_hand_class(rng, rng.choice(hands_in_category(cat)))), "category"
+        return chart, spot_from_chart(chart, deal_for_chart(rng, chart, hands_in_category(cat))), "category"
     if rng.random() < CATEGORY_CHANCE:
         weights = profile.category_weights()
         cat = rng.choices(list(weights), weights=list(weights.values()))[0]
-        return chart, spot_from_chart(chart, deal_hand_class(rng, rng.choice(hands_in_category(cat)))), "category"
-    return chart, spot_from_chart(chart, deal(rng, 2)), "weighted"
+        return chart, spot_from_chart(chart, deal_for_chart(rng, chart, hands_in_category(cat))), "category"
+    return chart, spot_from_chart(chart, deal_for_chart(rng, chart)), "weighted"

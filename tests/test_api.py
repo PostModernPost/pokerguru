@@ -100,7 +100,7 @@ def test_answer_grade_matches_chart(ctx):
 
     client, _ = ctx
     lib = ChartLibrary.from_directory(CHARTS_DIR)
-    chart = lib.get("SAMPLE-nlhe-cash-9max-100bb-rfi-CO")
+    chart = lib.get("rangeconverter-nlhe-cash-9max-100bb-rfi-CO")
     for cards, hand in [(["As", "Ah"], "AA"), (["Ks", "Qd"], "KQo"), (["7c", "2d"], "72o")]:
         for action in chart.actions:
             res = client.post("/api/preflop/answer", json={
@@ -115,10 +115,10 @@ def test_answer_grade_matches_chart(ctx):
     "body,status",
     [
         ({"chart_id": "nope", "hero_cards": ["As", "Kd"], "action": "fold"}, 404),
-        ({"chart_id": "SAMPLE-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["As", "As"], "action": "fold"}, 400),
-        ({"chart_id": "SAMPLE-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["Xx", "Kd"], "action": "fold"}, 400),
-        ({"chart_id": "SAMPLE-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["As", "Kd"], "action": "call"}, 400),
-        ({"chart_id": "SAMPLE-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["As"], "action": "fold"}, 422),
+        ({"chart_id": "rangeconverter-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["As", "As"], "action": "fold"}, 400),
+        ({"chart_id": "rangeconverter-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["Xx", "Kd"], "action": "fold"}, 400),
+        ({"chart_id": "rangeconverter-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["As", "Kd"], "action": "call"}, 400),
+        ({"chart_id": "rangeconverter-nlhe-cash-9max-100bb-rfi-CO", "hero_cards": ["As"], "action": "fold"}, 422),
     ],
 )
 def test_answer_bad_input(ctx, body, status):
@@ -137,7 +137,7 @@ def test_stats_and_leak_mode(ctx):
     assert r.status_code == 404 and "No leaks found yet" in r.json()["detail"]
 
     # Miss the same spot repeatedly, then it should show up as a leak and as a due review.
-    chart_id = "SAMPLE-nlhe-cash-9max-100bb-rfi-CO"
+    chart_id = "rangeconverter-nlhe-cash-9max-100bb-rfi-CO"
     for cards in (["As", "Ah"], ["Ks", "Kh"], ["Qs", "Qh"], ["Js", "Jh"], ["Ts", "Th"], ["9s", "9h"]):
         res = client.post("/api/preflop/answer", json={"chart_id": chart_id, "hero_cards": cards, "action": "fold"}).json()
         if res["grade"] == "correct":  # make sure we have misses: answer the other way too
@@ -181,7 +181,7 @@ def test_tips_shown_only_in_scope_and_only_verified(tmp_path):
     tips.write_text(json.dumps({"tips": [VERIFIED_TIP, CONTESTED_TIP]}))
     with TestClient(create_app(charts_dir=CHARTS_DIR, db_path=tmp_path / "p.sqlite", seed=1, equity_iterations=20,
                                advice_path=tips)) as client:
-        rfi = client.post("/api/preflop/answer", json={"chart_id": "SAMPLE-nlhe-cash-9max-100bb-rfi-CO",
+        rfi = client.post("/api/preflop/answer", json={"chart_id": "rangeconverter-nlhe-cash-9max-100bb-rfi-CO",
                                                        "hero_cards": ["As", "Kd"], "action": "fold"}).json()
         assert [t["id"] for t in rfi["tips"]] == ["t-preflop", "t-bad"]  # contested shown too, after verified
         assert rfi["tips"][1]["status"] == "contested"
@@ -205,6 +205,6 @@ def test_shipped_advice_shows_nothing_unverified(ctx):
     client, _ = ctx
     s = client.get("/api/advice").json()
     assert isinstance(s["verified"], int) and isinstance(s["unverified"], int)
-    for cid, cards in (("SAMPLE-nlhe-cash-9max-100bb-rfi-CO", ["As", "Kd"]),):
+    for cid, cards in (("rangeconverter-nlhe-cash-9max-100bb-rfi-CO", ["As", "Kd"]),):
         r = client.post("/api/preflop/answer", json={"chart_id": cid, "hero_cards": cards, "action": "fold"}).json()
         assert all(t["status"] in ("verified", "single_source", "contested") for t in r["tips"])

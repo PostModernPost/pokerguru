@@ -1,0 +1,49 @@
+{
+ "fetched": "2026-10-25",
+ "sources": [
+  {
+   "publisher": "PokerCoaching (Jonathan Little)",
+   "url": "https://pokercoaching.com/tools/downloadable-preflop-charts/",
+   "quote": "Starting Hands for Full-Ring Poker Games (8-max) ... UTG: 11.4% \u2013 77+,A3s+,K9s+,QTs+,JTs,T9s,AQo+,KQo / UTG+1: 13.2% \u2013 77+,A3s+,K8s+,QTs+,JTs,T9s,AJo+,KQo / LJ: 15.7% \u2013 66+,A2s+,K7s+,QTs+,JTs,T9s,ATo+,KJo+ / HJ: 19.6% \u2013 55+,A2s+,K5s+,Q9s+,J9s+,T9s,ATo+,KTo+,QJo / CO: 26.1% \u2013 44+,A2s+,K5s+,Q8s+,J8s+,T8s+,97s+,87s,76s,65s,54s,A8o+,KTo+,QTo+,JTo / BTN: 40.3% \u2013 22+,A2s+,K2s+,Q3s+,J5s+,T6s+,96s+,86s+,76s,65s,54s,A3o+,K8o+,Q9o+,J9o+,T9o / SB: Call or Raise 73.9%",
+   "table": "8-max",
+   "seat_map_to_9max_by_players_behind": {
+    "UTG": "UTG1",
+    "UTG+1": "UTG2",
+    "LJ": "LJ",
+    "HJ": "HJ",
+    "CO": "CO",
+    "BTN": "BTN"
+   },
+   "rfi": {
+    "UTG": "77+,A3s+,K9s+,QTs+,JTs,T9s,AQo+,KQo",
+    "UTG+1": "77+,A3s+,K8s+,QTs+,JTs,T9s,AJo+,KQo",
+    "LJ": "66+,A2s+,K7s+,QTs+,JTs,T9s,ATo+,KJo+",
+    "HJ": "55+,A2s+,K5s+,Q9s+,J9s+,T9s,ATo+,KTo+,QJo",
+    "CO": "44+,A2s+,K5s+,Q8s+,J8s+,T8s+,97s+,87s,76s,65s,54s,A8o+,KTo+,QTo+,JTo",
+    "BTN": "22+,A2s+,K2s+,Q3s+,J5s+,T6s+,96s+,86s+,76s,65s,54s,A3o+,K8o+,Q9o+,J9o+,T9o"
+   },
+   "notes": "Labelled 'implementable' (simplified from GTO solutions, one action per hand) and 'exploitative' for small-stakes games. The SB line mixes call and raise so it is not used."
+  },
+  {
+   "publisher": "Preflop Wizard",
+   "url": "https://www.preflopwizard.app/blog/preflop-charts",
+   "quote": "9-max preflop charts by position (full-ring / live poker) ... These are 100bb open-raise (RFI) ranges. UTG Open ~11% 22+, ATs+, KTs+, QTs+, JTs, AJo+, KQo / MP (Middle Position) ~13% 22+, A9s+, KTs+, QTs+, J9s+, T9s, AJo+, KQo / HJ (Hijack) ~17% 22+, A7s+, K9s+, Q9s+, J9s+, T9s, 98s, ATo+, KJo+ / CO (Cutoff) ~24% 22+, A2s+, K8s+, Q9s+, J8s+, T8s+, 97s+, 87s, 76s, A9o+, KTo+, QJo / BTN (Button) ~40% 22+, A2s+, K2s+, Q5s+, J7s+, T7s+, 96s+, 86s+, 75s+, 65s, 54s, A2o+, K8o+, Q9o+, J9o+, T9o / SB (Small Blind) ~30% (raise or fold) 22+, A2s+, K5s+, Q8s+, J8s+, T8s+, 97s+, 86s+, 76s, 65s, A2o+, K9o+, QTo+, JTo",
+   "table": "9-max (six seats named)",
+   "seat_map": {
+    "UTG": "UTG",
+    "HJ": "HJ",
+    "CO": "CO",
+    "BTN": "BTN",
+    "SB": "SB"
+   },
+   "rfi": {
+    "UTG": "22+, ATs+, KTs+, QTs+, JTs, AJo+, KQo",
+    "HJ": "22+, A7s+, K9s+, Q9s+, J9s+, T9s, 98s, ATo+, KJo+",
+    "CO": "22+, A2s+, K8s+, Q9s+, J8s+, T8s+, 97s+, 87s, 76s, A9o+, KTo+, QJo",
+    "BTN": "22+, A2s+, K2s+, Q5s+, J7s+, T7s+, 96s+, 86s+, 75s+, 65s, 54s, A2o+, K8o+, Q9o+, J9o+, T9o",
+    "SB": "22+, A2s+, K5s+, Q8s+, J8s+, T8s+, 97s+, 86s+, 76s, 65s, A2o+, K9o+, QTo+, JTo"
+   },
+   "notes": "'Simplified to exclude mixed strategies'. Its 'MP' covers several early seats so it is only compared where the seat is unambiguous."
+  }
+ ]
+}

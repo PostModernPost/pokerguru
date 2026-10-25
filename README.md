@@ -237,9 +237,35 @@ this chart: how often the chart plays it, how many hands it plays more often, an
 hand of the same kind the chart still plays. Everything is computed from the cards and the chart;
 it is a description, not extra advice.
 
+## Real 9-handed charts (phase 10)
+
+`data/charts/nlhe/rangeconverter/` holds 80 charts for a 9-handed 100bb cash game: opening from
+every seat, facing an open from every earlier seat, and facing a 3-bet from every later seat.
+They come from [RangeConverter's free 9-max 100bb PDF](https://rangeconverter.com/articles/poker-charts-9-max-100bb-no-limit-texas-holdem)
+(solver output, simplified to halves). The PDF is pictures, so `scripts/rangeconverter_grids.py`
+reads the colour of every cell (blue fold, green call, orange raise, red all-in, dark = you
+wouldn't have this hand here) and the import checks the totals against the percentages printed
+on the charts. Sizes follow the source: open to 3bb, 3-bet to 10bb (12bb from the small blind,
+13bb from the big blind), 4-bet to 26bb (28bb against a big-blind 3-bet) or all-in.
+
+Each chart was then compared with unrelated publishers: Pokerspot's 9-max charts for every
+spot type, plus RunoutPoker, PokerCoaching and Preflop Wizard for the opening ranges, and our
+verified Pokalab big-blind charts where the seats left to act are the same. Charts agreeing on
+the main action for at least 85% of hands are "verified" (51); below that they are shipped as
+"sources disagree" with a † footnote (26, mostly facing a 3-bet, where Pokerspot has one chart
+per seat instead of one per 3-bettor); three big-blind spots have no second publisher and carry
+a * footnote. The numbers are in each chart's source notes and in `_verification.json`.
+
+Facing a 3-bet, a chart also carries `deal_weights`: how often you'd have each hand after
+opening from that seat. The drill never deals a hand you wouldn't have opened, and the range
+grid dims those hands.
+
+`python scripts/import_rangeconverter.py --fetch` repeats the whole import (needs `pdfimages`
+from poppler and `pip install pillow scipy`, which are import-time tools, not app dependencies).
+
 ## Real preflop charts (phase 7)
 
-`data/charts/nlhe/pokalab/` holds nine 6-max 100bb charts read straight from
+`data/charts/nlhe/pokalab/` holds ten 6-max 100bb charts read straight from
 [Pokalab's free preflop charts](https://www.pokalab.com/tools/preflop-charts) (solver output,
 opens to 2.5bb, SB to 3bb, GGPoker NL50 rake). They were verified the same way as advice:
 

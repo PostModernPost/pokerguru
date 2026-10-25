@@ -38,9 +38,7 @@ FOURBET = 20
 SPOTS = (
     [(6, "vs_open", h, v) for h, v in [("CO", "UTG"), ("BTN", "CO"), ("SB", "BTN")]]
     + [(6, "vs_3bet", h, v) for h, v in [("UTG", "BB"), ("CO", "BTN"), ("BTN", "SB"), ("BTN", "BB")]]
-    + [(9, "rfi", p, None) for p in POSITIONS[9][:-1]]
-    + [(9, "vs_open", h, v) for h, v in [("HJ", "UTG"), ("BTN", "CO"), ("BB", "BTN")]]
-    + [(9, "vs_3bet", h, v) for h, v in [("UTG", "BB"), ("CO", "BTN"), ("BTN", "SB")]]
+    # 9-handed spots all have real charts now (data/charts/nlhe/rangeconverter), so no samples.
 )
 
 
