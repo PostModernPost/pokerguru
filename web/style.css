@@ -501,3 +501,6 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 
 .grade-banner.neutral { background: var(--panel-2); color: var(--text); }
 .log-win { font-weight: 700; color: var(--accent); }
+
+#next-btn { margin: 4px 0 12px; }
+.side-left .new-game { margin: 0 0 10px; width: 100%; }

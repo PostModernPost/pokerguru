@@ -45,6 +45,7 @@
 
     <section id="game-screen" class="screen" hidden>
       <aside class="side side-left">
+        <button class="big-btn ghost new-game" id="new-game-btn">Start a new game</button>
         <details class="why" id="log" open>
           <summary>Hand so far (latest first)</summary>
           <ol class="log-list" id="log-list"></ol>
@@ -60,6 +61,7 @@
           <div id="hero-line" class="muted"></div>
         </div>
       </div>
+      <button class="big-btn primary" id="next-btn" hidden>Next hand</button>
 
       <section class="attention" id="attention" hidden>
         <h3>Pay attention to</h3>
@@ -85,9 +87,7 @@
       <div id="feedback" class="feedback" hidden></div>
 
       <div id="result" class="hand-result" hidden></div>
-      <button class="big-btn primary" id="next-btn" hidden>Next hand</button>
 
-      <button class="big-btn ghost" id="new-game-btn">Start a new game</button>
       </div>
       <aside class="side side-right">
         <details class="why" id="hand-notes" open>
