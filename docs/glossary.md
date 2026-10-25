@@ -18,6 +18,7 @@ The app underlines these words; tap one for its meaning. Edit `web/glossary.json
 
 ## Positions and blinds
 
+- **aggressor**: The player who made the last bet or raise in the current betting round. Whoever is facing that bet is the one with a decision to make.
 - **ante**: A small forced bet from every player (or from one player on everyone's behalf) before the deal, common in tournaments. It makes the pot bigger before anyone acts.
 - **big blind** *(also: BB)*: The seat two left of the button. It posts a forced bet before the deal, and stack sizes and bets in this app are measured in big blinds. '10bb' means ten big blinds.
 - **blinds**: The two forced bets (small blind and big blind) posted before each hand so there's something to play for.
@@ -28,7 +29,7 @@ The app underlines these words; tap one for its meaning. Edit `web/glossary.json
 - **LJ** *(also: lojack)*: 'Lojack': the seat three to the right of the button, used at 9-handed tables.
 - **position**: Where you sit relative to the dealer button, which decides when you act. Acting later is called having position; you see what others do first.
 - **small blind** *(also: SB)*: The seat just left of the button. It must put in a forced bet (half a big blind here) before the cards are dealt.
-- **UTG** *(also: under the gun, UTG1, UTG2)*: 'Under the gun': the first seat to act before the flop, just left of the big blind. At a 9-handed table the next two seats are UTG1 and UTG2.
+- **UTG** *(also: under the gun, UTG1, UTG2, UTG+1, UTG+2)*: 'Under the gun': the first seat to act before the flop, just left of the big blind. At a 9-handed table the next two seats are UTG1 and UTG2 (also written UTG+1 and UTG+2); they act second and third.
 - **villain**: Any opponent. 'Villain bets 10' just means an opponent bet 10; it isn't personal.
 
 ## The deal and the streets
@@ -89,8 +90,9 @@ The app underlines these words; tap one for its meaning. Edit `web/glossary.json
 - **indifferent** *(also: indifference)*: When two actions have the same expected value, so it doesn't matter which you pick. Charts often mix such hands, playing them one way some of the time.
 - **Monte Carlo** *(also: simulated hands, simulation)*: Estimating a probability by running the situation many times with random cards and counting the results. The app deals 2,500 random runouts to estimate equity, accurate to about one percentage point.
 - **Nash equilibrium** *(also: equilibrium, Nash)*: A pair of strategies where neither player can do better by changing only their own. The push/fold charts are an equilibrium: the shoving and calling ranges are each the best reply to the other.
-- **pot odds**: The price you're being offered: how much you must call compared with what's in the pot. If the pot is 100 and you must call 50, you're risking 50 to win 150.
+- **pot odds** *(also: price, the price)*: The price you're being offered: how much you must call compared with what's in the pot. If the pot is 100 and you must call 50, you're risking 50 to win 150.
 - **required equity** *(also: equity needed, need)*: The break-even point for a call: call / (pot + bet + call). If your equity is at least this, calling at least breaks even on this street. The app computes it for you.
+- **stack-to-pot ratio** *(also: SPR, times the pot)*: The effective stack divided by the pot. A big number means there is a lot of betting still possible compared with what is already in the middle; a small number means someone is close to all-in.
 
 ## Ranges and charts
 

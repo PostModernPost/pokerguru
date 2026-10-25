@@ -178,6 +178,22 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         threading.Timer(0.5, lambda: os._exit(0)).start()
         return {"ok": True}
 
+    @app.get("/api/chart/{chart_id}")
+    def chart_view(chart_id: str):
+        """A chart's full range for display (the game mode's 'show chart' pop-up)."""
+        try:
+            chart = library.get(chart_id)
+        except KeyError:
+            raise HTTPException(404, f"No chart {chart_id!r}") from None
+        return {
+            "id": chart.id, "spot_type": chart.spot_type, "spot_label": SPOT_TYPE_LABELS[chart.spot_type],
+            "hero_pos": chart.hero_pos, "villain_pos": chart.villain_pos, "table_size": chart.table_size,
+            "actions": [{"id": a, "label": action_label(a, chart.spot_type)} for a in chart.actions],
+            "grid": grid(),
+            "range": {h: [chart.hands[h].get(a, 0.0) for a in chart.actions] for h in chart.hands},
+            "deal_weights": chart.deal_weights, "source": chart.source, "is_sample": chart.is_sample,
+        }
+
     @app.get("/api/options")
     def options(include_samples: bool = False):
         charts = library.find(game="nlhe", include_samples=include_samples)

@@ -151,6 +151,13 @@
     if (dialog.open) dialog.close();
   }
 
+  // Other scripts can open a term by name (e.g. a card title that explains itself).
+  window.openGlossaryTerm = function (name) {
+    const key = String(name).toLowerCase();
+    const e = entries.find((x) => x.key === key || x.names.some((n) => n.toLowerCase() === key));
+    if (e) openTerm(e);
+  };
+
   function openTerm(entry) {
     showingList = false;
     titleEl.textContent = cap(entry.term);

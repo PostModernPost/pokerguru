@@ -48,20 +48,20 @@ def attention(hand: Hand, idx: int, charts: ChartIndex) -> list[dict]:
     # position
     if hand.street == "preflop":
         yet = sum(1 for i in players if i != idx and hand.bets()[i] < max(hand.bets()) and i != agg["last_raiser"])
-        items.append({"title": "Position", "value": pos,
+        items.append({"title": "Position", "gloss": "position", "value": pos,
                       "detail": f"{yet} still to act after you · {others} other{'s' if others != 1 else ''} in"})
     else:
         last = players[-1] if players else idx
         after = len([i for i in players if i > idx])
-        items.append({"title": "Position", "value": pos,
+        items.append({"title": "Position", "gloss": "position", "value": pos,
                       "detail": "you act last" if idx == last else f"{after} act{'s' if after == 1 else ''} after you"})
     # price
     pot, to_call = hand.pot, legal.get("to_call", 0)
     if to_call:
         req = required_equity(pot, to_call)
-        items.append({"title": "Price", "value": f"{pct(req)} to call", "detail": f"${to_call} into ${pot} · direct odds only"})
+        items.append({"title": "Price", "gloss": "pot odds", "value": f"{pct(req)} to call", "detail": f"${to_call} into ${pot} · direct odds only"})
     else:
-        items.append({"title": "Price", "value": "Free to check", "detail": f"pot ${pot}"})
+        items.append({"title": "Price", "gloss": "pot odds", "value": "Free to check", "detail": f"pot ${pot}"})
     # hand
     hole = hand.hole[idx]
     if hand.street == "preflop":
@@ -69,13 +69,13 @@ def attention(hand: Hand, idx: int, charts: ChartIndex) -> list[dict]:
         rank = equity_rank_all()[hc]
         feats = features(hc)
         head = feats[0].split(":")[0].split(",")[0]
-        items.append({"title": "Your hand", "value": hc, "detail": f"{head} · ranks {rank} of 169"})
+        items.append({"title": "Your hand", "gloss": "hand class", "value": hc, "detail": f"{head} · ranks {rank} of 169"})
         match = charts.for_decision(hand, idx)
         if match:
             play = {h: 1 - f.get("fold", 0.0) for h, f in match.chart.hands.items()}
             played = len([p for p in play.values() if p >= 0.5])
             better = sum(1 for h, p in play.items() if p > play[hc] + 1e-9)
-            items.append({"title": "Your range here", "value": f"{played} of 169 hands",
+            items.append({"title": "Your range here", "gloss": "range", "value": f"{played} of 169 hands",
                           "detail": f"played from this seat · {better} ranked above yours" if better else "played from this seat · yours is one of them"})
     else:
         now = current_hand("nlhe", hole, tuple(hand.board))
@@ -83,13 +83,13 @@ def attention(hand: Hand, idx: int, charts: ChartIndex) -> list[dict]:
         if hand.street != "river":
             o = improving_outs("nlhe", hole, tuple(hand.board))
             detail = f"{len(o.outs)} outs to {o.best_outcome} · {pct(o.hit_chance_by_river)} by the river" if o.outs else "no draw to a straight or better"
-        items.append({"title": "Your hand", "value": now.description, "detail": detail})
+        items.append({"title": "Your hand", "gloss": "hand rankings", "value": now.description, "detail": detail})
     # table
     eff = min(hand.stacks_now()[i] + hand.bets()[i] for i in players) if players else 0
     spr = (eff / pot) if pot else 0
-    items.append({"title": "Table", "value": f"{len(players)} in the pot", "detail": f"effective stack ${eff} · {spr:.0f}× the pot"})
+    items.append({"title": "Table", "gloss": "stack-to-pot ratio", "value": f"{len(players)} in the pot", "detail": f"effective stack ${eff} · {spr:.0f}× the pot"})
     if agg["last_raiser"] is not None and agg["last_raiser"] != idx:
-        items.append({"title": "Aggressor", "value": hand.positions[agg["last_raiser"]], "detail": f"raised to ${agg['last_to']} this round"})
+        items.append({"title": "Aggressor", "gloss": "aggressor", "value": hand.positions[agg["last_raiser"]], "detail": f"raised to ${agg['last_to']} this round"})
     return items
 
 
@@ -129,14 +129,16 @@ def chart_feedback(hand: Hand, idx: int, match: ChartMatch, kind: str, all_in: b
                         [f"This chart never {'calls' if kind in ('call', 'check') else kind + 's'} here. "
                          f"With {hc} it {labels[best].lower()}s {format_pct(freqs[best])} of the time."],
                         foot, {"frequencies": [{"label": labels[a], "freq": f} for a, f in freqs.items()],
-                               "source": chart.source.get("name"), "status": chart.source.get("status")},
+                               "source": chart.source.get("name"), "status": chart.source.get("status"),
+                               "chart_id": chart.id, "hand_class": hc},
                         {"drill_type": "game_preflop", "chart": chart, "hand_class": hc, "user_answer": kind,
                          "correct": [labels[best]], "grade": "wrong", "chosen_frequency": 0.0})
     g = grade(chart, hc, chosen, config.GRADE_THRESHOLDS)
     lines = [f"You chose {labels[chosen].lower()} (chart: {format_pct(g.chosen_frequency)}).", g.explanation]
     return Feedback("chart", f"Preflop: {hc} from {chart.hero_pos}", g.grade, lines, foot,
                     {"frequencies": [{"label": labels[a], "freq": f} for a, f in freqs.items()],
-                     "source": chart.source.get("name"), "status": chart.source.get("status")},
+                     "source": chart.source.get("name"), "status": chart.source.get("status"),
+                     "chart_id": chart.id, "hand_class": hc},
                     {"drill_type": "game_preflop", "chart": chart, "hand_class": hc, "user_answer": chosen,
                      "correct": [labels[a] for a in g.best_actions], "grade": g.grade, "chosen_frequency": g.chosen_frequency})
 

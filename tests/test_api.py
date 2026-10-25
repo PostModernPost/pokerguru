@@ -216,3 +216,11 @@ def test_version_and_shutdown_guard(ctx):
     assert isinstance(v, str) and len(v) >= 8
     # the test client is not 127.0.0.1, so shutdown is refused (and the test process survives)
     assert client.post("/api/shutdown").status_code == 403
+
+
+def test_chart_view_route(ctx):
+    client, _ = ctx
+    c = client.get("/api/chart/rangeconverter-nlhe-cash-9max-100bb-vs_3bet-CO-vs-BTN").json()
+    assert len(c["range"]) == 169 and len(c["grid"]) == 13 and c["deal_weights"]["72o"] == 0
+    assert [a["id"] for a in c["actions"]][:3] == ["fold", "call", "raise_26"]
+    assert client.get("/api/chart/nope").status_code == 404

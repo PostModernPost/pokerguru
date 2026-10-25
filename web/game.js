@@ -21,6 +21,38 @@ async function api(path, body) {
 
 function money(x) { return "$" + num(x); }
 
+// Range-grid colours (same scheme as the Preflop drill).
+const KIND_COLORS = { allin: "var(--allin)", raise: "var(--raise)", call: "var(--call)", fold: "var(--fold)" };
+const KIND_ORDER = ["allin", "raise", "call", "fold"];
+function actionKind(id) { return id === "fold" || id === "call" || id === "allin" ? id : (id.startsWith("raise") ? "raise" : "fold"); }
+function gradientFor(freqs, actions) {
+  const parts = actions.map((a, i) => ({ kind: actionKind(a.id), f: freqs[i] })).filter((p) => p.f > 0)
+    .sort((x, y) => KIND_ORDER.indexOf(x.kind) - KIND_ORDER.indexOf(y.kind));
+  if (parts.length === 1) return KIND_COLORS[parts[0].kind];
+  let at = 0; const stops = [];
+  for (const p of parts) { const end = at + p.f * 100; stops.push(`${KIND_COLORS[p.kind]} ${at}% ${end}%`); at = end; }
+  return `linear-gradient(to right, ${stops.join(", ")})`;
+}
+
+async function showChart(chartId, handClass) {
+  let c;
+  try { c = await api("/api/chart/" + encodeURIComponent(chartId)); } catch (e) { alert(e.message); return; }
+  $("chart-title").textContent = `${c.hero_pos}${c.villain_pos ? " vs " + c.villain_pos : ""} · ${c.spot_label} · ${c.table_size}-handed`;
+  const legend = $("chart-legend"); legend.replaceChildren();
+  for (const a of c.actions) legend.append(el("span", { style: `--c:${KIND_COLORS[actionKind(a.id)]}` }, a.label));
+  const grid = $("chart-grid"); grid.replaceChildren();
+  for (const row of c.grid) for (const hand of row) {
+    const w = c.deal_weights ? c.deal_weights[hand] : 1;
+    grid.append(el("div", {
+      class: `cell${hand === handClass ? " hero" : ""}${w === 0 ? " out" : ""}`,
+      title: hand + ": " + (w === 0 ? "not opened from here" : c.actions.map((a, i) => `${a.label} ${Math.round(c.range[hand][i] * 100)}%`).join(", ")),
+      style: `background:${gradientFor(c.range[hand], c.actions)}`,
+    }, hand));
+  }
+  $("chart-source").textContent = "Chart source: " + (c.source.name || "unknown") + (c.source.status === "contested" ? " † sources disagree" : c.source.status === "single_source" ? " * one publisher" : "");
+  $("chart-dialog").showModal();
+}
+
 function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(GAME_KEY) || "null");
@@ -82,8 +114,12 @@ function render() {
   const att = h.attention || [];
   $("attention").hidden = !(h.hero_turn && att.length);
   const al = $("attention-list"); al.replaceChildren();
-  for (const a of att) al.append(el("div", { class: "att-tile" },
-    el("div", { class: "att-title" }, a.title), el("div", { class: "att-value" }, a.value ?? a.text ?? ""), el("div", { class: "att-detail" }, a.detail || "")));
+  for (const a of att) {
+    const title = a.gloss && window.openGlossaryTerm
+      ? el("button", { type: "button", class: "att-title term-btn", title: "Tap for what this means", onclick: () => window.openGlossaryTerm(a.gloss) }, a.title + " ⓘ")
+      : el("div", { class: "att-title" }, a.title);
+    al.append(el("div", { class: "att-tile" }, title, el("div", { class: "att-value" }, a.value ?? a.text ?? ""), el("div", { class: "att-detail" }, a.detail || "")));
+  }
 
   // actions
   const legal = h.legal || {};
@@ -106,6 +142,15 @@ function render() {
       $("raise-amount").min = legal.min_raise_to; $("raise-amount").max = legal.max_raise_to;
       $("raise-amount").value = sizes[0].to;
       $("btn-raise").textContent = toCall ? "Raise to" : "Bet";
+      const ac = $("add-chips"); ac.replaceChildren();
+      const bump = (d) => {
+        const cur = Number($("raise-amount").value) || legal.min_raise_to;
+        $("raise-amount").value = Math.max(legal.min_raise_to, Math.min(legal.max_raise_to, cur + d));
+        updateRaiseHint(legal);
+      };
+      for (const d of [1, 5, 25, 100]) ac.append(chip(`+$${d}`, false, () => bump(d)));
+      ac.append(chip("Reset", false, () => { $("raise-amount").value = legal.min_raise_to; updateRaiseHint(legal); }));
+      updateRaiseHint(legal);
     }
   }
 
@@ -132,7 +177,8 @@ function render() {
 
   // log
   const ll = $("log-list"); ll.replaceChildren();
-  for (const e of h.events) {
+  const numbered = h.events.map((e, i) => ({ ...e, n: i + 1 })).reverse();
+  for (const e of numbered) {
     const who = e.pos ? `${e.name} (${e.pos})` : "";
     const text = e.kind === "deal" ? `${e.street}: ${e.text}` :
       e.kind.startsWith("post") ? `${who} posts ${money(e.amount)}` :
@@ -140,9 +186,13 @@ function render() {
       e.kind === "check" ? `${who} checks` : e.kind === "fold" ? `${who} folds` :
       e.kind === "allin" ? `${who} is all-in for ${money(e.amount)}` :
       `${who} ${e.kind === "bet" ? "bets" : "raises to"} ${money(e.amount)}`;
-    ll.append(el("li", {}, text));
+    ll.append(el("li", {}, el("span", { class: "log-n" }, `${e.n}.`), " ", text));
   }
-  $("log").open = false;
+}
+
+function updateRaiseHint(legal) {
+  const v = Number($("raise-amount").value);
+  $("raise-hint").textContent = `Between ${money(legal.min_raise_to)} and ${money(legal.max_raise_to)} total${v > legal.max_raise_to || v < legal.min_raise_to ? " · will be adjusted to the nearest legal amount" : ""}`;
 }
 
 function renderFeedback(box, f) {
@@ -159,7 +209,9 @@ function renderFeedback(box, f) {
         el("div", { class: "bar" }, el("i", { style: `width:${x.freq * 100}%` })), el("span", { class: "pct" }, Math.round(x.freq * 100) + "%")));
     }
     box.append(fr);
-    box.append(el("p", { class: "source" }, "Chart: " + f.chart.source));
+    const src = el("p", { class: "source" }, "Chart: " + f.chart.source + " ");
+    if (f.chart.chart_id) src.append(el("button", { type: "button", class: "link-btn", onclick: () => showChart(f.chart.chart_id, f.chart.hand_class) }, "Show the full chart"));
+    box.append(src);
   }
   for (const n of f.footnotes) box.append(el("p", { class: "footnote" }, n));
 }
@@ -187,6 +239,8 @@ $("btn-fold").addEventListener("click", () => act("fold"));
 $("btn-call").addEventListener("click", () => act(state.hand.legal.to_call ? "call" : "check"));
 $("btn-raise").addEventListener("click", () => act("raise", Number($("raise-amount").value)));
 $("next-btn").addEventListener("click", nextHand);
+$("chart-close").addEventListener("click", () => $("chart-dialog").close());
+$("raise-amount").addEventListener("input", () => state?.hand?.legal && updateRaiseHint(state.hand.legal));
 $("start-btn").addEventListener("click", startGame);
 $("setup-btn").addEventListener("click", () => { renderSetup(); showScreen("setup-screen"); });
 

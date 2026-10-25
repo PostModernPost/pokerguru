@@ -66,10 +66,12 @@
         </div>
         <div class="raise-box" id="raise-box">
           <div class="chips" id="size-chips"></div>
+          <div class="chips add-chips" id="add-chips"></div>
           <div class="raise-row">
             <input type="number" id="raise-amount" inputmode="numeric" aria-label="Raise to">
             <button class="big-btn warn" id="btn-raise">Raise to</button>
           </div>
+          <p class="hint" id="raise-hint"></p>
         </div>
       </div>
 
@@ -79,8 +81,8 @@
       <button class="big-btn primary" id="next-btn" hidden>Next hand</button>
 
       <details class="why" id="log">
-        <summary>Hand so far</summary>
-        <ul id="log-list"></ul>
+        <summary>Hand so far (latest first)</summary>
+        <ol class="log-list" id="log-list"></ol>
       </details>
       <details class="why" id="hand-notes" hidden>
         <summary>All feedback this hand</summary>
@@ -92,6 +94,15 @@
       <p id="message"></p>
     </section>
   </main>
+
+  <dialog id="chart-dialog" class="chart-dialog">
+    <div class="gd-head"><h2 id="chart-title">Chart</h2><button type="button" class="icon-btn" id="chart-close">Close</button></div>
+    <div class="chart-body">
+      <div class="legend" id="chart-legend"></div>
+      <div class="range-grid" id="chart-grid"></div>
+      <p class="source" id="chart-source"></p>
+    </div>
+  </dialog>
 
   <footer class="foot">
     <button type="button" class="link-btn" id="glossary-open">Glossary: tap any dotted word for its meaning</button>
