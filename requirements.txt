@@ -1,0 +1,6 @@
+# Versions pinned so the app behaves the same on every machine.
+pokerkit==0.7.7     # poker rules, cards, hand evaluation, equity
+fastapi==0.162.0    # web server framework
+uvicorn==0.54.0     # runs the FastAPI server
+pytest==9.1.1       # test runner
+httpx==0.28.1       # needed by FastAPI's test client (used only in tests)
