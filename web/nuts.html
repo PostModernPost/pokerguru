@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Omaha Nuts Drill</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Poker Trainer</h1>
+    <nav class="tabs" aria-label="Drills">
+      <a href="/">Preflop</a>
+      <a href="/equity.html">Equity</a>
+      <a href="/nuts.html" aria-current="page">Nuts</a>
+      <a href="/potlimit.html">Pot limit</a>
+    </nav>
+    <div class="score" id="score" title="Correct nut-hand answers / hands played (all time)">–</div>
+    <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
+  </header>
+
+  <main>
+    <section id="filters-screen" class="screen" hidden>
+      <h2>What to drill</h2>
+      <p class="hint">Tap to select. Nothing selected means all streets.</p>
+      <div class="filter-group">
+        <h3>Street</h3>
+        <div class="chips" id="f-street"></div>
+      </div>
+      <button class="big-btn primary" id="start-btn">Start drilling</button>
+    </section>
+
+    <section id="drill-screen" class="screen" hidden>
+      <div class="spot-tags" id="spot-tags"></div>
+      <h3>Board</h3>
+      <div class="cards medium" id="board"></div>
+      <h3 class="mt">Your hand</h3>
+      <div class="cards four" id="hero-cards"></div>
+
+      <h3 class="mt">1. What is the nuts right now?</h3>
+      <div class="option-list" id="nut-options"></div>
+      <h3 class="mt">2. Do you have it?</h3>
+      <div class="decision-row">
+        <button class="action-btn k-call choice" id="has-yes" type="button" aria-pressed="false">Yes</button>
+        <button class="action-btn k-fold choice" id="has-no" type="button" aria-pressed="false">No</button>
+      </div>
+      <div id="draw-block">
+        <h3 class="mt">3. With the next card, are you…</h3>
+        <div class="option-list" id="draw-options"></div>
+      </div>
+      <button class="big-btn primary" id="submit-btn" type="button" disabled>Check answers</button>
+    </section>
+
+    <section id="result-screen" class="screen" hidden>
+      <div class="grade-list" id="grades"></div>
+      <p class="explanation" id="explanation"></p>
+      <button class="big-btn primary" id="next-btn">Next hand</button>
+      <div class="result-cards">
+        <div><h3>Board</h3><div class="cards small" id="r-board"></div></div>
+        <div><h3>Your hand</h3><div class="cards small" id="r-hero"></div></div>
+      </div>
+      <p class="source">Computed: every possible opponent holding is checked and PokerKit ranks the hands.
+        "The nuts" means the best hand anyone can hold given the board and the cards you're holding.
+        "Drawing" counts only the very next card, and only hands of a straight or better.</p>
+    </section>
+
+    <section id="message-screen" class="screen" hidden>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script src="nuts.js"></script>
+</body>
+</html>

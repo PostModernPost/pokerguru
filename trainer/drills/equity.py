@@ -9,11 +9,10 @@ gives the identical answer.
 from __future__ import annotations
 
 import random
-import threading
-from collections import OrderedDict
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future
 
 from trainer import config
+from trainer.drills.background import BackgroundCache
 from trainer.game.equity import EquityResult, equity_vs_random, spot_seed
 from trainer.scenarios.postflop import EquitySpot, random_equity_spot
 
@@ -24,40 +23,25 @@ DECISION_DRILL = "pot_odds_decision"
 class EquityService:
     def __init__(self, iterations: int = config.EQUITY_ITERATIONS, cache_size: int = 256, workers: int = 2):
         self.iterations = iterations
-        self._pool = ThreadPoolExecutor(max_workers=workers, thread_name_prefix="equity")
-        self._cache: OrderedDict[tuple, Future] = OrderedDict()
-        self._cache_size = cache_size
-        self._lock = threading.Lock()
+        self._cache: BackgroundCache = BackgroundCache(self._compute, workers=workers, size=cache_size, name="equity")
 
-    def _key(self, spot: EquitySpot) -> tuple:
+    @staticmethod
+    def _key(spot: EquitySpot) -> tuple:
         return (spot.game, spot.hero_cards, spot.board)
 
-    def _compute(self, spot: EquitySpot) -> EquityResult:
-        return equity_vs_random(
-            spot.game, spot.hero_cards, spot.board,
-            iterations=self.iterations,
-            seed=spot_seed(spot.game, spot.hero_cards, spot.board),
-        )
+    def _compute(self, key: tuple) -> EquityResult:
+        game, hero, board = key
+        return equity_vs_random(game, hero, board, iterations=self.iterations, seed=spot_seed(game, hero, board))
 
     def start(self, spot: EquitySpot) -> Future:
         """Begin computing (or reuse a cached computation)."""
-        key = self._key(spot)
-        with self._lock:
-            fut = self._cache.get(key)
-            if fut is None:
-                fut = self._pool.submit(self._compute, spot)
-                self._cache[key] = fut
-                while len(self._cache) > self._cache_size:
-                    self._cache.popitem(last=False)
-            else:
-                self._cache.move_to_end(key)
-            return fut
+        return self._cache.start(self._key(spot))
 
     def equity(self, spot: EquitySpot) -> EquityResult:
-        return self.start(spot).result()
+        return self._cache.get(self._key(spot))
 
     def shutdown(self) -> None:
-        self._pool.shutdown(wait=False, cancel_futures=True)
+        self._cache.shutdown()
 
 
 def next_equity_spot(service: EquityService, rng: random.Random, *,

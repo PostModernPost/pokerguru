@@ -44,3 +44,11 @@ EQUITY_BET_FRACTIONS = {
     "nlhe": [0.25, 0.33, 0.5, 0.66, 0.75, 1.0, 1.5, 2.0],
     "plo": [0.25, 0.33, 0.5, 0.66, 0.75, 1.0],  # pot-limit: a bet can't exceed the pot
 }
+
+# ---- Phase 3: PLO drills ----
+
+# Pot-limit sizing drill: (small blind, big blind) in chips, postflop pot sizes
+# as multiples of the big blind, and villain's bet as a fraction of the pot.
+POT_LIMIT_BLINDS = [(1, 2), (2, 5), (5, 10)]
+POT_LIMIT_POSTFLOP_POTS = [5, 8, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100]
+POT_LIMIT_BET_FRACTIONS = [0.33, 0.5, 0.66, 0.75, 1.0]

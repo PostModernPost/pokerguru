@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Pot-Limit Sizing Drill</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Poker Trainer</h1>
+    <nav class="tabs" aria-label="Drills">
+      <a href="/">Preflop</a>
+      <a href="/equity.html">Equity</a>
+      <a href="/nuts.html">Nuts</a>
+      <a href="/potlimit.html" aria-current="page">Pot limit</a>
+    </nav>
+    <div class="score" id="score" title="Correct answers / spots played (all time)">–</div>
+    <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
+  </header>
+
+  <main>
+    <section id="filters-screen" class="screen" hidden>
+      <h2>What to drill</h2>
+      <p class="hint">Tap to select. Nothing selected means both.</p>
+      <div class="filter-group">
+        <h3>Stage</h3>
+        <div class="chips" id="f-stage"></div>
+      </div>
+      <button class="big-btn primary" id="start-btn">Start drilling</button>
+    </section>
+
+    <section id="drill-screen" class="screen" hidden>
+      <div class="spot-tags" id="spot-tags"></div>
+      <div class="pl-pot" id="pl-pot"></div>
+      <ol class="pl-history" id="pl-history"></ol>
+      <h3 class="mt">What's the most you can raise to?</h3>
+      <p class="hint">Enter the total amount of your bet (the "raise to" number), in chips.</p>
+      <div class="num-display" id="num-display" aria-live="polite">0</div>
+      <div class="keypad" id="keypad"></div>
+      <button class="big-btn primary" id="submit-btn" type="button" disabled>Check answer</button>
+    </section>
+
+    <section id="result-screen" class="screen" hidden>
+      <div class="grade-banner" id="grade-banner"></div>
+      <div class="pl-answer" id="pl-answer"></div>
+      <p class="explanation" id="explanation"></p>
+      <button class="big-btn primary" id="next-btn">Next spot</button>
+      <p class="source">Pot-limit rule: you may raise by the size of the pot <em>after</em> your call.
+        Max raise to = largest bet + (pot including all bets + your call).</p>
+    </section>
+
+    <section id="message-screen" class="screen" hidden>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script src="potlimit.js"></script>
+</body>
+</html>

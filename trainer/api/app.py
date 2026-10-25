@@ -19,8 +19,10 @@ from pydantic import BaseModel, Field
 
 from trainer import config
 from trainer.api.equity_routes import make_equity_router
+from trainer.api.plo_routes import make_plo_router
 from trainer.charts.loader import Chart, ChartLibrary
 from trainer.drills.equity import EquityService
+from trainer.drills.plo import NutsService
 from trainer.drills.preflop import DRILL_TYPE, NoMatchingChart, next_spot, spot_from_chart
 from trainer.game.hand_classes import grid
 from trainer.game.positions import POSITIONS, SPOT_TYPES
@@ -124,11 +126,13 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
     log.info("Loaded %d charts from %s", len(library), charts_dir)
 
     equity_service = EquityService(iterations=equity_iterations)
+    nuts_service = NutsService()
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
         yield
         equity_service.shutdown()
+        nuts_service.shutdown()
 
     app = FastAPI(title="Poker Trainer", lifespan=lifespan)
 
@@ -234,6 +238,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         return store.summary(drill_type)
 
     app.include_router(make_equity_router(store, equity_service, rng))
+    app.include_router(make_plo_router(store, nuts_service, rng))
 
     app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="web")
     return app

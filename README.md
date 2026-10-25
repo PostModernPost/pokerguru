@@ -4,12 +4,18 @@ A drill-based trainer for No-Limit Hold'em and Pot-Limit Omaha. It shows you a s
 answer, and it grades you right away, either against a chart file or against math the
 program computes itself.
 
-**Current status: Phases 1 and 2 are done.** There are two drills, switched with the tabs at
+**Current status: Phases 1, 2 and 3 are done.** There are four drills, switched with the tabs at
 the top of the screen:
 
 - **Preflop:** NLHE cash, 6-max and 9-handed, 100bb, graded against chart files.
 - **Equity:** NLHE and PLO, flop or turn. Estimate your equity, then call or fold. Graded by
-  computed equity and pot odds. No charts are needed, so these answers are real math, not samples.
+  computed equity and pot odds.
+- **Nuts:** PLO. What's the best possible hand on this board, do you have it, and are you drawing
+  to it? Graded by checking every possible opponent holding.
+- **Pot limit:** given the blinds and the action so far, what's the most you can raise to?
+
+Only the Preflop drill needs charts. The other three are pure math, so their answers are real,
+not samples.
 
 For the preflop drill, the only charts included are
 **SAMPLE charts with random made-up frequencies**. They exist to test the app. They are
@@ -91,9 +97,10 @@ They take about 30 seconds; the equity tests run thousands of simulated hands on
 
 ```
 trainer/
-  game/        cards, positions, hand classes, equity (thin layer over PokerKit, no strategy)
+  game/        cards, positions, hand classes, equity, Omaha nuts, pot-limit math
+               (thin layer over PokerKit, no strategy)
   charts/      chart file format: loader + range-string importer
-  scenarios/   builds spots: preflop (positions, action, pot) and postflop (board, pot, bet)
+  scenarios/   builds spots: preflop, postflop (board, pot, bet), PLO nuts and pot-limit
   graders/     grades your answer (against a chart, or by computed equity)
   drills/      picks the next spot for a drill
   progress/    SQLite storage of every attempt
@@ -103,7 +110,8 @@ data/
   charts/nlhe/          NLHE charts (one JSON file per spot)
   charts/nlhe/sample/   the fake SAMPLE charts (delete this folder once you have real ones)
   progress.sqlite       your drill history (created automatically, not in git)
-web/           the drill screens: index.html (preflop), equity.html, shared common.js / style.css
+web/           the drill screens: index.html (preflop), equity.html, nuts.html, potlimit.html,
+               shared common.js / style.css
 scripts/       helper scripts (sample chart generator, range importer)
 docs/          notes: phase summaries and decisions.md (every judgment call made for you)
 tests/         automated tests
@@ -129,6 +137,32 @@ How it's graded:
 
 Settings (number of simulated hands, the 2-point tolerance, pot and bet sizes) are in
 `trainer/config.py`.
+
+## The PLO drills (phase 3)
+
+**Nuts.** You see a flop, turn or river and your four cards, and answer up to three questions:
+1. *What is the nuts right now?* Four hand descriptions, one right.
+2. *Do you have it?* Yes or no. Tying the best possible hand counts as yes.
+3. *With the next card, are you drawing to the nuts, to a non-nut hand, or neither?* (Flop and
+   turn only, and only when you don't already have the nuts.)
+
+How it's graded: the program lists every two-card holding an opponent could have, combines each
+with the board under Omaha rules (exactly two hole cards, three board cards), and PokerKit ranks
+them. "The nuts" means the best hand *anyone can hold given your cards*: if you hold the ace of
+spades, nobody else can make the ace-high flush, and the app tells you when your cards block a
+hand like that. "Drawing" looks at the very next card only, and only counts hands of a straight
+or better.
+
+**Pot limit.** The blinds and this round's action are shown; you type the biggest total bet you
+may make. The rule: you may raise by the size of the pot *after* your call.
+
+```
+amount_to_call = largest_bet_this_round - your_chips_already_in_this_round
+max_raise_to   = largest_bet_this_round + (pot_including_all_bets + amount_to_call)
+```
+
+Example: blinds 1/2, you're first to act: pot 3, call 2, so raise to 2 + (3 + 2) = 7.
+Blinds, pot sizes and bet sizes used by the drill are in `trainer/config.py`.
 
 ## Preflop grading
 
