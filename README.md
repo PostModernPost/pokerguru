@@ -1,9 +1,17 @@
 # Poker Trainer
 
-A drill-based trainer for No-Limit Hold'em (and later Pot-Limit Omaha). It shows you a
-spot, you pick an action, and it grades you right away against an answer key (a chart file).
+A drill-based trainer for No-Limit Hold'em and Pot-Limit Omaha. It shows you a spot, you
+answer, and it grades you right away, either against a chart file or against math the
+program computes itself.
 
-**Current status: Phase 1 (NLHE cash preflop trainer).** The only charts included are
+**Current status: Phases 1 and 2 are done.** There are two drills, switched with the tabs at
+the top of the screen:
+
+- **Preflop:** NLHE cash, 6-max and 9-handed, 100bb, graded against chart files.
+- **Equity:** NLHE and PLO, flop or turn. Estimate your equity, then call or fold. Graded by
+  computed equity and pot odds. No charts are needed, so these answers are real math, not samples.
+
+For the preflop drill, the only charts included are
 **SAMPLE charts with random made-up frequencies**. They exist to test the app. They are
 **not real strategy** and the app shows a red warning whenever one is in use. Add your own
 charts (see "Adding real charts" below) before you drill for real.
@@ -20,13 +28,18 @@ charts (see "Adding real charts" below) before you drill for real.
 
 PokerKit API checked against version 0.7.7 (source and docs) before use:
 - Cards: `Card.parse("AsKd")`, `Deck.STANDARD` (52 cards), each card has `.rank` and `.suit`.
-- Hand evaluation (for later phases): `StandardHighHand.from_game(hole, board)` for Hold'em,
+- Hand evaluation: `StandardHighHand.from_game(hole, board)` for Hold'em,
   `OmahaHoldemHand.from_game(hole, board)` for Omaha (exactly 2 hole + 3 board cards).
-- Equity (for later phases): `calculate_equities(hole_ranges, board_cards, hole_dealing_count,
-  board_dealing_count, deck, hand_types, *, sample_count=..., executor=None)` with
-  `parse_range("AK")` for ranges.
+  Hands compare with `>` / `==`.
+- Equity: `calculate_equities(hole_ranges, board_cards, hole_dealing_count,
+  board_dealing_count, deck, hand_types, *, sample_count=..., executor=None)`.
+  Passing `[[]]` as a range means "one random hand".
 
-Phase 1 only uses the card and deck parts.
+The equity drill uses PokerKit's hand evaluation inside its own small sampling loop
+(`trainer/game/equity.py`). PokerKit's `calculate_equities` gives different results from one
+run of Python to the next even with the same seed, because it uses Python's shared random
+generator and set ordering. The brief requires seedable answers, so the loop is ours, and a
+test checks it against `calculate_equities`.
 
 ## Running it on Windows (step by step)
 
@@ -72,15 +85,16 @@ With the virtual environment activated:
 python -m pytest
 ```
 All tests should pass. Run them after any change that touches grading or charts.
+They take about 30 seconds; the equity tests run thousands of simulated hands on purpose.
 
 ## How it's organized
 
 ```
 trainer/
-  game/        cards, positions, hand classes (thin layer over PokerKit, no strategy)
+  game/        cards, positions, hand classes, equity (thin layer over PokerKit, no strategy)
   charts/      chart file format: loader + range-string importer
-  scenarios/   builds a preflop spot (positions, action so far, pot) from parameters
-  graders/     grades your answer against a chart
+  scenarios/   builds spots: preflop (positions, action, pot) and postflop (board, pot, bet)
+  graders/     grades your answer (against a chart, or by computed equity)
   drills/      picks the next spot for a drill
   progress/    SQLite storage of every attempt
   api/         web routes (FastAPI)
@@ -89,13 +103,34 @@ data/
   charts/nlhe/          NLHE charts (one JSON file per spot)
   charts/nlhe/sample/   the fake SAMPLE charts (delete this folder once you have real ones)
   progress.sqlite       your drill history (created automatically, not in git)
-web/           the drill screens (HTML, CSS, JavaScript)
+web/           the drill screens: index.html (preflop), equity.html, shared common.js / style.css
 scripts/       helper scripts (sample chart generator, range importer)
-docs/          notes, including the phase 1 summary and open questions
+docs/          notes: phase summaries and decisions.md (every judgment call made for you)
 tests/         automated tests
 ```
 
-## Grading
+## The equity drill (phase 2)
+
+You see your hand (2 cards for Hold'em, 4 for Omaha), a flop or turn, the pot, and a bet
+you're facing. Your opponent holds **a random hand**. You answer two questions:
+
+1. **Your equity:** your share of the pot if all the cards were dealt out right now. Pick a
+   range: under 20%, 20-30, 30-40, 40-50, 50-60, or 60%+.
+2. **Call or fold.**
+
+How it's graded:
+- The program deals out 2,500 random opponent hands and runouts, and PokerKit decides each
+  winner. That gives your equity within about ±1%.
+- **Equity needed to call** = call / (pot + bet + call). Example: 50 into a pot of 100 means
+  50 / (100 + 50 + 50) = 25%. Calling is right when your equity is at least that.
+- Because the simulation is only accurate to about ±1%, an answer within 2 percentage points
+  of the line (or of an equity range's edge) is graded **Close enough** instead of Wrong.
+- **Direct odds only.** Money you might win on later streets (implied odds) is ignored.
+
+Settings (number of simulated hands, the 2-point tolerance, pot and bet sizes) are in
+`trainer/config.py`.
+
+## Preflop grading
 
 Charts can mix actions (e.g. raise 60%, fold 40%). Your answer is graded by how often the
 chart takes the action you picked:
