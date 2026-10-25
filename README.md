@@ -91,6 +91,7 @@ data/
   progress.sqlite       your drill history (created automatically, not in git)
 web/           the drill screens (HTML, CSS, JavaScript)
 scripts/       helper scripts (sample chart generator, range importer)
+docs/          notes, including the phase 1 summary and open questions
 tests/         automated tests
 ```
 
@@ -150,12 +151,21 @@ The importer turns those into a chart file. It understands:
 | `22-55`, `A2s-A5s` | everything between, inclusive |
 | `AQs:0.5` | this action 50% of the time (also works on shorthand: `A2s+:0.5`) |
 
-Example (one range per non-fold action; whatever is left over becomes fold):
+Example (one range per non-fold action; whatever is left over becomes fold). Type it as one line:
 
 ```
-python scripts/import_range.py --id nlhe-cash-6max-100bb-rfi-CO --table-size 6 --type rfi --hero CO ^
-  --action "raise_2.5=AA,KK,QQ,AKs,AQs:0.5,A5s:0.6" ^
-  --source-name "My chart source" --out data/charts/nlhe/rfi-6max-CO.json
+python scripts/import_range.py --id nlhe-cash-6max-100bb-rfi-CO --table-size 6 --type rfi --hero CO --action "raise_2.5=AA,KK,QQ,AKs,AQs:0.5,A5s:0.6" --source-name "My chart source" --out data/charts/nlhe/rfi-6max-CO.json
 ```
+
+For a `vs_open` or `vs_3bet` chart add `--villain BTN` (and `--open-size 2.5`, `--threebet-size 9`),
+and give one `--action` per action, e.g. `--action "call=..." --action "raise_9=..."`.
+The importer refuses to write the file if anything in the ranges is unclear (a typo, a hand
+listed twice, frequencies adding up to more than 100%), and tells you which hand or token is wrong.
+
+The app loads charts when it starts, so restart the server after adding or changing chart files.
+If a chart file has a mistake, the server won't start and the message names the file and the problem.
+
+**When you add real charts:** delete the `data/charts/nlhe/sample/` folder (or keep it, but then
+sample spots stay mixed into your drills). Two charts for the exact same spot aren't allowed.
 
 Run `python scripts/import_range.py --help` for all options.

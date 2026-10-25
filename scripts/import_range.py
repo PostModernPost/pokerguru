@@ -1,6 +1,6 @@
 """Turn published range strings into a chart JSON file.
 
-Example (Windows: use ^ instead of \\ to continue lines):
+Example (on Windows, type it all on one line without the backslashes):
 
     python scripts/import_range.py --id nlhe-cash-6max-100bb-rfi-CO \\
         --table-size 6 --type rfi --hero CO \\
@@ -30,7 +30,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--game", default="nlhe")
     p.add_argument("--format", default="cash", choices=["cash", "tournament"])
     p.add_argument("--table-size", type=int, required=True, choices=[6, 9])
-    p.add_argument("--stack-bb", type=float, default=100)
+    p.add_argument("--stack-bb", type=float, default=100.0)
     p.add_argument("--type", required=True, choices=["rfi", "vs_open", "vs_3bet"])
     p.add_argument("--hero", required=True, help="hero position, e.g. CO")
     p.add_argument("--villain", default=None, help="opener (vs_open) or 3-bettor (vs_3bet)")
@@ -56,7 +56,8 @@ def main(argv: list[str] | None = None) -> int:
         facing["open_size_bb"] = args.open_size
     if args.threebet_size:
         facing["threebet_size_bb"] = args.threebet_size
-    stack = int(args.stack_bb) if args.stack_bb.is_integer() else args.stack_bb
+    stack_bb = float(args.stack_bb)
+    stack = int(stack_bb) if stack_bb.is_integer() else stack_bb
 
     try:
         hands = build_hands(action_ranges)
