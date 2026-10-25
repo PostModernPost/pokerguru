@@ -18,11 +18,10 @@ from typing import Any
 
 from trainer.config import SAMPLE_SOURCE_NAME
 from trainer.game.hand_classes import ALL_HAND_CLASSES, HAND_CLASS_SET
-from trainer.game.positions import POSITIONS, acts_before
+from trainer.game.positions import POSITIONS, SPOT_TYPES, spot_position_error
 
 log = logging.getLogger(__name__)
 
-SPOT_TYPES = ("rfi", "vs_open", "vs_3bet")
 SUPPORTED_GAMES = ("nlhe",)
 FORMATS = ("cash", "tournament")
 DEFAULT_ACTION = "fold"
@@ -103,28 +102,11 @@ def chart_from_dict(data: Any, where: str = "<chart>") -> Chart:
     spot_type = spot.get("type")
     if spot_type not in SPOT_TYPES:
         _fail(where, f"spot.type must be one of {list(SPOT_TYPES)}, got {spot_type!r}")
-    positions = POSITIONS[table_size]
     hero = spot.get("hero_pos")
     villain = spot.get("villain_pos")
-    if hero not in positions:
-        _fail(where, f"spot.hero_pos {hero!r} is not a {table_size}-handed position {list(positions)}")
-    if spot_type == "rfi":
-        if villain is not None:
-            _fail(where, "rfi spots must have villain_pos null")
-        if hero == "BB":
-            _fail(where, "BB can't raise first in (everyone folded means BB wins the blinds)")
-    else:
-        if villain not in positions:
-            _fail(where, f"spot.villain_pos {villain!r} is not a {table_size}-handed position")
-        if villain == hero:
-            _fail(where, "hero and villain can't be the same position")
-        if spot_type == "vs_open" and not acts_before(table_size, villain, hero):
-            _fail(where, f"vs_open: opener {villain} must act before hero {hero}")
-        if spot_type == "vs_3bet":
-            if hero == "BB":
-                _fail(where, "vs_3bet: BB can't be the opener")
-            if not acts_before(table_size, hero, villain):
-                _fail(where, f"vs_3bet: 3-bettor {villain} must act after hero {hero}")
+    problem = spot_position_error(table_size, spot_type, hero, villain)
+    if problem:
+        _fail(where, f"spot: {problem}")
     facing = spot.get("facing")
     if facing is not None:
         if not isinstance(facing, dict):
