@@ -141,3 +141,51 @@ def test_format_and_stack_filters(ctx):
     s = client.post("/api/preflop/next", json={"formats": ["cash"], "stacks": [100]}).json()
     assert s["format"] == "cash" and s["stack_bb"] == 100
     assert client.post("/api/preflop/next", json={"stacks": [37]}).status_code == 404
+
+
+VERIFIED_TIP = {
+    "id": "t-preflop", "text": "A verified sentence of advice for testing the plumbing only.", "status": "verified",
+    "scope": {"drills": ["preflop_chart"], "games": ["nlhe"], "formats": ["cash"], "spot_types": ["rfi"]},
+    "sources": [
+        {"name": "A", "publisher": "Pub A", "url": "https://a.example/x", "quote": "a long enough supporting passage here", "accessed": "2026-10-25"},
+        {"name": "B", "publisher": "Pub B", "url": "https://b.example/y", "quote": "another long enough supporting passage", "accessed": "2026-10-25"},
+    ],
+    "checks": [{"type": "source_fetched", "passed": True, "detail": "ok"}, {"type": "corroborated", "passed": True, "detail": "ok"}],
+}
+CONTESTED_TIP = dict(VERIFIED_TIP, id="t-bad", status="contested",
+                     checks=VERIFIED_TIP["checks"] + [{"type": "math_consistent", "passed": False, "detail": "disagrees"}])
+
+
+def test_tips_shown_only_in_scope_and_only_verified(tmp_path):
+    import json
+    from fastapi.testclient import TestClient
+    tips = tmp_path / "tips.json"
+    tips.write_text(json.dumps({"tips": [VERIFIED_TIP, CONTESTED_TIP]}))
+    with TestClient(create_app(charts_dir=CHARTS_DIR, db_path=tmp_path / "p.sqlite", seed=1, equity_iterations=20,
+                               advice_path=tips)) as client:
+        rfi = client.post("/api/preflop/answer", json={"chart_id": "SAMPLE-nlhe-cash-6max-100bb-rfi-CO",
+                                                       "hero_cards": ["As", "Kd"], "action": "fold"}).json()
+        assert [t["id"] for t in rfi["tips"]] == ["t-preflop"]
+        assert rfi["tips"][0]["source_names"] == ["Pub A", "Pub B"]
+        vs3 = client.post("/api/preflop/answer", json={"chart_id": "SAMPLE-nlhe-cash-6max-100bb-vs_3bet-CO-vs-BTN",
+                                                       "hero_cards": ["As", "Kd"], "action": "fold"}).json()
+        assert vs3["tips"] == []  # out of scope
+        ev = client.get("/api/advice/t-preflop").json()
+        assert ev["evidence"]["sources"][0]["quote"].startswith("a long enough")
+        assert client.get("/api/advice/nope").status_code == 404
+        summary = client.get("/api/advice").json()
+        assert summary["verified"] == 1 and [t["id"] for t in summary["contested"]] == ["t-bad"]
+        # The other drills carry a (possibly empty) tips list too.
+        s = client.post("/api/equity/next", json={"games": ["nlhe"]}).json()
+        body = {k: s[k] for k in ("game", "street", "hero_cards", "board", "pot_bb", "bet_bb")}
+        assert client.post("/api/equity/answer", json=dict(body, bucket="30-40", decision="call")).json()["tips"] == []
+
+
+def test_shipped_advice_shows_nothing_unverified(ctx):
+    """With the real tips file, every tip returned by the API is verified."""
+    client, _ = ctx
+    s = client.get("/api/advice").json()
+    assert isinstance(s["verified"], int) and isinstance(s["unverified"], int)
+    for cid, cards in (("SAMPLE-nlhe-cash-6max-100bb-rfi-CO", ["As", "Kd"]),):
+        r = client.post("/api/preflop/answer", json={"chart_id": cid, "hero_cards": cards, "action": "fold"}).json()
+        assert all(t["status"] == "verified" for t in r["tips"])

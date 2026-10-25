@@ -18,6 +18,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from trainer import config
+from trainer.advice.library import AdviceLibrary
 from trainer.api.equity_routes import make_equity_router
 from trainer.api.plo_routes import make_plo_router
 from trainer.charts.loader import Chart, ChartLibrary
@@ -128,8 +129,12 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
                db_path: str | Path = config.DB_PATH,
                web_dir: str | Path = config.WEB_DIR,
                seed: int | None = None,
-               equity_iterations: int = config.EQUITY_ITERATIONS) -> FastAPI:
+               equity_iterations: int = config.EQUITY_ITERATIONS,
+               advice_path: str | Path | None = None) -> FastAPI:
     library = ChartLibrary.from_directory(charts_dir)
+    advice = AdviceLibrary.load(advice_path) if advice_path else AdviceLibrary.load()
+    log.info("Advice library: %d verified, %d contested, %d unverified", len(advice.verified()),
+             len(advice.contested()), len(advice.tips) - len(advice.verified()) - len(advice.contested()))
     store = AttemptStore(db_path)
     rng = random.Random(seed)
     log.info("Loaded %d charts from %s", len(library), charts_dir)
@@ -259,7 +264,28 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
             "is_sample": chart.is_sample,
             "source": chart.source,
             "summary": store.summary(DRILL_TYPE),
+            "tips": [t.public() for t in advice.matching(
+                drill="preflop_chart", game=spot.game, format=spot.format, position=spot.hero_pos,
+                spot_type=spot.spot_type, street="preflop", hand_category=hand_category(spot.hand_class),
+                stack_bb=spot.stack_bb)],
         }
+
+    @app.get("/api/advice")
+    def advice_summary():
+        """Counts plus the contested items with their evidence (never shown as advice)."""
+        return {
+            "verified": len(advice.verified()),
+            "contested": [dict(t.public(), evidence=t.evidence()) for t in advice.contested()],
+            "unverified": len([t for t in advice.tips if t.status == "unverified"]),
+        }
+
+    @app.get("/api/advice/{tip_id}")
+    def advice_evidence(tip_id: str):
+        try:
+            tip = advice.get(tip_id)
+        except KeyError:
+            raise HTTPException(404, "Unknown tip") from None
+        return dict(tip.public(), evidence=tip.evidence())
 
     @app.get("/api/summary")
     def summary(drill_type: str = Query(DRILL_TYPE)):
@@ -314,8 +340,8 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
             "thresholds": {"min_attempts": 5, "weak_score": 0.7},
         }
 
-    app.include_router(make_equity_router(store, equity_service, rng))
-    app.include_router(make_plo_router(store, nuts_service, rng))
+    app.include_router(make_equity_router(store, equity_service, rng, advice))
+    app.include_router(make_plo_router(store, nuts_service, rng, advice))
 
     app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="web")
     return app

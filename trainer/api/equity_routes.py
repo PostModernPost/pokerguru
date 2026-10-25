@@ -7,6 +7,7 @@ import random
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from trainer.advice.library import AdviceLibrary
 from trainer.drills.equity import (
     DECISION_DRILL,
     ESTIMATE_DRILL,
@@ -51,7 +52,9 @@ def _spot_payload(spot: EquitySpot) -> dict:
     }
 
 
-def make_equity_router(store: AttemptStore, service: EquityService, rng: random.Random) -> APIRouter:
+def make_equity_router(store: AttemptStore, service: EquityService, rng: random.Random,
+                       advice: AdviceLibrary | None = None) -> APIRouter:
+    advice = advice or AdviceLibrary([])
     router = APIRouter(prefix="/api/equity")
 
     @router.get("/options")
@@ -113,6 +116,8 @@ def make_equity_router(store: AttemptStore, service: EquityService, rng: random.
                          "required": g.required, "required_pct": f"{g.required * 100:.1f}%",
                          "explanation": g.decision_explanation},
             "summary": store.summary(DECISION_DRILL),
+            "tips": [t.public() for t in advice.matching(drill="equity", game=spot.game, format="cash",
+                                                          street=spot.street)],
         }
 
     return router

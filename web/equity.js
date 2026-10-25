@@ -137,6 +137,7 @@ function renderResult(s, r) {
     `You picked ${r.bucket.chosen_label}. ` + r.bucket.explanation;
   $("decision-expl").textContent = r.decision.explanation;
 
+  renderTips($("tips"), r.tips);
   $("r-board").replaceChildren(...s.board.map(renderCard));
   $("r-hero").replaceChildren(...s.hero_cards.map(renderCard));
   $("method").textContent =

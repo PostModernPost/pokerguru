@@ -10,7 +10,19 @@ This is a trainer, not a poker game. Playing full hands against bots is out of s
 
 ## Ground rules (read these first)
 
-1. **Never invent poker strategy.** Do not write preflop chart contents, solver outputs, or "correct" strategic answers from your own knowledge. LLM poker strategy is unreliable and would train bad habits. Strategy answers come only from data files Adam supplies or from answers the program computes mathematically.
+1. **Never invent poker strategy, and never ship unverified advice.** Strategy and advice must never come from the AI's own memory: LLM poker strategy is unreliable and would train bad habits. Every piece of advice in the app is one of:
+   - **Computed**: worked out mathematically by the program (equity, pot-limit math, push/fold equilibria, solver output), labelled with the method.
+   - **Sourced and verified**: taken from named outside sources and passed the verification standard below, with the evidence stored next to it.
+   - **Contested / unverified**: anything that failed or hasn't finished verification. Stored, never shown as advice. The app may list it as "sources disagree" with the evidence.
+   Adam does not review advice himself; the verification standard is the gate.
+
+   **Verification standard** (every item must pass all of it before it is shown):
+   1. *The source exists and says it.* Fetch the actual page or document and store the quote or data with the link, author/publisher and the date checked. Nothing from memory.
+   2. *Independent corroboration.* At least two unrelated reputable sources agree (solver-based publishers, established training sites, books with named authors). Forums and unattributed charts don't count. Disagreement means contested, not a coin flip.
+   3. *Consistent with the math.* Where the program can compute the answer, the source must agree with it (push/fold ranges vs the solver, odds claims vs the formula, nut claims vs the Omaha engine, chart sanity checks). A failed check is a failed verification.
+   4. *Explicit scope.* Each item records exactly which spots it applies to (game, format, positions, stack depth, spot types, streets, hand categories) and is only ever shown inside that scope.
+   5. *Reviewable.* Every piece of advice on screen offers "Why trust this?", showing sources, quotes, check date and the checks it passed.
+   Where credible sources differ on a detail (for example open-raise sizes) the app says so and names each, rather than picking silently.
 2. **Every answer key records its source.** Chart files carry a `source` field. Computed answers are labeled `computed` with the method.
 3. **Do not write a hand evaluator or rules engine.** Use PokerKit for game rules, hand evaluation, and equity. Read its current docs and verify the API before using it rather than assuming function names.
 4. **Correctness is tested.** Anything that grades the user (pot-limit math, equity, chart lookup, grading thresholds) needs unit tests with known values before the UI depends on it.

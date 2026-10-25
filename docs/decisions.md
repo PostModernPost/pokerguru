@@ -68,6 +68,17 @@ the program computes itself.
 | Scope of weighting | Preflop drill only; the other drills are random but all of them report to Stats. | Their spots have no chart/hand to key on; weighting by street or game is a small follow-up. |
 | Database | Schema version 2 adds a `reviews` table; an old database upgrades itself. | `trainer/progress/store.py` |
 
+## Phase 6 (advice library and verification)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| Rule change | Ground rule 1 now allows sourced advice that passes a written verification standard; Adam asked not to review tips himself, so the standard is the gate. | `CLAUDE.md` |
+| What "verified" requires | Pages fetched and the exact quote found; two unrelated publishers; any applicable math check passes; explicit scope; evidence viewable in the app. | Enforced by the loader (`trainer/advice/library.py`) and set by `scripts/verify_tips.py`. |
+| Failure handling | A quote not found on its page or a failed math check marks the tip **contested**; a page that can't be fetched leaves it **unverified**. Neither is ever shown as advice. | `scripts/verify_tips.py` |
+| Math checks | Six cross-checks against the program's own calculations (pot odds, rule of 2 and 4, pot-limit formula, shorter stacks shove wider, antes widen ranges, suited beats offsuit). | `trainer/advice/math_checks.py` |
+| Up to 3 tips per result | Narrowest scope first. | `AdviceLibrary.matching(limit=3)` |
+| First batch | Nine tips drafted with candidate sources from web searches on 2026-10-25, all `unverified` because the build environment's network policy blocked fetching the source pages. The math checks all pass. | Run `verify_tips.py` once network access allows it. |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

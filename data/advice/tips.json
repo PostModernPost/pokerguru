@@ -1,0 +1,422 @@
+{
+  "note": "Advice library. Only tips with status 'verified' are shown in the app. Statuses are set by scripts/verify_tips.py, which fetches each source and confirms the quote; quotes are recorded only from fetched pages, never from memory. See CLAUDE.md ground rule 1.",
+  "tips": [
+    {
+      "id": "pot-odds-formula",
+      "text": "To decide a call, compare your equity with the price: you need at least call ÷ (pot + bet + call). A half-pot bet needs 25%, a pot-sized bet 33%.",
+      "status": "unverified",
+      "math_check": "pot_odds_formula",
+      "scope": {
+        "drills": [
+          "equity"
+        ],
+        "streets": [
+          "flop",
+          "turn"
+        ]
+      },
+      "sources": [
+        {
+          "name": "Pot odds",
+          "publisher": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Pot_odds",
+          "quote": ""
+        },
+        {
+          "name": "How to calculate pot odds",
+          "publisher": "PokerNews",
+          "url": "https://www.pokernews.com/strategy/how-to-calculate-pot-odds-42847.htm",
+          "quote": ""
+        }
+      ],
+      "checks": [
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://en.wikipedia.org/wiki/Pot_odds: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokernews.com/strategy/how-to-calculate-pot-odds-42847.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "call / (pot + bet + call) gives 25% for a half-pot bet, 33.3% for a pot bet, 40% for 2x pot"
+        }
+      ],
+      "notes": "Candidate sources from a web search on 2026-10-25; pages not yet fetched (network blocked in the build environment)."
+    },
+    {
+      "id": "rule-of-2-and-4",
+      "text": "Quick estimate for your draw: multiply your outs by 4 with two cards to come, by 2 with one card to come. It's within a point or two up to about nine outs and overstates big draws.",
+      "status": "unverified",
+      "math_check": "rule_of_2_and_4",
+      "scope": {
+        "drills": [
+          "equity"
+        ],
+        "games": [
+          "nlhe"
+        ],
+        "streets": [
+          "flop",
+          "turn"
+        ]
+      },
+      "sources": [
+        {
+          "name": "Pot odds (rule of four and two)",
+          "publisher": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Pot_odds",
+          "quote": ""
+        },
+        {
+          "name": "Rule of 2 and 4 explained",
+          "publisher": "PokerSkill",
+          "url": "https://www.pokerskill.com/blog/rule-of-2-and-4-explained/",
+          "quote": ""
+        }
+      ],
+      "checks": [
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://en.wikipedia.org/wiki/Pot_odds: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokerskill.com/blog/rule-of-2-and-4-explained/: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "9 outs: exact hit chance 35.0% by the river vs rule 36%; 19.6% on one card vs rule 18%. (Equity vs a random hand is higher: 72% / 35%, since the draw can also win unimproved.)"
+        }
+      ],
+      "notes": "Candidate sources from a web search on 2026-10-25; pages not yet fetched."
+    },
+    {
+      "id": "plo-non-nut-flush-draws",
+      "text": "In Omaha, drawing to a flush that isn't the nut flush is a classic beginner leak: against several opponents a bigger flush is often out there, so many of your 'outs' lose.",
+      "status": "unverified",
+      "scope": {
+        "drills": [
+          "nuts"
+        ],
+        "games": [
+          "plo"
+        ],
+        "streets": [
+          "flop",
+          "turn"
+        ]
+      },
+      "sources": [
+        {
+          "name": "Eight common mistakes beginners make in Pot-Limit Omaha",
+          "publisher": "PokerNews",
+          "url": "https://www.pokernews.com/strategy/eight-common-mistakes-beginners-make-in-pot-limit-omaha-32220.htm",
+          "quote": ""
+        },
+        {
+          "name": "Introduction to Omaha: the temporary nuts",
+          "publisher": "PokerNews",
+          "url": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm",
+          "quote": ""
+        },
+        {
+          "name": "Folding the nuts in PLO",
+          "publisher": "CardPlayer",
+          "url": "https://www.cardplayer.com/?p=1039337",
+          "quote": ""
+        }
+      ],
+      "checks": [
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokernews.com/strategy/eight-common-mistakes-beginners-make-in-pot-limit-omaha-32220.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.cardplayer.com/?p=1039337: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        }
+      ],
+      "notes": "Needs a second independent publisher confirmed (two PokerNews pages count once). Candidate sources from a web search on 2026-10-25."
+    },
+    {
+      "id": "plo-temporary-nuts",
+      "text": "In Omaha the nuts on the flop is often only the temporary nuts: with two cards to come, a hand with no redraw can be overtaken. Having the nuts plus a draw to a better nuts is much stronger than the bare nuts.",
+      "status": "unverified",
+      "scope": {
+        "drills": [
+          "nuts"
+        ],
+        "games": [
+          "plo"
+        ],
+        "streets": [
+          "flop",
+          "turn"
+        ]
+      },
+      "sources": [
+        {
+          "name": "Introduction to Omaha: the temporary nuts",
+          "publisher": "PokerNews",
+          "url": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm",
+          "quote": ""
+        },
+        {
+          "name": "Folding the nuts in PLO",
+          "publisher": "CardPlayer",
+          "url": "https://www.cardplayer.com/?p=1039337",
+          "quote": ""
+        }
+      ],
+      "checks": [
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.cardplayer.com/?p=1039337: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        }
+      ],
+      "notes": "Candidate sources from a web search on 2026-10-25; pages not yet fetched."
+    },
+    {
+      "id": "position-tighter-early",
+      "text": "Open fewer hands from early position and more from late position: with many players still to act behind you, you'll be raised more often and play most hands out of position after the flop.",
+      "status": "unverified",
+      "scope": {
+        "drills": [
+          "preflop_chart"
+        ],
+        "games": [
+          "nlhe"
+        ],
+        "formats": [
+          "cash"
+        ],
+        "spot_types": [
+          "rfi"
+        ]
+      },
+      "sources": [
+        {
+          "name": "Too tight?",
+          "publisher": "CardPlayer",
+          "url": "https://www.cardplayer.com/?p=1034063",
+          "quote": ""
+        },
+        {
+          "name": "Early position (glossary)",
+          "publisher": "DeucesCracked",
+          "url": "https://www.deucescracked.com/learn/poker-glossary/early-position",
+          "quote": ""
+        }
+      ],
+      "checks": [
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.cardplayer.com/?p=1034063: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.deucescracked.com/learn/poker-glossary/early-position: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        }
+      ],
+      "notes": "Also checkable against any imported real chart (phase 7): earlier positions must open fewer hands. Candidate sources from a web search on 2026-10-25."
+    },
+    {
+      "id": "pushfold-shorter-wider",
+      "text": "The shorter your stack, the more hands you should be willing to shove: with few blinds left, the blinds you pick up are worth more relative to what you risk.",
+      "status": "unverified",
+      "math_check": "shorter_stacks_shove_wider",
+      "scope": {
+        "drills": [
+          "preflop_chart"
+        ],
+        "formats": [
+          "tournament"
+        ],
+        "spot_types": [
+          "push"
+        ],
+        "stack_bb_max": 15
+      },
+      "sources": [
+        {
+          "name": "Push/fold (glossary)",
+          "publisher": "PokerSkill",
+          "url": "https://www.pokerskill.com/poker-glossary/push-fold/",
+          "quote": ""
+        },
+        {
+          "name": "Nash push/fold (glossary)",
+          "publisher": "PokerSkill",
+          "url": "https://www.pokerskill.com/poker-glossary/nash-push-fold/",
+          "quote": ""
+        }
+      ],
+      "checks": [
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokerskill.com/poker-glossary/push-fold/: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokerskill.com/poker-glossary/nash-push-fold/: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+        },
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "heads-up solver: 130 shoving classes at 5bb vs 91 at 15bb"
+        }
+      ],
+      "notes": "Needs a second independent publisher. The program's own solver confirms the direction (math check)."
+    },
+    {
+      "id": "antes-widen-ranges",
+      "text": "With antes in play there's more dead money in the pot before anyone acts, so both shoving and calling ranges get wider than without antes.",
+      "status": "unverified",
+      "math_check": "antes_widen_ranges",
+      "scope": {
+        "drills": [
+          "preflop_chart"
+        ],
+        "formats": [
+          "tournament"
+        ],
+        "spot_types": [
+          "push",
+          "vs_push"
+        ],
+        "stack_bb_max": 15
+      },
+      "sources": [],
+      "checks": [
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "heads-up 10bb: push 113 -> 119 classes, call 69 -> 77 with antes"
+        }
+      ],
+      "notes": "The program's solver confirms this; two outside sources still needed. The 2026-10-25 search found none that state it directly."
+    },
+    {
+      "id": "pot-limit-after-call",
+      "text": "Pot-limit sizing: first count the pot as if you had called, then raise by that amount on top. Max raise to = largest bet + (pot including all bets + your call).",
+      "status": "unverified",
+      "math_check": "pot_limit_formula",
+      "scope": {
+        "drills": [
+          "pot_limit"
+        ],
+        "games": [
+          "plo"
+        ]
+      },
+      "sources": [],
+      "checks": [
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "blinds 1/2 first in -> 7 (expect 7); pot 100 bet 100 -> 400 (expect 400)"
+        }
+      ],
+      "notes": "This is a rule of the game, confirmed by the program's math; two rules sources (e.g. a card-room rulebook and a poker site's rules page) still to be fetched and quoted."
+    },
+    {
+      "id": "suited-vs-offsuit",
+      "text": "Suited versions of a hand are worth a few percentage points more equity than the offsuit version, because of the extra flush chances; charts open suited hands from more positions than the same hand offsuit.",
+      "status": "unverified",
+      "math_check": "suited_beats_offsuit",
+      "scope": {
+        "drills": [
+          "preflop_chart"
+        ],
+        "games": [
+          "nlhe"
+        ],
+        "hand_categories": [
+          "suited ace",
+          "suited broadway",
+          "suited connector",
+          "suited other"
+        ]
+      },
+      "sources": [],
+      "checks": [
+        {
+          "type": "corroborated",
+          "passed": false,
+          "detail": "0 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "equity table: suited beats the same hand offsuit vs 22 by 2.6%, 2.3%, 4.5%"
+        }
+      ],
+      "notes": "The equity table confirms the equity part; the 'charts open suited hands from more positions' part needs real charts (phase 7) and two sources."
+    }
+  ]
+}

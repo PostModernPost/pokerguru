@@ -7,6 +7,7 @@ import random
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from trainer.advice.library import AdviceLibrary
 from trainer.drills.plo import (
     HAS_NUTS_DRILL,
     NUT_DRAW_DRILL,
@@ -73,7 +74,9 @@ def _rebuild_pot_limit_spot(d: dict):
         raise HTTPException(400, f"Bad spot: {e}") from None
 
 
-def make_plo_router(store: AttemptStore, nuts: NutsService, rng: random.Random) -> APIRouter:
+def make_plo_router(store: AttemptStore, nuts: NutsService, rng: random.Random,
+                    advice: AdviceLibrary | None = None) -> APIRouter:
+    advice = advice or AdviceLibrary([])
     router = APIRouter(prefix="/api/plo")
 
     # ---- nut awareness ----
@@ -139,6 +142,7 @@ def make_plo_router(store: AttemptStore, nuts: NutsService, rng: random.Random) 
             "blocked_hand": None if a.info.blocked_hand is None else a.info.blocked_hand.description,
             "explanation": g.explanation,
             "summary": store.summary(NUT_HAND_DRILL),
+            "tips": [t.public() for t in advice.matching(drill="nuts", game="plo", street=spot.street)],
         }
 
     # ---- pot-limit sizing ----
@@ -174,6 +178,8 @@ def make_plo_router(store: AttemptStore, nuts: NutsService, rng: random.Random) 
             "pot": spot.pot, "largest_bet": spot.largest_bet, "hero_in": spot.hero_in, "to_call": spot.to_call,
             "explanation": g.explanation,
             "summary": store.summary(POT_LIMIT_DRILL),
+            "tips": [t.public() for t in advice.matching(drill="pot_limit", game="plo",
+                                                          street="preflop" if spot.stage == "preflop" else "flop")],
         }
 
     return router

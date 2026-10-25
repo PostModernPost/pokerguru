@@ -274,6 +274,7 @@ function renderResult(spot, r) {
     }
   }
 
+  renderTips($("tips"), r.tips);
   const src = $("source"); src.replaceChildren();
   const name = r.source.name || "unknown";
   src.append("Chart source: ", el("span", { class: r.is_sample ? "fake" : "" }, name));

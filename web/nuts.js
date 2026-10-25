@@ -124,6 +124,7 @@ function renderResult(s, r) {
     g.append(gradeRow("3. Your draw", r.draw.grade, r.draw.chosen_label, r.draw.correct_label));
   }
   $("explanation").textContent = r.explanation;
+  renderTips($("tips"), r.tips);
   $("r-board").replaceChildren(...s.board.map(renderCard));
   $("r-hero").replaceChildren(...s.hero_cards.map(renderCard));
 }

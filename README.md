@@ -197,6 +197,20 @@ more often, and a spot you got wrong comes back after 5 more hands, then at doub
 until you've nailed it. **Drill my leaks** (in the Preflop filters) serves nothing but weak areas
 and due reviews.
 
+## Advice and how it's verified (phase 6)
+
+Result screens can show short tips for the spot you just played. A tip is shown **only** when it
+passed the verification standard in `CLAUDE.md`: its sources were actually fetched and the quoted
+passage found on the page, at least two unrelated publishers agree, and any math the program can
+check agrees too. Every tip has a **Why trust this?** button showing the sources, quotes, check
+dates and checks.
+
+- Tips live in `data/advice/tips.json` with a status: `verified` (shown), `contested` (sources or
+  math disagree; never shown), `unverified` (not checked yet; never shown).
+- `python scripts/verify_tips.py` does the checking: it downloads each source, looks for the
+  recorded quote, runs the named math check, and sets the status. It never invents a quote.
+- `/api/advice` lists what's verified and what's contested, with evidence.
+
 ## Preflop grading
 
 Charts can mix actions (e.g. raise 60%, fold 40%). Your answer is graded by how often the

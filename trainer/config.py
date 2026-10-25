@@ -10,6 +10,8 @@ CHARTS_DIR = PROJECT_ROOT / "data" / "charts"
 WEB_DIR = PROJECT_ROOT / "web"
 # Drill history. Override with the TRAINER_DB environment variable.
 DB_PATH = Path(os.environ.get("TRAINER_DB", PROJECT_ROOT / "data" / "progress.sqlite"))
+# Sourced advice (tips with evidence). Override with TRAINER_ADVICE.
+ADVICE_PATH = Path(os.environ.get("TRAINER_ADVICE", PROJECT_ROOT / "data" / "advice" / "tips.json"))
 
 # Grading of mixed strategies, by how often the chart takes the chosen action:
 #   frequency >= correct           -> "correct"

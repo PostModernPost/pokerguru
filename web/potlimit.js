@@ -110,6 +110,7 @@ function renderResult(r) {
   $("pl-answer").replaceChildren(
     "Your answer: ", el("b", {}, num(r.answer)), " · Correct: ", el("b", {}, num(r.correct)));
   $("explanation").textContent = r.explanation;
+  renderTips($("tips"), r.tips);
 }
 
 document.addEventListener("keydown", (e) => {
