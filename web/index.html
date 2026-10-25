@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Poker Trainer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Preflop Trainer</h1>
+    <div class="score" id="score" title="Correct answers / hands played (all time)">–</div>
+    <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
+  </header>
+
+  <div class="sample-warning" id="sample-warning" hidden>
+    ⚠ SAMPLE CHART — NOT REAL STRATEGY. Random test data. Don't learn from these answers.
+  </div>
+
+  <main>
+    <!-- Filters -->
+    <section id="filters-screen" class="screen" hidden>
+      <h2>What to drill</h2>
+      <p class="hint">Tap to select. Nothing selected in a group means all of it.</p>
+      <div class="filter-group">
+        <h3>Table size</h3>
+        <div class="chips" id="f-table"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Your position</h3>
+        <div class="chips" id="f-pos"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Spot type</h3>
+        <div class="chips" id="f-spot"></div>
+      </div>
+      <p class="error" id="filters-error" hidden></p>
+      <button class="big-btn primary" id="start-btn">Start drilling</button>
+    </section>
+
+    <!-- Drill -->
+    <section id="drill-screen" class="screen" hidden>
+      <div class="spot-tags" id="spot-tags"></div>
+      <div class="seats" id="seats"></div>
+      <ol class="history" id="history"></ol>
+      <div class="pot-line" id="pot-line"></div>
+      <div class="hero-row">
+        <div class="hero-label" id="hero-label"></div>
+        <div class="cards" id="hero-cards"></div>
+      </div>
+      <div class="actions" id="actions"></div>
+    </section>
+
+    <!-- Result -->
+    <section id="result-screen" class="screen" hidden>
+      <div class="grade-banner" id="grade-banner"></div>
+      <div class="result-hand">
+        <div class="cards small" id="result-cards"></div>
+        <div>
+          <div class="result-spot" id="result-spot"></div>
+          <div class="you-chose" id="you-chose"></div>
+        </div>
+      </div>
+      <div class="freqs" id="freqs"></div>
+      <p class="explanation" id="explanation"></p>
+      <button class="big-btn primary" id="next-btn">Next hand</button>
+      <h3 class="range-title">Full range for this spot</h3>
+      <div class="legend" id="legend"></div>
+      <div class="range-grid" id="range-grid"></div>
+      <p class="source" id="source"></p>
+    </section>
+
+    <section id="message-screen" class="screen" hidden>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
