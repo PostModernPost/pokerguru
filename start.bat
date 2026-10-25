@@ -36,8 +36,8 @@ echo.
 echo Starting Poker Trainer. Keep this window open while you drill.
 echo The phone address is printed below. Close this window to stop.
 echo.
-REM Open the browser only once the server actually answers (first start can take a while).
-start "" /b powershell -NoProfile -ExecutionPolicy Bypass -Command "for($i=0;$i -lt 120;$i++){ try { Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 http://localhost:8000/api/summary | Out-Null; Start-Process http://localhost:8000; break } catch { Start-Sleep -Seconds 1 } }"
+REM The app opens the browser itself once the server is ready. If a Poker Trainer is
+REM already running (an earlier window), it just opens that one instead of failing.
 ".venv\Scripts\python.exe" -m trainer
 echo.
 echo The server stopped. If there is an error above, send a screenshot of this window.

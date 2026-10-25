@@ -68,6 +68,10 @@ Double-click **`start.bat`** in the project folder. Every time, it:
 
 You still need Python installed once (step 1 below).
 
+If you double-click `start.bat` while a Poker Trainer window is already running, the new window
+just opens the existing app in your browser and tells you which window to close to stop it. If
+another program is using port 8000, the app moves to the next free port and prints the address.
+
 **Updates and private repositories.** If the repository is public, updates need no login. If it's
 private, GitHub will refuse the download until you give the launcher a token, once:
 GitHub → your profile picture → Settings → Developer settings → Personal access tokens →
