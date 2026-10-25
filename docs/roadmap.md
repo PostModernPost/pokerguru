@@ -23,6 +23,25 @@ marked "computed" the program can work out from the rules and the math.
 | 17 | **Deployment and sync** | Run it on a small server so it works away from home Wi-Fi, with progress synced across phone and computer. | Convenience, not learning. | None needed (hosting choice from Adam). |
 | 18 | **Play full hands against bots** | Explicitly out of scope in the brief. Listed only so it isn't forgotten. | Fun, but a trainer teaches more per minute than a game. | Needs real bot strategy. |
 
+## Plan for remote access (not built yet)
+
+Adam wants the app on his phone away from home eventually; for now it runs on the desktop and
+over home Wi-Fi. Vercel is fine for the app itself but keeps no files between runs, so the
+progress database must live in a database service: Supabase (Postgres), which Adam already has.
+
+Design rules kept now so this stays a short job later:
+1. All state lives in the progress store (`trainer/progress/store.py`); nothing else is written
+   at runtime. Precomputed tables and charts are repo files, read-only.
+2. Every answer is recomputed on the server from the spot, so requests are independent.
+
+Work when the time comes (about half a day):
+- A Postgres implementation of `AttemptStore` behind the same methods (SQLite stays the local default).
+- A `PASSCODE` setting checked on every request, since the app would be public.
+- A Vercel configuration for the FastAPI app; background equity/nuts work becomes on-request
+  (a second or two) since serverless functions don't keep threads alive.
+- Alternative if Vercel's limits bite (numpy size, cold starts): Fly.io or Render with a small
+  persistent disk, which needs no database change at all.
+
 ## Done since the brief
 
 - **Phase 6, advice library**, **Phase 7, real 6-max preflop charts**, and **Phase 8, basics drill**
