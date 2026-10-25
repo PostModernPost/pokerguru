@@ -45,6 +45,29 @@ the program computes itself.
 | Tampering guard | The pot-limit answer is never sent to the phone with the question; the server rebuilds the spot from the action history when grading | `trainer/api/plo_routes.py` |
 | Score shown on the Nuts tab | Accuracy on question 1 (naming the nuts); all three questions are stored separately | Phase 5 will show them all. |
 
+## Phase 4 (tournament push/fold)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| Players | **Heads-up only** (SB shoves or folds, BB calls or folds). | The brief says start heads-up and extend afterward. Extending properly needs multi-way all-in equities and callers behind callers; the common shortcuts give wrong ranges, and wrong charts train bad habits. Left for a later phase, honestly labelled. |
+| Stacks and antes | 3-15bb in 1bb steps; ante 0 and 0.125bb per player (close to a 12.5% ante). | `PUSHFOLD_STACKS_BB`, `PUSHFOLD_ANTES_BB` in `trainer/config.py`, then `python scripts/build_pushfold_charts.py`. |
+| Equity table | 169x169, seeded Monte Carlo, 40,000 boards per matchup (about +/-0.25%), PokerKit ranks every showdown. Committed. | Exact enumeration would take days in Python; this takes 10 minutes. `scripts/build_equity_table.py --samples N` rebuilds it. |
+| numpy | Added as a dependency. | The brief says ask first; you asked me to decide. Without it the table would take many hours. |
+| Solver | Fictitious play, 600 iterations, chip EV, card removal between the two hands. Exploitability (how much a perfect opponent could gain) is written into each chart's notes; it is a few thousandths of a big blind per hand. | `PUSHFOLD_ITERATIONS` in config. |
+| Mixed hands | Frequencies between 0 and 1 are kept as-is, so the usual mixed-strategy grading applies (an "acceptable" answer near the edge). | These hands are genuinely close to indifferent. |
+| Where they appear | As real (non-sample) charts in the Preflop drill under Format: Tournament, table size Heads-up, spot types "Push or fold" and "Facing a shove". | Chart files in `data/charts/pushfold/`. |
+
+## Phase 5 (leak tracking)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| What counts as a leak | Score under 70% with at least 5 answers; an "acceptable" answer counts half a point. | `WEAK_SCORE`, `MIN_ATTEMPTS` in `trainer/drills/preflop.py` (shown on the Stats page). |
+| Hand categories | pair, suited ace, offsuit ace, suited broadway, offsuit broadway, suited connector (one apart), suited other, offsuit other. | `hand_category` in `trainer/game/hand_classes.py`. |
+| Weighting | Chart weight = 1 + 4 x (how far below 100% you score in its position and spot type); the same for hand categories half the time. Unknown areas count as mildly weak so they get explored. | `WEIGHT_GAIN`, `CATEGORY_CHANCE` in `trainer/drills/preflop.py`. |
+| Spaced repetition | Counted in hands, not days (you drill in bursts). A miss returns after 5 hands, an "acceptable" after 12; each correct answer doubles the gap (minimum 25); past 200 the spot graduates. Due reviews are served about a third of the time. | `REVIEW_*` in `trainer/progress/store.py`, `REVIEW_CHANCE` in the drill. |
+| Scope of weighting | Preflop drill only; the other drills are random but all of them report to Stats. | Their spots have no chart/hand to key on; weighting by street or game is a small follow-up. |
+| Database | Schema version 2 adds a `reviews` table; an old database upgrades itself. | `trainer/progress/store.py` |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

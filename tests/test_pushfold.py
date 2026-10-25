@@ -39,8 +39,15 @@ def test_push_ev_when_bb_always_folds_is_the_blinds():
 
 def test_call_ev_vs_shove_with_everything_is_showdown_equity():
     ev = bb_call_ev(np.ones(169), stack_bb=10, ante_bb=0)
-    assert ev[IDX["AA"]] > 6  # AA vs a random hand is about 85%: (2*0.85-1)*10 = 7
+    assert ev.dtype == np.float64  # an integer array here once truncated every EV
+    assert ev[IDX["AA"]] == pytest.approx(7.0, abs=0.3)  # AA vs a random hand is about 85%: (2*0.85-1)*10
+    assert 6 < ev[IDX["AA"]] and ev[IDX["AA"]] != int(ev[IDX["AA"]])
     assert ev[IDX["72o"]] < -2
+    # Hands that never face a shove get the fold EV.
+    never = np.zeros(169); never[IDX["AA"]] = 1.0
+    ev = bb_call_ev(never, stack_bb=10, ante_bb=0)
+    assert ev[IDX["AA"]] == pytest.approx(0.0, abs=0.2)  # AA vs AA is a chop
+    assert ev[IDX["KK"]] < -6  # KK vs a shove that is always AA: about 18% equity
 
 
 def test_solution_has_sensible_shape():
@@ -55,6 +62,13 @@ def test_solution_has_sensible_shape():
     assert sum(push.values()) > sum(call.values()) + 20
     assert 0 <= sol.exploitability_bb < 0.02
     assert all(0 <= f <= 1 for f in push.values()) and all(0 <= f <= 1 for f in call.values())
+    # Only genuinely indifferent hands stay mixed, and there are few of them.
+    mixed_push = [h for h, f in push.items() if 0 < f < 1]
+    mixed_call = [h for h, f in call.items() if 0 < f < 1]
+    assert len(mixed_push) <= 6 and len(mixed_call) <= 6
+    margins = sb_push_ev(sol.call, 10, 0) + 0.5
+    for h in mixed_push:
+        assert abs(margins[IDX[h]]) <= 0.005
 
 
 def test_shorter_stacks_shove_more():
@@ -71,8 +85,11 @@ def test_antes_widen_both_ranges():
 
 
 def test_very_short_stack_shoves_any_two():
-    sol = solve(2, 0, iterations=200)
+    # With 1.3bb, even 32o (about 32% vs a random call) shoves: 1.3 * (2*0.32 - 1) = -0.47 beats folding -0.5.
+    sol = solve(1.3, 0, iterations=200)
     assert sol.push.min() > 0.95
+    # At 2bb the same hand should fold: 2 * (2*0.35 - 1) = -0.6 is worse than -0.5.
+    assert solve(2, 0, iterations=200).push_dict()["72o"] == 0.0
 
 
 def test_bad_stack():

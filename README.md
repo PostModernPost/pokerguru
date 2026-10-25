@@ -4,20 +4,23 @@ A drill-based trainer for No-Limit Hold'em and Pot-Limit Omaha. It shows you a s
 answer, and it grades you right away, either against a chart file or against math the
 program computes itself.
 
-**Current status: Phases 1, 2 and 3 are done.** There are four drills, switched with the tabs at
-the top of the screen:
+**Current status: Phases 1 to 5 are done.** There are four drills plus a Stats page, switched
+with the tabs at the top of the screen:
 
-- **Preflop:** NLHE cash, 6-max and 9-handed, 100bb, graded against chart files.
+- **Preflop:** NLHE. Cash spots (6-max and 9-handed, 100bb) graded against chart files, and
+  tournament push/fold spots (heads-up, 3-15bb) graded against charts the program computed itself.
 - **Equity:** NLHE and PLO, flop or turn. Estimate your equity, then call or fold. Graded by
   computed equity and pot odds.
 - **Nuts:** PLO. What's the best possible hand on this board, do you have it, and are you drawing
   to it? Graded by checking every possible opponent holding.
 - **Pot limit:** given the blinds and the action so far, what's the most you can raise to?
+- **Stats:** accuracy by drill, position, spot type and hand category, your leaks, and what's due
+  for review.
 
-Only the Preflop drill needs charts. The other three are pure math, so their answers are real,
-not samples.
+Only the cash preflop spots need outside charts. Everything else is computed, so those answers are
+real, not samples.
 
-For the preflop drill, the only charts included are
+For the cash preflop spots, the only charts included are
 **SAMPLE charts with random made-up frequencies**. They exist to test the app. They are
 **not real strategy** and the app shows a red warning whenever one is in use. Add your own
 charts (see "Adding real charts" below) before you drill for real.
@@ -28,6 +31,7 @@ charts (see "Adding real charts" below) before you drill for real.
 |---|---|---|
 | Python | 3.11 or newer | the language |
 | [PokerKit](https://github.com/uoftcprg/pokerkit) | **0.7.7** | cards, dealing, hand evaluation, equity |
+| numpy | 2.5 | fast bulk hand ranking for the equity table and solver |
 | FastAPI + uvicorn | 0.162 / 0.54 | the web server |
 | SQLite | built into Python | stores every drill attempt |
 | pytest | 9.1 | tests |
@@ -102,16 +106,19 @@ trainer/
   charts/      chart file format: loader + range-string importer
   scenarios/   builds spots: preflop, postflop (board, pot, bet), PLO nuts and pot-limit
   graders/     grades your answer (against a chart, or by computed equity)
-  drills/      picks the next spot for a drill
+  drills/      picks the next spot for a drill (weighted toward your leaks)
+  solvers/     the push/fold equilibrium solver
   progress/    SQLite storage of every attempt
   api/         web routes (FastAPI)
   config.py    tunable settings (grading thresholds live here)
 data/
   charts/nlhe/          NLHE charts (one JSON file per spot)
   charts/nlhe/sample/   the fake SAMPLE charts (delete this folder once you have real ones)
+  charts/pushfold/      computed heads-up push/fold charts (real, not samples)
+  equity_cache/         the 169x169 all-in equity table (committed) and a 5-card rank cache
   progress.sqlite       your drill history (created automatically, not in git)
 web/           the drill screens: index.html (preflop), equity.html, nuts.html, potlimit.html,
-               shared common.js / style.css
+               stats.html, shared common.js / style.css
 scripts/       helper scripts (sample chart generator, range importer)
 docs/          notes: phase summaries and decisions.md (every judgment call made for you)
 tests/         automated tests
@@ -163,6 +170,32 @@ max_raise_to   = largest_bet_this_round + (pot_including_all_bets + amount_to_ca
 
 Example: blinds 1/2, you're first to act: pot 3, call 2, so raise to 2 + (3 + 2) = 7.
 Blinds, pot sizes and bet sizes used by the drill are in `trainer/config.py`.
+
+## Tournament push/fold (phase 4)
+
+Short-stack heads-up spots: the small blind (the button) shoves or folds, the big blind calls or
+folds. The charts in `data/charts/pushfold/` were **computed by the program**, not copied from
+anywhere: a Nash equilibrium by chip EV (no ICM) for equal stacks of 3 to 15 big blinds, with and
+without antes. Hand-vs-hand equities come from `data/equity_cache/preflop_equity_169.json`, a
+169 x 169 table built by `scripts/build_equity_table.py` (seeded Monte Carlo, 40,000 boards per
+matchup, every showdown ranked by PokerKit). Both are committed, so you never need to rebuild
+them; `scripts/build_pushfold_charts.py` re-solves the charts in under a minute if you change
+the settings in `trainer/config.py`.
+
+In the Preflop filters pick **Format: Tournament** to drill them. Mixed frequencies in these charts
+mean the hand is close to indifferent, so either action is graded acceptable. Push/fold at more
+than two players is not solved yet (see `docs/decisions.md`).
+
+## Leak tracking (phase 5)
+
+Every answer is stored, and the **Stats** tab breaks accuracy down by drill, position, spot type,
+hand category (pairs, suited aces, ...) and format. A category is a *leak* once you've answered it
+at least 5 times with a score under 70% (an "acceptable" answer counts half).
+
+The Preflop drill uses this automatically: weak positions, spot types and hand categories come up
+more often, and a spot you got wrong comes back after 5 more hands, then at doubling intervals
+until you've nailed it. **Drill my leaks** (in the Preflop filters) serves nothing but weak areas
+and due reviews.
 
 ## Preflop grading
 

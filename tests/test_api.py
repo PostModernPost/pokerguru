@@ -25,9 +25,9 @@ def test_home_page_served(ctx):
 def test_options(ctx):
     client, _ = ctx
     o = client.get("/api/options").json()
-    assert o["table_sizes"] == [6, 9]
+    assert o["table_sizes"] == [2, 6, 9]  # heads-up comes from the push/fold charts
     assert "UTG1" in o["positions"]["9"] and "UTG1" not in o["positions"]["6"]
-    assert {s["id"] for s in o["spot_types"]} == {"rfi", "vs_open", "vs_3bet"}
+    assert {s["id"] for s in o["spot_types"]} == {"rfi", "vs_open", "vs_3bet", "push", "vs_push"}
     assert o["sample_in_use"] is True
     assert o["thresholds"] == {"correct": 0.5, "acceptable": 0.15}
 

@@ -91,28 +91,50 @@ def bb_call_ev(push: np.ndarray, stack_bb: float, ante_bb: float) -> np.ndarray:
     # BB holds j, SB holds i: BB's showdown EV is -showdown[i, j]; weight by push[i] and removal.
     weight = w.T * push[None, :]  # (j, i)
     denom = weight.sum(axis=1)
-    ev = np.full(N, -(1 + ante_bb))
+    ev = np.full(N, -(1.0 + ante_bb), dtype=np.float64)
     ok = denom > 0
     ev[ok] = (weight[ok] * (-showdown.T)[ok]).sum(axis=1) / denom[ok]
     return ev
+
+
+# Hands whose push (or call) EV is within this many bb of folding are treated
+# as indifferent and keep their mixed frequency; everything else is snapped to
+# the pure action, since the averaging of fictitious play leaves small residues.
+INDIFFERENCE_BB = 0.005
 
 
 def solve(stack_bb: float, ante_bb: float = 0.0, iterations: int = 400) -> PushFoldSolution:
     if stack_bb <= 1:
         raise ValueError("stack must be more than one big blind")
     sb_fold_ev = -(0.5 + ante_bb)
-    bb_fold_ev = -(1 + ante_bb)
-    push_avg = np.ones(N)  # start: SB shoves everything
-    call_avg = np.ones(N)  # start: BB calls everything
-    push_sum = push_avg.copy()
-    call_sum = call_avg.copy()
-    for t in range(2, iterations + 2):
+    bb_fold_ev = -(1.0 + ante_bb)
+    push_avg = np.ones(N)  # opening guess: SB shoves everything
+    call_avg = np.ones(N)  # opening guess: BB calls everything
+    push_sum = np.zeros(N)
+    call_sum = np.zeros(N)
+    burn_in = iterations // 2  # early rounds are far from equilibrium; only average the rest
+    counted = 0
+    for t in range(1, iterations + 1):
         best_push = (sb_push_ev(call_avg, stack_bb, ante_bb) > sb_fold_ev).astype(float)
         best_call = (bb_call_ev(push_avg, stack_bb, ante_bb) > bb_fold_ev).astype(float)
-        push_sum += best_push
-        call_sum += best_call
-        push_avg = push_sum / t
-        call_avg = call_sum / t
+        if t > burn_in:
+            push_sum += best_push
+            call_sum += best_call
+            counted += 1
+            push_avg = push_sum / counted
+            call_avg = call_sum / counted
+        else:
+            # Before the burn-in ends, respond to the plain running average.
+            push_avg = (push_avg * (t - 1) + best_push) / t
+            call_avg = (call_avg * (t - 1) + best_call) / t
+
+    # Snap hands that clearly prefer one action; keep genuinely indifferent ones mixed.
+    push_margin = sb_push_ev(call_avg, stack_bb, ante_bb) - sb_fold_ev
+    call_margin = bb_call_ev(push_avg, stack_bb, ante_bb) - bb_fold_ev
+    push_avg = np.where(push_margin > INDIFFERENCE_BB, 1.0,
+                        np.where(push_margin < -INDIFFERENCE_BB, 0.0, push_avg))
+    call_avg = np.where(call_margin > INDIFFERENCE_BB, 1.0,
+                        np.where(call_margin < -INDIFFERENCE_BB, 0.0, call_avg))
 
     # Value of the game to SB under the averaged strategies, and how exploitable they are.
     w = combo_weights()
