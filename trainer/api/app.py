@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 
 from trainer import config
 from trainer.advice.library import AdviceLibrary
+from trainer.api.basics_routes import make_basics_router
 from trainer.api.equity_routes import make_equity_router
 from trainer.api.plo_routes import make_plo_router
 from trainer.charts.loader import Chart, ChartLibrary
@@ -295,6 +296,9 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
     def stats():
         """Everything the Stats screen shows."""
         drills = {
+            "basics_hand": "Basics: what's my hand",
+            "basics_outs": "Basics: how many outs",
+            "basics_price": "Basics: what's the price",
             "preflop_chart": "Preflop: chart decision",
             "equity_estimate": "Equity: estimate",
             "pot_odds_decision": "Equity: call or fold",
@@ -342,6 +346,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
 
     app.include_router(make_equity_router(store, equity_service, rng, advice))
     app.include_router(make_plo_router(store, nuts_service, rng, advice))
+    app.include_router(make_basics_router(store, rng, advice))
 
     app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="web")
     return app

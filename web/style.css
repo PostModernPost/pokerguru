@@ -270,8 +270,8 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 .pl-answer b { color: var(--accent); }
 
 /* ---------- phase 4/5 ---------- */
-.tabs { grid-template-columns: repeat(5, 1fr); }
-.tabs a { font-size: .9rem; padding: 8px 2px; }
+.tabs { grid-template-columns: repeat(3, 1fr); }
+.tabs a { font-size: .95rem; padding: 7px 2px; }
 .tag.review { background: var(--accent); color: #222; border-color: var(--accent); font-weight: 700; }
 
 .stat-section { margin-bottom: 22px; }

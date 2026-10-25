@@ -25,7 +25,8 @@ marked "computed" the program can work out from the rules and the math.
 
 ## Done since the brief
 
-- **Phase 6, advice library** and **Phase 7, real 6-max preflop charts**: see `docs/decisions.md`.
+- **Phase 6, advice library**, **Phase 7, real 6-max preflop charts**, and **Phase 8, basics drill**
+  (hand naming, outs, price) plus a double-click Windows launcher: see `docs/decisions.md`.
   Still open from phase 7: 9-handed charts, facing a 3-bet, and seats other than the big blind
   facing an open (no verifiable free source found yet).
 

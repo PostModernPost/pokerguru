@@ -8,7 +8,8 @@
       "math_check": "pot_odds_formula",
       "scope": {
         "drills": [
-          "equity"
+          "equity",
+          "basics"
         ],
         "streets": [
           "flop",
@@ -62,7 +63,8 @@
       "math_check": "rule_of_2_and_4",
       "scope": {
         "drills": [
-          "equity"
+          "equity",
+          "basics"
         ],
         "games": [
           "nlhe"

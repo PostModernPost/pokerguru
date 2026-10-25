@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Basics Drill</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Poker Trainer</h1>
+    <nav class="tabs" aria-label="Drills">
+      <a href="/basics.html" aria-current="page">Basics</a>
+      <a href="/">Preflop</a>
+      <a href="/equity.html">Equity</a>
+      <a href="/nuts.html">Nuts</a>
+      <a href="/potlimit.html">Pot limit</a>
+      <a href="/stats.html">Stats</a>
+    </nav>
+    <div class="score" id="score" title="Correct answers / questions (all time)">–</div>
+    <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
+  </header>
+
+  <main>
+    <section id="filters-screen" class="screen" hidden>
+      <h2>What to drill</h2>
+      <p class="hint">Tap to select. Nothing selected in a group means all of it.</p>
+      <div class="filter-group">
+        <h3>Question</h3>
+        <div class="chips" id="f-question"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Game</h3>
+        <div class="chips" id="f-game"></div>
+        <p class="hint">Outs questions are Hold'em only.</p>
+      </div>
+      <button class="big-btn primary" id="start-btn">Start drilling</button>
+    </section>
+
+    <section id="drill-screen" class="screen" hidden>
+      <div class="spot-tags" id="spot-tags"></div>
+      <h3>Board</h3>
+      <div class="cards medium" id="board"></div>
+      <h3 class="mt">Your hand</h3>
+      <div class="cards" id="hero-cards"></div>
+      <div class="bet-line" id="bet-line" hidden></div>
+      <h3 class="mt" id="prompt"></h3>
+      <div class="option-list" id="options"></div>
+    </section>
+
+    <section id="result-screen" class="screen" hidden>
+      <div class="grade-banner" id="grade-banner"></div>
+      <div class="pl-answer" id="answer-line"></div>
+      <p class="explanation" id="explanation"></p>
+      <div class="cards small" id="detail-cards"></div>
+      <div class="tips" id="tips" hidden></div>
+      <button class="big-btn primary" id="next-btn">Next question</button>
+      <div class="result-cards">
+        <div><h3>Board</h3><div class="cards small" id="r-board"></div></div>
+        <div><h3>Your hand</h3><div class="cards small" id="r-hero"></div></div>
+      </div>
+      <p class="source">Computed: PokerKit names the hand; outs are counted by trying every unseen card
+        (cards that make a straight or better, not just a pair); the price is call ÷ (pot + bet + call).</p>
+    </section>
+
+    <section id="message-screen" class="screen" hidden>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <button type="button" class="link-btn" id="glossary-open">Glossary: tap any dotted word for its meaning</button>
+  </footer>
+
+  <script src="common.js"></script>
+  <script src="glossary.js"></script>
+  <script src="advice.js"></script>
+  <script src="basics.js"></script>
+</body>
+</html>

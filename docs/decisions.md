@@ -101,6 +101,18 @@ the program computes itself.
 | Sample charts | The red banner became a one-line `‡` footnote on the drill screen and the result's source line. Still shown every time a sample chart is in use (ground rule 5), just quietly. |
 | Direct-odds note | The Equity tab's bar became a `*` footnote under the bet line and under the result. |
 
+## Phase 8 (basics drill) and the launcher
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| Three question types | "What's my hand?" (Hold'em and Omaha, any street), "How many outs?" (Hold'em, flop/turn), "What's the price?" (required equity for a call). All multiple choice, four options. | `trainer/scenarios/basics.py`, `trainer/graders/basics.py` |
+| What counts as an out | A card that gives you a straight or better and beats your current hand; pairing up doesn't count. Same definition as the Nuts drill's draws, so the two agree. | `trainer/game/outs.py` (`STRONG_LABELS`) |
+| Outs spots | Only dealt when there are 3-15 outs, so there's a real draw to count. The result shows the exact chance and the rule-of-2-and-4 estimate side by side. | `OUTS_MIN`/`OUTS_MAX` in `scenarios/basics.py` |
+| Hand-naming distractors | The strongest other hands anyone could hold on this board. | `possible_hands` in `game/outs.py` |
+| Price distractors | Common break-even points (20, 25, 29, 33, 40, 44, 50%). | `graders/basics.py` |
+| Tabs | Six tabs now, as a 3x2 grid; Basics first since it's the starting point for a newer player. | `web/style.css` |
+| Launcher | `start.bat`: double-click to set up (first run), start, and open the browser. Not a packaged .exe: that would hide the code Adam vibe-codes with and complicate updates (`git pull` keeps working). | `start.bat` |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

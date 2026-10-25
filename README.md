@@ -7,6 +7,8 @@ program computes itself.
 **Current status: Phases 1 to 5 are done.** There are four drills plus a Stats page, switched
 with the tabs at the top of the screen:
 
+- **Basics:** "What's my hand?" (Hold'em and Omaha), "How many outs?" and "What's the price?",
+  with the math shown. The place to start if the other drills feel fast.
 - **Preflop:** NLHE. Cash spots (6-max and 9-handed, 100bb) graded against chart files, and
   tournament push/fold spots (heads-up, 3-15bb) graded against charts the program computed itself.
 - **Equity:** NLHE and PLO, flop or turn. Estimate your equity, then call or fold. Graded by
@@ -53,6 +55,13 @@ The equity drill uses PokerKit's hand evaluation inside its own small sampling l
 run of Python to the next even with the same seed, because it uses Python's shared random
 generator and set ordering. The brief requires seedable answers, so the loop is ours, and a
 test checks it against `calculate_equities`.
+
+## The easy way to run it (Windows)
+
+Double-click **`start.bat`** in the project folder. The first time it sets up Python packages
+(about a minute); every time, it starts the server and opens the app in your browser. The
+window it opens shows the address for your phone; close that window to stop. You still need
+Python installed once (step 1 below).
 
 ## Running it on Windows (step by step)
 

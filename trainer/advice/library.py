@@ -28,7 +28,7 @@ TIPS_PATH = Path(config.ADVICE_PATH)
 
 STATUSES = ("verified", "single_source", "contested", "unverified")
 SHOWN_STATUSES = ("verified", "single_source", "contested")
-DRILLS = ("preflop_chart", "equity", "nuts", "pot_limit")
+DRILLS = ("preflop_chart", "equity", "nuts", "pot_limit", "basics")
 GAMES = ("nlhe", "plo")
 FORMATS = ("cash", "tournament")
 STREETS = ("preflop", "flop", "turn", "river")
