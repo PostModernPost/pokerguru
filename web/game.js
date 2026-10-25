@@ -82,12 +82,14 @@ async function startGame() {
   settings.big_blind = Number($("s-bb").value) || 2;
   settings.buy_in_bb = Number($("s-buyin").value) || 100;
   try {
-    state = await api("/api/game/new", settings);
+    state = await api("/api/game/new", { ...settings, step: true });
   } catch (e) {
     $("setup-error").textContent = e.message; $("setup-error").hidden = false; return;
   }
   session = state.id; save();
   render(); showScreen("game-screen");
+  busy = true;
+  try { await playBots(); } finally { busy = false; }
 }
 
 function showScreen(id) {
@@ -127,6 +129,7 @@ function render() {
   // actions
   const legal = h.legal || {};
   $("actions").hidden = !h.hero_turn;
+  $("hand-line").textContent += h.waiting_on_bots ? " · opponents acting…" : "";
   if (h.hero_turn) {
     $("btn-fold").hidden = !legal.can_fold;
     $("btn-call").textContent = legal.to_call ? `Call ${money(legal.to_call)}` : "Check";
@@ -172,8 +175,9 @@ function render() {
   if (h.finished && state.result) {
     const r = state.result, box = $("result"); box.replaceChildren();
     const net = r.hero_net;
-    box.append(el("div", { class: `grade-banner ${net > 0 ? "correct" : net < 0 ? "wrong" : "acceptable"}` },
-      net > 0 ? `You won ${money(net)}` : net < 0 ? `You lost ${money(-net)}` : "No change"));
+    const banner = net > 0 ? `You won ${money(net)}` : net < 0 ? (r.hero_folded ? `You folded; down ${money(-net)} (your blind)` : `You lost ${money(-net)}`)
+      : (r.hero_folded ? "You folded before putting money in" : "You broke even");
+    box.append(el("div", { class: `grade-banner ${net > 0 ? "correct" : net < 0 ? "wrong" : "neutral"}` }, banner));
     for (const w of r.winners) {
       const who = w.is_hero ? "You" : w.name;
       box.append(el("p", { class: "winner-line" }, el("b", {}, `${who} win${w.is_hero ? "" : "s"} ${money(w.amount)}`),
@@ -194,13 +198,14 @@ function render() {
   const numbered = h.events.map((e, i) => ({ ...e, n: i + 1 })).reverse();
   for (const e of numbered) {
     const who = e.pos ? `${e.name} (${e.pos})` : "";
-    const text = e.kind === "deal" ? `${e.street}: ${e.text}` :
+    const text = e.kind === "win" ? `${e.name === "You" ? "You win" : e.name + " wins"} ${money(e.amount)} (${e.text})` :
+      e.kind === "deal" ? `${e.street}: ${e.text}` :
       e.kind.startsWith("post") ? `${who} posts ${money(e.amount)}` :
       e.kind === "call" ? `${who} calls ${money(e.amount)}` :
       e.kind === "check" ? `${who} checks` : e.kind === "fold" ? `${who} folds` :
       e.kind === "allin" ? `${who} is all-in for ${money(e.amount)}` :
       `${who} ${e.kind === "bet" ? "bets" : "raises to"} ${money(e.amount)}`;
-    ll.append(el("li", {}, el("span", { class: "log-n" }, `${e.n}.`), " ", text));
+    ll.append(el("li", { class: e.kind === "win" ? "log-win" : "" }, el("span", { class: "log-n" }, `${e.n}.`), " ", text));
   }
 }
 
@@ -232,12 +237,27 @@ function renderFeedback(box, f, n) {
 }
 
 // ---------- actions ----------
+const STEP_MS = { fold: 260, check: 300, default: 420 };
+
+// Bots act one at a time, with a short pause between moves, so the table can be followed.
+async function playBots() {
+  while (state?.hand?.waiting_on_bots) {
+    const before = state.hand.events.length;
+    state = await api("/api/game/step", { session });
+    render();
+    const last = state.hand.events[state.hand.events.length - 1];
+    const moved = state.hand.events.length > before;
+    await new Promise((r) => setTimeout(r, moved ? (STEP_MS[last?.kind] || STEP_MS.default) : 50));
+  }
+}
+
 async function act(action, amount) {
   if (busy || !state?.hand?.hero_turn) return;
   busy = true;
   try {
-    state = await api("/api/game/act", { session, action, amount });
+    state = await api("/api/game/act", { session, action, amount, step: true });
     render();
+    await playBots();
   } catch (e) {
     if (/No such game/.test(e.message)) { session = null; save(); showScreen("setup-screen"); renderSetup(); }
     else alert(e.message);
@@ -247,7 +267,7 @@ async function act(action, amount) {
 async function nextHand() {
   if (busy) return;
   busy = true;
-  try { state = await api("/api/game/next", { session }); render(); } catch (e) { alert(e.message); } finally { busy = false; }
+  try { state = await api("/api/game/next", { session, step: true }); render(); await playBots(); } catch (e) { alert(e.message); } finally { busy = false; }
 }
 
 $("btn-fold").addEventListener("click", () => act("fold"));

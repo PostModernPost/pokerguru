@@ -105,7 +105,8 @@ class Hand:
                 cards = self._draw(st.board_dealing_count)
                 st.deal_board(cards)
                 self.board += [card_str(c) for c in cards]
-                self.events.append(Event(self.street, -1, "deal", 0, " ".join(card_str(c) for c in cards)))
+                name = {3: "flop", 4: "turn", 5: "river"}.get(len(self.board), self.street)
+                self.events.append(Event(name, -1, "deal", 0, " ".join(card_str(c) for c in cards)))
 
     # ---------- reading the state ----------
     @property
@@ -136,6 +137,10 @@ class Hand:
         return [int(s) for s in self.state.stacks]
 
     def in_hand(self, idx: int) -> bool:
+        """Still holding cards: during the hand PokerKit's status; once it is over, whoever
+        reached the showdown (PokerKit marks losers as out, which would read as 'folded')."""
+        if self.finished and self.showdown:
+            return idx in self.showdown
         return bool(self.state.statuses[idx])
 
     def players_in_hand(self) -> list[int]:

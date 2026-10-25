@@ -59,6 +59,7 @@ class Session:
     last_result: dict | None = None
     hand_feedback: list[dict] = field(default_factory=list)
     pending_hero_action: dict | None = None
+    step_limit: int | None = None  # None: bots play through at once; 0: the screen steps them one by one
 
     def __post_init__(self):
         c = self.config
@@ -109,12 +110,17 @@ class Session:
         self.last_feedback = None
         self.last_result = None
         self.hand_feedback = []
-        self.run_bots()
+        self.run_bots(limit=self.step_limit)
 
-    def run_bots(self) -> None:
-        """Let the bots act until it is your turn or the hand is over."""
+    def run_bots(self, limit: int | None = None) -> None:
+        """Let the bots act until it is your turn or the hand is over (at most `limit` actions,
+        so the screen can show them one at a time)."""
         hand = self.hand
+        done = 0
         while not hand.finished and hand.actor is not None and hand.actor != hand.hero_idx:
+            if limit is not None and done >= limit:
+                return
+            done += 1
             i = hand.actor
             match = self.charts.for_decision(hand, i)
             kind, amount = self.bots.decide(hand, i, self.rng)
@@ -151,8 +157,19 @@ class Session:
             self.last_feedback = fb
             self.hand_feedback.append(fb.to_dict())
             self._record(fb, before)
-        self.run_bots()
+        self.run_bots(limit=self.step_limit)
         return fb
+
+    def step(self) -> None:
+        """One bot action (the screen calls this repeatedly to animate the table)."""
+        if self.hand is None or self.hand.finished:
+            return
+        self.run_bots(limit=1)
+
+    @property
+    def waiting_on_bots(self) -> bool:
+        h = self.hand
+        return h is not None and not h.finished and h.actor is not None and h.actor != h.hero_idx
 
     def _feedback(self, before: dict, match, ev) -> Feedback | None:
         hand = self.hand
@@ -216,6 +233,7 @@ class Session:
                 "events": [{"street": e.street, "pos": hand.positions[e.idx] if e.idx >= 0 else None,
                             "name": self.seats[self.seat_of(e.idx)].name if e.idx >= 0 else None,
                             "kind": e.kind, "amount": e.amount, "text": e.text} for e in hand.events],
+                "waiting_on_bots": self.waiting_on_bots,
                 "attention": attention(hand, hand.hero_idx, self.charts) if (hero_turn and c.attention) else [],
             }
             if hand.finished and self.last_result:
@@ -231,5 +249,9 @@ class Session:
                 winners = [{"name": self.seats[self.seat_of(i)].name, "is_hero": i == hand.hero_idx, "amount": r["payoffs"][i],
                             "hand": None if by_fold else describe(hand.hole[i])} for i in r["winners"]]
                 out["result"] = {"payoffs": r["payoffs"], "winners": winners, "by_fold": by_fold,
-                                 "hero_net": r["payoffs"][hand.hero_idx], "board": r["board"], "shown": shown}
+                                 "hero_net": r["payoffs"][hand.hero_idx], "board": r["board"], "shown": shown,
+                                 "hero_folded": hand.hero_idx not in hand.showdown and r["payoffs"][hand.hero_idx] <= 0}
+                for w in winners:
+                    out["hand"]["events"].append({"street": "end", "pos": None, "name": w["name"], "kind": "win",
+                                                  "amount": w["amount"], "text": w["hand"] or "everyone else folded"})
         return out

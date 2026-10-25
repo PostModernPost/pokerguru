@@ -498,3 +498,6 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 
 .fb-action { color: var(--muted); font-style: italic; margin: 2px 0 6px; }
 .att-value.term-btn.big { font-size: 1.15rem; font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--text); text-decoration: underline dotted var(--accent); text-underline-offset: 3px; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; }
+
+.grade-banner.neutral { background: var(--panel-2); color: var(--text); }
+.log-win { font-weight: 700; color: var(--accent); }
