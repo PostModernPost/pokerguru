@@ -270,3 +270,11 @@ class ChartLibrary:
 def spot_key(c: Chart) -> tuple:
     facing = tuple(sorted((c.facing or {}).items()))
     return (c.game, c.format, c.table_size, c.stack_bb, c.spot_type, c.hero_pos, c.villain_pos, facing)
+
+
+def dump_chart_json(data: dict) -> str:
+    """Chart dict as JSON text, one hand per line so files are easy to read and diff."""
+    head = {k: v for k, v in data.items() if k != "hands"}
+    lines = json.dumps(head, indent=2)[:-2].rstrip()  # drop the closing brace
+    hand_lines = [f"    {json.dumps(h)}: {json.dumps(f)}" for h, f in data["hands"].items()]
+    return lines + ',\n  "hands": {\n' + ",\n".join(hand_lines) + "\n  }\n}\n"

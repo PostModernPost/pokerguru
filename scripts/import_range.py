@@ -15,13 +15,12 @@ before it is written.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from trainer.charts.loader import chart_from_dict  # noqa: E402
+from trainer.charts.loader import chart_from_dict, dump_chart_json  # noqa: E402
 from trainer.charts.range_parser import RangeParseError, build_hands  # noqa: E402
 
 
@@ -80,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
     chart_from_dict(chart, where=args.out)  # raises if anything is off
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(chart, indent=1) + "\n", encoding="utf-8")
+    out.write_text(dump_chart_json(chart), encoding="utf-8")
     print(f"Wrote {out} ({len(hands)} hands)")
     return 0
 
