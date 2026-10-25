@@ -132,14 +132,6 @@ async function nextSpot() {
   }
 }
 
-function seatStatus(seat) {
-  if (seat.status === "hero") return "You";
-  if (seat.status === "fold") return "fold";
-  if (seat.status === "raise") return seat.to_bb != null ? `${num(seat.to_bb)}bb` : "raise";
-  if (seat.blind != null) return `${num(seat.blind)}bb`;
-  return "–";
-}
-
 function renderSpot(spot) {
   setSampleWarning(spot.is_sample);
 
@@ -152,12 +144,7 @@ function renderSpot(spot) {
   if (spot.reason === "review") tags.append(el("span", { class: "tag review" }, "Review: you missed this before"));
   else if (filters.leaks_only) tags.append(el("span", { class: "tag review" }, "Leak drill"));
 
-  const seats = $("seats"); seats.replaceChildren();
-  for (const seat of spot.seats) {
-    seats.append(el("div", { class: `seat ${seat.status}` },
-      el("span", { class: "pos" }, seat.pos),
-      el("span", { class: "st" }, seatStatus(seat))));
-  }
+  renderTable($("table"), spot);
 
   const hist = $("history"); hist.replaceChildren();
   if (!spot.history.length) {

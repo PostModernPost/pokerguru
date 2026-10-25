@@ -113,6 +113,14 @@ the program computes itself.
 | Tabs | Six tabs now, as a 3x2 grid; Basics first since it's the starting point for a newer player. | `web/style.css` |
 | Launcher | `start.bat`: double-click to set up (first run), start, and open the browser. Not a packaged .exe: that would hide the code Adam vibe-codes with and complicate updates (`git pull` keeps working). | `start.bat` |
 
+## Desktop layout and the drawn table (Adam's requests, after phase 8)
+
+| Decision | Choice | How to change |
+|---|---|---|
+| Desktop width | Content column widens from 560px to 880px on screens 900px and wider, still centred (Adam doesn't want things pushed to the edges). Cards get bigger; the Preflop result goes two-column (decision left, full range right). | `--page-w` and the `@media (min-width: 900px)` block in `web/style.css` |
+| Table drawing | The Preflop seat strip became a drawn table: seats in clockwise seating order with you at the bottom, dealer button, blinds and bets as chips, folded seats greyed, action order numbered. Pure SVG, no library. | `web/table.js` |
+| Glossary and the table | The glossary linker skips SVG, otherwise it wrapped position names inside the drawing and they vanished. | `SKIP` in `web/glossary.js` |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

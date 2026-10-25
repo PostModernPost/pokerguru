@@ -338,3 +338,72 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 
 .fn-mark { color: var(--accent); font-weight: 700; margin-left: 2px; }
 .footnote { color: var(--muted); font-size: .8rem; margin: 2px 0 0; }
+
+/* ---------- drawn table ---------- */
+.table-wrap { margin: 4px 0 10px; }
+.table-svg { width: 100%; height: auto; display: block; }
+.table-svg .rail { fill: #3b2a1a; }
+.table-svg .felt { fill: #1c6b4a; stroke: #2f8a63; stroke-width: 3; }
+.table-svg .pot-label { fill: #bfe3d0; font-size: 13px; }
+.table-svg .pot-value { fill: var(--accent); font-size: 22px; font-weight: 800; }
+.table-svg .seat-box { fill: var(--panel); stroke: var(--line); stroke-width: 2; }
+.table-svg .seat-pos { fill: var(--text); font-size: 15px; font-weight: 800; }
+.table-svg .seat-sub { fill: var(--muted); font-size: 11px; }
+.table-svg .seat-g.fold .seat-box { fill: #0e241c; stroke: #1f3a30; }
+.table-svg .seat-g.fold .seat-pos, .table-svg .seat-g.fold .seat-sub { fill: #5f7a70; }
+.table-svg .seat-g.raise .seat-box { fill: #5a2420; stroke: var(--raise); }
+.table-svg .seat-g.raise .seat-sub { fill: #ffc2bc; }
+.table-svg .seat-g.hero .seat-box { fill: var(--accent); stroke: var(--accent); }
+.table-svg .seat-g.hero .seat-pos { fill: #222; }
+.table-svg .seat-g.hero .seat-sub { fill: #4a3b00; }
+.table-svg .order-badge { fill: #0b2a20; stroke: var(--line); stroke-width: 1.5; }
+.table-svg .seat-g.fold .order-badge { stroke: #1f3a30; }
+.table-svg .order-text { fill: var(--text); font-size: 11px; font-weight: 700; }
+.table-svg .seat-g.fold .order-text { fill: #5f7a70; }
+.table-svg .chip { stroke: #fff; stroke-width: 2; stroke-dasharray: 4 3; }
+.table-svg .chip.blind { fill: #3f7fbf; }
+.table-svg .chip.raise { fill: var(--raise); }
+.table-svg .chip-text { fill: #fff; font-size: 12px; font-weight: 700; }
+.table-svg .dealer { fill: #fff; }
+.table-svg .dealer-text { fill: #222; font-size: 12px; font-weight: 800; }
+.table-svg .table-hint { fill: var(--muted); font-size: 11px; }
+
+/* ---------- desktop: a wider (but still centred) column ---------- */
+@media (min-width: 900px) {
+  :root { --page-w: 880px; }
+  .tabs { grid-template-columns: repeat(6, 1fr); }
+  .tabs a { font-size: 1rem; }
+  .card { width: 104px; height: 146px; }
+  .card .r { font-size: 3.2rem; }
+  .card .s { font-size: 2.5rem; }
+  .cards.four .card { width: 92px; height: 130px; }
+  .cards.medium .card { width: 76px; height: 106px; }
+  .actions { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .option-list { grid-template-columns: 1fr 1fr; }
+  .bucket-grid { grid-template-columns: repeat(6, 1fr); }
+  .keypad { max-width: 420px; }
+
+  /* Preflop result: decision on the left, the full range on the right. */
+  #result-screen:has(.range-grid) {
+    display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; align-items: start;
+    grid-template-areas:
+      "grade range-title"
+      "hand legend"
+      "freqs grid"
+      "expl grid"
+      "tips grid"
+      "next grid"
+      "source source";
+  }
+  #result-screen:has(.range-grid) > .grade-banner { grid-area: grade; }
+  #result-screen:has(.range-grid) > .result-hand { grid-area: hand; }
+  #result-screen:has(.range-grid) > .freqs { grid-area: freqs; }
+  #result-screen:has(.range-grid) > .explanation { grid-area: expl; }
+  #result-screen:has(.range-grid) > .tips { grid-area: tips; }
+  #result-screen:has(.range-grid) > #next-btn { grid-area: next; }
+  #result-screen:has(.range-grid) > .range-title { grid-area: range-title; margin-top: 0; }
+  #result-screen:has(.range-grid) > .legend { grid-area: legend; }
+  #result-screen:has(.range-grid) > .range-grid { grid-area: grid; }
+  #result-screen:has(.range-grid) > .source { grid-area: source; }
+  .cell { font-size: 11px; }
+}
