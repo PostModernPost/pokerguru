@@ -70,23 +70,16 @@
     {
      "term": "button",
      "aliases": [
-      "BTN",
       "dealer"
      ],
      "definition": "The seat with the dealer marker. It acts last on every street after the flop. The button moves one seat left after each hand."
     },
     {
      "term": "small blind",
-     "aliases": [
-      "SB"
-     ],
      "definition": "The seat just left of the button. It must put in a forced bet (half a big blind here) before the cards are dealt."
     },
     {
      "term": "big blind",
-     "aliases": [
-      "BB"
-     ],
      "definition": "The seat two left of the button. It posts a forced bet before the deal, and stack sizes and bets in this app are measured in big blinds. '10bb' means ten big blinds."
     },
     {
@@ -100,11 +93,7 @@
     {
      "term": "UTG",
      "aliases": [
-      "under the gun",
-      "UTG1",
-      "UTG2",
-      "UTG+1",
-      "UTG+2"
+      "under the gun"
      ],
      "definition": "'Under the gun': the first seat to act before the flop, just left of the big blind. At a 9-handed table the next two seats are UTG1 and UTG2 (also written UTG+1 and UTG+2); they act second and third."
     },
@@ -120,14 +109,14 @@
      "aliases": [
       "hijack"
      ],
-     "definition": "'Hijack': the seat two to the right of the button."
+     "definition": "'Hijack': the seat two to the right of the button, just before the cutoff."
     },
     {
      "term": "CO",
      "aliases": [
       "cutoff"
      ],
-     "definition": "'Cutoff': the seat just right of the button."
+     "definition": "'Cutoff': the seat just to the right of the button. Only the button and the blinds act after it before the flop."
     },
     {
      "term": "hero",
@@ -140,6 +129,32 @@
     {
      "term": "aggressor",
      "definition": "The player who made the last bet or raise in the current betting round. Whoever is facing that bet is the one with a decision to make."
+    },
+    {
+     "term": "UTG1",
+     "definition": "'Under the gun plus one' (also UTG+1): the second seat to act before the flop at a 9-handed table, right after UTG. Still an early seat: six players act after it.",
+     "aliases": [
+      "UTG+1"
+     ]
+    },
+    {
+     "term": "UTG2",
+     "definition": "'Under the gun plus two' (also UTG+2): the third seat to act before the flop at a 9-handed table. Early position: five players act after it.",
+     "aliases": [
+      "UTG+2"
+     ]
+    },
+    {
+     "term": "BTN",
+     "definition": "'Button': the dealer seat, which acts last after the flop. Short for 'dealer button'; the best seat at the table."
+    },
+    {
+     "term": "SB",
+     "definition": "'Small blind': the seat left of the button; posts half a big blind before the deal and acts first after the flop."
+    },
+    {
+     "term": "BB",
+     "definition": "'Big blind': the seat two left of the button; posts the big blind before the deal and acts last before the flop."
     }
    ]
   },

@@ -1,4 +1,4 @@
-' Poker Trainer, no window: double-click this instead of start.bat.
+' Poker Guru, no window: double-click this instead of start.bat.
 ' Runs start.bat hidden (updates, first-time setup, server), waits for the server
 ' to answer, and shows a message only if something went wrong. Output is in
 ' trainer.log next to this file. Stop the server with "Stop the trainer" at the
@@ -29,5 +29,5 @@ For i = 1 To 180
   End If
 Next
 If Not ok Then
-  MsgBox "Poker Trainer did not start. Open trainer.log in this folder to see why, or run start.bat to watch it start.", 48, "Poker Trainer"
+  MsgBox "Poker Guru did not start. Open trainer.log in this folder to see why, or run start.bat to watch it start.", 48, "Poker Guru"
 End If

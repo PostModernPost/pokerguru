@@ -1,4 +1,4 @@
-# Poker Trainer self-update. Run by start.bat before the app starts.
+# Poker Guru self-update. Run by start.bat before the app starts.
 #
 # Checks GitHub for a newer version of the main branch and, if there is one,
 # downloads it and copies it over this folder. Your progress file

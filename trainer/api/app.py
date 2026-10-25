@@ -14,6 +14,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -153,7 +154,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         equity_service.shutdown()
         nuts_service.shutdown()
 
-    app = FastAPI(title="Poker Trainer", lifespan=lifespan)
+    app = FastAPI(title="Poker Guru", lifespan=lifespan)
 
     @app.middleware("http")
     async def no_cache(request: Request, call_next):
@@ -163,6 +164,10 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         return response
 
     running_version = current_version()
+
+    @app.get("/", include_in_schema=False)
+    def home():
+        return RedirectResponse("/game.html")  # the game is the home page
 
     @app.get("/api/version")
     def version():

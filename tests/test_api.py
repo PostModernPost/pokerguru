@@ -15,7 +15,9 @@ def ctx(tmp_path):
 
 def test_home_page_served(ctx):
     client, _ = ctx
-    r = client.get("/")
+    r = client.get("/", follow_redirects=False)
+    assert r.status_code in (302, 307) and r.headers["location"] == "/game.html"  # the game is the home page
+    r = client.get("/preflop.html")
     assert r.status_code == 200 and "Preflop" in r.text and "equity.html" in r.text
     assert client.get("/app.js").status_code == 200
     assert client.get("/style.css").status_code == 200

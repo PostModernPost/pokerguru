@@ -30,7 +30,7 @@ def lan_ip() -> str | None:
 
 
 def trainer_already_running(port: int) -> bool:
-    """True if a Poker Trainer answers on this port already (a second window was opened)."""
+    """True if a Poker Guru answers on this port already (a second window was opened)."""
     try:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/options", timeout=2) as resp:
             return resp.status == 200 and b"spot_types" in resp.read()
@@ -84,7 +84,7 @@ def open_browser_when_ready(url: str, timeout: float = 120) -> None:
 
 
 def remember_url(url: str) -> None:
-    """Tell the hidden launcher (Poker Trainer.vbs) where the server is."""
+    """Tell the hidden launcher (Poker Guru.vbs) where the server is."""
     try:
         (Path(__file__).resolve().parent.parent / ".trainer_url").write_text(url)
     except OSError:
@@ -103,12 +103,12 @@ def main() -> None:
         url = f"http://localhost:{port}"
         if running_version(port) == current_version():
             remember_url(url)
-            print(f"\n  Poker Trainer is already running at {url} (another window has it open).")
+            print(f"\n  Poker Guru is already running at {url} (another window has it open).")
             print("  Opening that one. Close this window; use the other window to stop the server.\n")
             if not args.no_browser:
                 webbrowser.open(url)
             return
-        print(f"\n  An older Poker Trainer is still running at {url}; replacing it with the updated one.")
+        print(f"\n  An older Poker Guru is still running at {url}; replacing it with the updated one.")
         stop_running_trainer(port)
     if not port_is_free(port):
         # Something else owns the port: move to the next free one and say so.

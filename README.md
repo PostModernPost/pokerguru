@@ -1,4 +1,4 @@
-# Poker Trainer
+# Poker Guru
 
 A drill-based trainer for No-Limit Hold'em and Pot-Limit Omaha. It shows you a spot, you
 answer, and it grades you right away, either against a chart file or against math the
@@ -68,7 +68,7 @@ Double-click **`start.bat`** in the project folder. Every time, it:
 
 You still need Python installed once (step 1 below).
 
-If you double-click `start.bat` while a Poker Trainer window is already running, the new window
+If you double-click `start.bat` while a Poker Guru window is already running, the new window
 just opens the existing app in your browser and tells you which window to close to stop it. If
 another program is using port 8000, the app moves to the next free port and prints the address.
 
@@ -84,7 +84,7 @@ launcher then updates with git instead.
 
 ### No black window
 
-Double-click **`Poker Trainer.vbs`** instead of `start.bat`. It does the same things (update,
+Double-click **`Poker Guru.vbs`** instead of `start.bat`. It does the same things (update,
 first-time setup, start the server, open the browser) with no window at all. Its output goes
 to `trainer.log` next to it, and if the server fails to start you get a pop-up saying so. To
 stop the server, use **"Stop the trainer"** at the bottom of any page in the app (it only works
@@ -158,7 +158,7 @@ data/
   charts/pushfold/      computed heads-up push/fold charts (real, not samples)
   equity_cache/         the 169x169 all-in equity table (committed) and a 5-card rank cache
   progress.sqlite       your drill history (created automatically, not in git)
-web/           the drill screens: index.html (preflop), equity.html, nuts.html, potlimit.html,
+web/           the drill screens: preflop.html (preflop; game.html is the home page), equity.html, nuts.html, potlimit.html,
                stats.html, shared common.js / style.css
 scripts/       helper scripts (sample chart generator, range importer)
 docs/          notes: phase summaries and decisions.md (every judgment call made for you)

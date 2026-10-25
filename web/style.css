@@ -20,8 +20,8 @@
   /* four-colour deck: easier to read suits at a glance on a small screen */
   --spade: #111;
   --heart: #d0021b;
-  --diamond: #1a5fd1;
-  --club: #1d8a3a;
+  --diamond: #d0021b;  /* two-colour deck: hearts and diamonds red, spades and clubs black */
+  --club: #111;
 }
 
 * { box-sizing: border-box; }
@@ -495,3 +495,6 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
   #game-screen .side summary { pointer-events: none; list-style: none; }
   #game-screen .side summary::-webkit-details-marker { display: none; }
 }
+
+.fb-action { color: var(--muted); font-style: italic; margin: 2px 0 6px; }
+.att-value.term-btn.big { font-size: 1.15rem; font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--text); text-decoration: underline dotted var(--accent); text-underline-offset: 3px; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; }

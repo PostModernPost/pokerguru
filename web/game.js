@@ -118,7 +118,10 @@ function render() {
     const title = a.gloss && window.openGlossaryTerm
       ? el("button", { type: "button", class: "att-title term-btn", title: "Tap for what this means", onclick: () => window.openGlossaryTerm(a.gloss) }, a.title + " ⓘ")
       : el("div", { class: "att-title" }, a.title);
-    al.append(el("div", { class: "att-tile" }, title, el("div", { class: "att-value" }, a.value ?? a.text ?? ""), el("div", { class: "att-detail" }, a.detail || "")));
+    const value = a.value_gloss && window.openGlossaryTerm
+      ? el("button", { type: "button", class: "att-value term-btn big", title: "Tap for what this seat is", onclick: () => window.openGlossaryTerm(a.value_gloss) }, a.value)
+      : el("div", { class: "att-value" }, a.value ?? a.text ?? "");
+    al.append(el("div", { class: "att-tile" }, title, value, el("div", { class: "att-detail" }, a.detail || "")));
   }
 
   // actions
@@ -159,7 +162,9 @@ function render() {
   const notes = $("hand-notes"); notes.hidden = false;
   const nl = $("hand-notes-list"); nl.replaceChildren();
   if (!state.hand_feedback.length) nl.append(el("p", { class: "muted" }, "Nothing graded yet this hand."));
-  for (const f of state.hand_feedback) { const d = el("div", { class: "note" }); renderFeedback(d, f); nl.append(d); }
+  state.hand_feedback.map((f, i) => ({ f, n: i + 1 })).reverse().forEach(({ f, n }) => {
+    const d = el("div", { class: "note" }); renderFeedback(d, f, n); nl.append(d);
+  });
 
   // result
   $("result").hidden = !h.finished;
@@ -204,12 +209,13 @@ function updateRaiseHint(legal) {
   $("raise-hint").textContent = `Between ${money(legal.min_raise_to)} and ${money(legal.max_raise_to)} total${v > legal.max_raise_to || v < legal.min_raise_to ? " · will be adjusted to the nearest legal amount" : ""}`;
 }
 
-function renderFeedback(box, f) {
+function renderFeedback(box, f, n) {
   box.replaceChildren();
   if (!f) { box.hidden = true; return; }
   box.hidden = false;
   const grade = f.grade ? el("span", { class: `grade-pill ${f.grade}` }, { correct: "Correct", acceptable: "Acceptable (mixed)", wrong: "Wrong" }[f.grade]) : el("span", { class: "grade-pill none" }, "No grade");
-  box.append(el("div", { class: "fb-head" }, el("b", {}, f.title), grade));
+  box.append(el("div", { class: "fb-head" }, el("b", {}, (n ? `${n}. ` : "") + f.title), grade));
+  if (f.action) box.append(el("p", { class: "fb-action" }, `You ${f.action}` + (f.street ? ` on the ${f.street}` : "") + "."));
   for (const line of f.lines) box.append(el("p", {}, line));
   if (f.chart) {
     const fr = el("div", { class: "freqs" });

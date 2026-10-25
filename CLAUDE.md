@@ -1,4 +1,4 @@
-# Poker Trainer: Build Brief
+# Poker Guru: Build Brief
 
 ## What this is
 

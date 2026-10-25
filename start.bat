@@ -1,12 +1,12 @@
 @echo off
-REM Poker Trainer: double-click to run. Checks GitHub for updates, sets up Python
+REM Poker Guru: double-click to run. Checks GitHub for updates, sets up Python
 REM packages on first run, starts the server, and opens the app in your browser.
 REM Close this window to stop (or use "Stop the trainer" at the bottom of any page).
 REM
-REM "Poker Trainer.vbs" runs this same file hidden (start.bat --quiet): no window,
+REM "Poker Guru.vbs" runs this same file hidden (start.bat --quiet): no window,
 REM output goes to trainer.log, and errors show as a pop-up instead of a pause.
 cd /d "%~dp0"
-title Poker Trainer
+title Poker Guru
 set QUIET=0
 if /i "%~1"=="--quiet" set QUIET=1
 if "%QUIET%"=="1" (
@@ -49,10 +49,10 @@ if "%NEED_INSTALL%"=="1" (
 )
 
 echo.
-echo Starting Poker Trainer. Keep this window open while you drill.
+echo Starting Poker Guru. Keep this window open while you drill.
 echo The phone address is printed below. Close this window to stop.
 echo.
-REM The app opens the browser itself once the server is ready. If a Poker Trainer is
+REM The app opens the browser itself once the server is ready. If a Poker Guru is
 REM already running (an earlier window), it opens that one or replaces it if it is older.
 ".venv\Scripts\python.exe" -m trainer
 exit /b %errorlevel%

@@ -91,9 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!foot || !["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return;
   const btn = el("button", { type: "button", class: "link-btn stop-btn" }, "Stop the trainer");
   btn.addEventListener("click", async () => {
-    if (!confirm("Stop the Poker Trainer server? The app will stop working until you start it again (your progress is saved).")) return;
+    if (!confirm("Stop the Poker Guru server? The app will stop working until you start it again (your progress is saved).")) return;
     try { await fetch("/api/shutdown", { method: "POST" }); } catch (_) { /* it is going down */ }
-    document.body.innerHTML = '<main style="padding:24px;text-align:center"><h2>Poker Trainer stopped.</h2><p>You can close this tab. Double-click the launcher to start it again.</p></main>';
+    document.body.innerHTML = '<main style="padding:24px;text-align:center"><h2>Poker Guru stopped.</h2><p>You can close this tab. Double-click the launcher to start it again.</p></main>';
   });
   foot.append(document.createTextNode(" · "), btn);
 });

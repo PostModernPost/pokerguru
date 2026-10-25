@@ -144,6 +144,10 @@ class Session:
         ev = hand.act(kind, amount)
         fb = self._feedback(before, match, ev) if self.config.feedback else None
         if fb is not None:
+            fb.street = before["street"]
+            fb.action = {"fold": "folded", "check": "checked", "call": f"called ${ev.amount}",
+                         "bet": f"bet ${ev.amount}", "raise": f"raised to ${ev.amount}",
+                         "allin": f"went all-in for ${ev.amount}"}.get(ev.kind, ev.kind)
             self.last_feedback = fb
             self.hand_feedback.append(fb.to_dict())
             self._record(fb, before)

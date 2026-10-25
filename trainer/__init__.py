@@ -1,1 +1,1 @@
-"""Poker Trainer: drill-based NLHE / PLO trainer."""
+"""Poker Guru: drill-based NLHE / PLO trainer."""

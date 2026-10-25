@@ -39,7 +39,7 @@ def test_glossary_served_and_docs_in_sync(tmp_path):
     with TestClient(create_app(charts_dir=CHARTS_DIR, db_path=tmp_path / "p.sqlite", equity_iterations=10)) as c:
         assert c.get("/glossary.json").status_code == 200
         assert c.get("/glossary.js").status_code == 200
-        for page in ("/", "/equity.html", "/nuts.html", "/potlimit.html", "/stats.html"):
+        for page in ("/game.html", "/preflop.html", "/equity.html", "/nuts.html", "/potlimit.html", "/stats.html"):
             assert "glossary.js" in c.get(page).text, page
     md = (PROJECT_ROOT / "docs" / "glossary.md").read_text(encoding="utf-8")
     for g in load()["groups"]:

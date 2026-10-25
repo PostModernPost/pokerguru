@@ -48,12 +48,12 @@ def attention(hand: Hand, idx: int, charts: ChartIndex) -> list[dict]:
     # position
     if hand.street == "preflop":
         yet = sum(1 for i in players if i != idx and hand.bets()[i] < max(hand.bets()) and i != agg["last_raiser"])
-        items.append({"title": "Position", "gloss": "position", "value": pos,
+        items.append({"title": "Position", "gloss": "position", "value": pos, "value_gloss": pos,
                       "detail": f"{yet} still to act after you · {others} other{'s' if others != 1 else ''} in"})
     else:
         last = players[-1] if players else idx
         after = len([i for i in players if i > idx])
-        items.append({"title": "Position", "gloss": "position", "value": pos,
+        items.append({"title": "Position", "gloss": "position", "value": pos, "value_gloss": pos,
                       "detail": "you act last" if idx == last else f"{after} act{'s' if after == 1 else ''} after you"})
     # price
     pot, to_call = hand.pot, legal.get("to_call", 0)
@@ -89,7 +89,7 @@ def attention(hand: Hand, idx: int, charts: ChartIndex) -> list[dict]:
     spr = (eff / pot) if pot else 0
     items.append({"title": "Table", "gloss": "stack-to-pot ratio", "value": f"{len(players)} in the pot", "detail": f"effective stack ${eff} · {spr:.0f}× the pot"})
     if agg["last_raiser"] is not None and agg["last_raiser"] != idx:
-        items.append({"title": "Aggressor", "gloss": "aggressor", "value": hand.positions[agg["last_raiser"]], "detail": f"raised to ${agg['last_to']} this round"})
+        items.append({"title": "Aggressor", "gloss": "aggressor", "value": hand.positions[agg["last_raiser"]], "value_gloss": hand.positions[agg["last_raiser"]], "detail": f"raised to ${agg['last_to']} this round"})
     return items
 
 
@@ -104,10 +104,12 @@ class Feedback:
     footnotes: list[str] = field(default_factory=list)
     chart: dict | None = None
     attempt: dict | None = None  # what to record in the progress store
+    action: str = ""             # what you did, e.g. "called $14"
+    street: str = ""
 
     def to_dict(self) -> dict:
         return {"kind": self.kind, "title": self.title, "grade": self.grade, "lines": self.lines,
-                "footnotes": self.footnotes, "chart": self.chart}
+                "footnotes": self.footnotes, "chart": self.chart, "action": self.action, "street": self.street}
 
 
 def chart_feedback(hand: Hand, idx: int, match: ChartMatch, kind: str, all_in: bool) -> Feedback:

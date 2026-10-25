@@ -20,16 +20,21 @@ The app underlines these words; tap one for its meaning. Edit `web/glossary.json
 
 - **aggressor**: The player who made the last bet or raise in the current betting round. Whoever is facing that bet is the one with a decision to make.
 - **ante**: A small forced bet from every player (or from one player on everyone's behalf) before the deal, common in tournaments. It makes the pot bigger before anyone acts.
-- **big blind** *(also: BB)*: The seat two left of the button. It posts a forced bet before the deal, and stack sizes and bets in this app are measured in big blinds. '10bb' means ten big blinds.
+- **BB**: 'Big blind': the seat two left of the button; posts the big blind before the deal and acts last before the flop.
+- **big blind**: The seat two left of the button. It posts a forced bet before the deal, and stack sizes and bets in this app are measured in big blinds. '10bb' means ten big blinds.
 - **blinds**: The two forced bets (small blind and big blind) posted before each hand so there's something to play for.
-- **button** *(also: BTN, dealer)*: The seat with the dealer marker. It acts last on every street after the flop. The button moves one seat left after each hand.
-- **CO** *(also: cutoff)*: 'Cutoff': the seat just right of the button.
+- **BTN**: 'Button': the dealer seat, which acts last after the flop. Short for 'dealer button'; the best seat at the table.
+- **button** *(also: dealer)*: The seat with the dealer marker. It acts last on every street after the flop. The button moves one seat left after each hand.
+- **CO** *(also: cutoff)*: 'Cutoff': the seat just to the right of the button. Only the button and the blinds act after it before the flop.
 - **hero**: You, the player whose decision is being drilled.
-- **HJ** *(also: hijack)*: 'Hijack': the seat two to the right of the button.
+- **HJ** *(also: hijack)*: 'Hijack': the seat two to the right of the button, just before the cutoff.
 - **LJ** *(also: lojack)*: 'Lojack': the seat three to the right of the button, used at 9-handed tables.
 - **position**: Where you sit relative to the dealer button, which decides when you act. Acting later is called having position; you see what others do first.
-- **small blind** *(also: SB)*: The seat just left of the button. It must put in a forced bet (half a big blind here) before the cards are dealt.
-- **UTG** *(also: under the gun, UTG1, UTG2, UTG+1, UTG+2)*: 'Under the gun': the first seat to act before the flop, just left of the big blind. At a 9-handed table the next two seats are UTG1 and UTG2 (also written UTG+1 and UTG+2); they act second and third.
+- **SB**: 'Small blind': the seat left of the button; posts half a big blind before the deal and acts first after the flop.
+- **small blind**: The seat just left of the button. It must put in a forced bet (half a big blind here) before the cards are dealt.
+- **UTG** *(also: under the gun)*: 'Under the gun': the first seat to act before the flop, just left of the big blind. At a 9-handed table the next two seats are UTG1 and UTG2 (also written UTG+1 and UTG+2); they act second and third.
+- **UTG1** *(also: UTG+1)*: 'Under the gun plus one' (also UTG+1): the second seat to act before the flop at a 9-handed table, right after UTG. Still an early seat: six players act after it.
+- **UTG2** *(also: UTG+2)*: 'Under the gun plus two' (also UTG+2): the third seat to act before the flop at a 9-handed table. Early position: five players act after it.
 - **villain**: Any opponent. 'Villain bets 10' just means an opponent bet 10; it isn't personal.
 
 ## The deal and the streets
