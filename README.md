@@ -82,6 +82,16 @@ and never leaves your PC. If updating ever fails, the launcher says so in one li
 version you have. Alternatively, install GitHub Desktop and clone the repository with it; the
 launcher then updates with git instead.
 
+### No black window
+
+Double-click **`Poker Trainer.vbs`** instead of `start.bat`. It does the same things (update,
+first-time setup, start the server, open the browser) with no window at all. Its output goes
+to `trainer.log` next to it, and if the server fails to start you get a pop-up saying so. To
+stop the server, use **"Stop the trainer"** at the bottom of any page in the app (it only works
+from the computer the server runs on). Right-click the `.vbs` file, "Send to", "Desktop
+(create shortcut)" for a desktop icon.
+
+
 ## Running it on Windows (step by step)
 
 You only do steps 1-4 once. After that, just steps 5-6 each time.

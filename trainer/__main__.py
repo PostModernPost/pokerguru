@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 import json
 import logging
 import socket
@@ -82,6 +83,14 @@ def open_browser_when_ready(url: str, timeout: float = 120) -> None:
     threading.Thread(target=wait, daemon=True).start()
 
 
+def remember_url(url: str) -> None:
+    """Tell the hidden launcher (Poker Trainer.vbs) where the server is."""
+    try:
+        (Path(__file__).resolve().parent.parent / ".trainer_url").write_text(url)
+    except OSError:
+        pass
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the poker trainer web server")
     parser.add_argument("--port", type=int, default=8000)
@@ -93,6 +102,7 @@ def main() -> None:
     if trainer_already_running(port):
         url = f"http://localhost:{port}"
         if running_version(port) == current_version():
+            remember_url(url)
             print(f"\n  Poker Trainer is already running at {url} (another window has it open).")
             print("  Opening that one. Close this window; use the other window to stop the server.\n")
             if not args.no_browser:
@@ -114,6 +124,7 @@ def main() -> None:
     app = create_app()
     ip = lan_ip()
     url = f"http://localhost:{port}"
+    remember_url(f"http://127.0.0.1:{port}")
     print()
     print(f"  On this computer:  {url}")
     if ip:

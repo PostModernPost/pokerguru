@@ -23,3 +23,5 @@ data/equity_cache/five_card_ranks.npy
 # Self-update bookkeeping and your private GitHub token (never commit this)
 .update_sha
 update_token.txt
+.trainer_url
+trainer.log
