@@ -140,8 +140,11 @@ function render() {
       const pot = h.pot, toCall = legal.to_call;
       const after = pot + toCall; // pot after calling
       const add = (label, to) => { to = Math.round(Math.max(legal.min_raise_to, Math.min(legal.max_raise_to, to))); if (!sizes.some((s) => s.to === to)) sizes.push({ label, to }); };
+      const bb = state.config.big_blind;
+      if (h.street === "preflop") add("3bb", 3 * bb);  // the standard live open; shown first before the flop
       if (toCall === 0) { add("⅓ pot", pot / 3); add("½ pot", pot / 2); add("⅔ pot", pot * 2 / 3); add("Pot", pot); }
       else { add("Min", legal.min_raise_to); add("2.5×", legal.min_raise_to * 1.25 + toCall); add("Pot", legal.pot_raise_to); }
+      if (h.street !== "preflop") add("3bb", 3 * bb);
       add("All-in", legal.max_raise_to);
       const sc = $("size-chips"); sc.replaceChildren();
       for (const s of sizes) sc.append(chip(`${s.label} ${money(s.to)}`, false, () => { $("raise-amount").value = s.to; }));
