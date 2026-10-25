@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Equity Drill</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="tabs" aria-label="Drills">
+      <a href="/">Preflop</a>
+      <a href="/equity.html" aria-current="page">Equity</a>
+    </nav>
+    <div class="score" id="score" title="Correct call/fold decisions / hands played (all time)">–</div>
+    <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
+  </header>
+
+  <div class="odds-note">Direct odds only: implied odds (money won on later streets) are ignored.</div>
+
+  <main>
+    <section id="filters-screen" class="screen" hidden>
+      <h2>What to drill</h2>
+      <p class="hint">Tap to select. Nothing selected in a group means all of it.</p>
+      <div class="filter-group">
+        <h3>Game</h3>
+        <div class="chips" id="f-game"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Street</h3>
+        <div class="chips" id="f-street"></div>
+      </div>
+      <button class="big-btn primary" id="start-btn">Start drilling</button>
+    </section>
+
+    <section id="drill-screen" class="screen" hidden>
+      <div class="spot-tags" id="spot-tags"></div>
+      <h3>Board</h3>
+      <div class="cards medium" id="board"></div>
+      <h3 class="mt">Your hand</h3>
+      <div class="cards" id="hero-cards"></div>
+      <div class="bet-line" id="bet-line"></div>
+
+      <h3 class="mt">1. Your equity against a random hand?</h3>
+      <div class="bucket-grid" id="buckets"></div>
+      <h3 class="mt">2. Call or fold?</h3>
+      <div class="decision-row">
+        <button class="action-btn k-fold choice" id="d-fold" type="button" aria-pressed="false">Fold</button>
+        <button class="action-btn k-call choice" id="d-call" type="button" aria-pressed="false">Call</button>
+      </div>
+      <p class="hint center">Answer both. It's graded as soon as you've picked one of each.</p>
+    </section>
+
+    <section id="result-screen" class="screen" hidden>
+      <div class="two-grades">
+        <div class="grade-banner" id="g-bucket"></div>
+        <div class="grade-banner" id="g-decision"></div>
+      </div>
+      <div class="equity-big" id="equity-big"></div>
+      <div class="equity-meter" id="equity-meter"></div>
+      <p class="explanation" id="bucket-expl"></p>
+      <p class="explanation" id="decision-expl"></p>
+      <button class="big-btn primary" id="next-btn">Next hand</button>
+      <div class="result-cards">
+        <div><h3>Board</h3><div class="cards small" id="r-board"></div></div>
+        <div><h3>Your hand</h3><div class="cards small" id="r-hero"></div></div>
+      </div>
+      <p class="source" id="method"></p>
+    </section>
+
+    <section id="message-screen" class="screen" hidden>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script src="equity.js"></script>
+</body>
+</html>

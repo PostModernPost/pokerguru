@@ -62,3 +62,11 @@ def test_recent_limit(tmp_path):
     for _ in range(5):
         store.record(make())
     assert len(store.recent(3)) == 3
+
+
+def test_record_without_optional_fields(tmp_path):
+    store = AttemptStore(tmp_path / "p.sqlite")
+    store.record(Attempt(drill_type="equity_estimate", game="plo", format="cash", spot={"board": ["As"]},
+                         hero_cards="AsKdQcJc", user_answer="30-40", correct_answer=["40-50"], grade="wrong"))
+    [row] = store.recent()
+    assert row["frequencies"] is None and row["hand_class"] is None and row["table_size"] is None

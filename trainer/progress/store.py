@@ -93,7 +93,8 @@ class AttemptStore:
     def record(self, a: Attempt) -> int:
         row = asdict(a)
         row["spot_json"] = json.dumps(row.pop("spot"))
-        row["frequencies_json"] = json.dumps(row.pop("frequencies")) if a.frequencies is not None else None
+        freqs = row.pop("frequencies")
+        row["frequencies_json"] = json.dumps(freqs) if freqs is not None else None
         row["correct_answer"] = "|".join(a.correct_answer)
         row["is_sample"] = int(a.is_sample)
         cols = ", ".join(row)

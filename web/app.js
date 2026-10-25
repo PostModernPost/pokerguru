@@ -1,8 +1,6 @@
-// Preflop drill front end. Plain JavaScript, no build step.
+// Preflop drill front end. Plain JavaScript, no build step. Shared helpers are in common.js.
 "use strict";
 
-const $ = (id) => document.getElementById(id);
-const SUITS = { s: "♠", h: "♥", d: "♦", c: "♣" };
 const TABLE_LABELS = { 6: "6-max", 9: "9-handed" };
 const GRADE_TEXT = { correct: "Correct", acceptable: "Acceptable (mixed)", wrong: "Wrong" };
 const KIND_COLORS = { allin: "var(--allin)", raise: "var(--raise)", call: "var(--call)", fold: "var(--fold)" };
@@ -17,73 +15,12 @@ let busy = false;
 
 // ---------- helpers ----------
 
-function el(tag, attrs = {}, ...children) {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (k === "class") node.className = v;
-    else if (k === "style") node.style.cssText = v;
-    else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
-    else node.setAttribute(k, v);
-  }
-  for (const c of children) node.append(c);
-  return node;
-}
-
-function num(x) {
-  return String(+Number(x).toFixed(2));
-}
-
 function actionKind(id) {
   if (id === "fold") return "fold";
   if (id === "call") return "call";
   if (id === "allin") return "allin";
   if (id.startsWith("raise")) return "raise";
   return "fold";
-}
-
-function show(screen) {
-  for (const s of ["filters-screen", "drill-screen", "result-screen", "message-screen"]) {
-    $(s).hidden = s !== screen;
-  }
-  window.scrollTo(0, 0);
-}
-
-function showMessage(text) {
-  $("message").textContent = text;
-  show("message-screen");
-}
-
-async function api(path, body) {
-  const res = await fetch(path, body === undefined ? {} : {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const detail = typeof data.detail === "string" ? data.detail : `Server error ${res.status}`;
-    throw new Error(detail);
-  }
-  return data;
-}
-
-function renderCard(code) {
-  const rank = code[0] === "T" ? "10" : code[0];
-  const suit = code[1];
-  return el("div", { class: `card s-${suit}`, "aria-label": code },
-    el("span", { class: "r" }, rank),
-    el("span", { class: "s" }, SUITS[suit] || suit));
-}
-
-function setSampleWarning(on) {
-  $("sample-warning").hidden = !on;
-}
-
-function updateScore(summary) {
-  if (!summary) return;
-  $("score").textContent = summary.total
-    ? `${summary.correct}/${summary.total} correct`
-    : "No hands yet";
 }
 
 // ---------- filters ----------
@@ -104,15 +41,6 @@ function availablePositions() {
   const order = ["UTG", "UTG1", "UTG2", "LJ", "HJ", "CO", "BTN", "SB", "BB"];
   const have = new Set(sizes.flatMap((s) => options.positions[s] || []));
   return order.filter((p) => have.has(p));
-}
-
-function chip(label, pressed, onClick) {
-  return el("button", { class: "chip", "aria-pressed": String(pressed), type: "button", onclick: onClick }, label);
-}
-
-function toggle(list, value) {
-  const i = list.indexOf(value);
-  if (i >= 0) list.splice(i, 1); else list.push(value);
 }
 
 function renderFilters() {

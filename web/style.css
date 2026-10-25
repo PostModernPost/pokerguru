@@ -193,3 +193,47 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 @media (min-width: 600px) {
   .actions { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
 }
+
+/* ---------- drill tabs ---------- */
+.tabs { display: flex; gap: 4px; flex: 1; }
+.tabs a {
+  color: var(--muted); text-decoration: none; font-weight: 700;
+  padding: 8px 12px; border-radius: 10px; min-height: 40px; display: flex; align-items: center;
+}
+.tabs a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+/* ---------- equity drill ---------- */
+.odds-note {
+  background: var(--panel); color: var(--muted); font-size: .85rem;
+  padding: 6px 16px; text-align: center; border-bottom: 1px solid var(--line);
+}
+.mt { margin-top: 16px; }
+.hint.center { text-align: center; margin: 12px 0 0; }
+.muted { color: var(--muted); font-weight: 400; font-size: .9rem; }
+.cards.medium .card { width: 58px; height: 80px; }
+.cards.medium .card .r { font-size: 1.8rem; }
+.cards.medium .card .s { font-size: 1.4rem; }
+.cards.four { gap: 8px; }
+.cards.four .card { width: 68px; height: 96px; }
+.cards.four .card .r { font-size: 2.1rem; }
+.cards.four .card .s { font-size: 1.7rem; }
+.bet-line { margin: 14px 0 4px; font-size: 1rem; line-height: 1.5; }
+.bet-line b { color: var(--accent); }
+.bucket-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.bucket-grid .chip { min-height: 52px; font-weight: 700; padding: 0 4px; }
+.decision-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice[aria-pressed="true"] { outline: 4px solid var(--accent); outline-offset: 2px; }
+
+.two-grades { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grade-banner.small { font-size: 1.1rem; padding: 10px 6px; margin-bottom: 12px; }
+.grade-banner .gl { display: block; font-size: .78rem; font-weight: 600; opacity: .85; }
+.equity-big { font-size: 1.2rem; margin-bottom: 10px; }
+.equity-big b { font-size: 1.6rem; color: var(--accent); }
+.meter { position: relative; height: 22px; border-radius: 11px; background: var(--panel); overflow: hidden; }
+.meter .fill { position: absolute; left: 0; top: 0; bottom: 0; }
+.meter .fill.good { background: var(--call); }
+.meter .fill.bad { background: var(--raise); }
+.meter .need { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1px; background: var(--accent); }
+.meter-labels { position: relative; height: 20px; font-size: .8rem; color: var(--accent); }
+.meter-labels span { position: absolute; top: 2px; transform: translateX(-50%); white-space: nowrap; }
+.result-cards { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; }

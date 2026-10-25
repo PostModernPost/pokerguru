@@ -16,9 +16,10 @@ def ctx(tmp_path):
 def test_home_page_served(ctx):
     client, _ = ctx
     r = client.get("/")
-    assert r.status_code == 200 and "Preflop Trainer" in r.text
+    assert r.status_code == 200 and "Preflop" in r.text and "equity.html" in r.text
     assert client.get("/app.js").status_code == 200
     assert client.get("/style.css").status_code == 200
+    assert client.get("/common.js").status_code == 200
 
 
 def test_options(ctx):

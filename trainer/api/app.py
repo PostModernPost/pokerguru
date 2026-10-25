@@ -10,14 +10,17 @@ from __future__ import annotations
 
 import logging
 import random
+from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from trainer import config
+from trainer.api.equity_routes import make_equity_router
 from trainer.charts.loader import Chart, ChartLibrary
+from trainer.drills.equity import EquityService
 from trainer.drills.preflop import DRILL_TYPE, NoMatchingChart, next_spot, spot_from_chart
 from trainer.game.hand_classes import grid
 from trainer.game.positions import POSITIONS, SPOT_TYPES
@@ -113,13 +116,21 @@ def _spot_payload(chart: Chart, spot: PreflopSpot) -> dict:
 def create_app(charts_dir: str | Path = config.CHARTS_DIR,
                db_path: str | Path = config.DB_PATH,
                web_dir: str | Path = config.WEB_DIR,
-               seed: int | None = None) -> FastAPI:
+               seed: int | None = None,
+               equity_iterations: int = config.EQUITY_ITERATIONS) -> FastAPI:
     library = ChartLibrary.from_directory(charts_dir)
     store = AttemptStore(db_path)
     rng = random.Random(seed)
     log.info("Loaded %d charts from %s", len(library), charts_dir)
 
-    app = FastAPI(title="Poker Trainer")
+    equity_service = EquityService(iterations=equity_iterations)
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI):
+        yield
+        equity_service.shutdown()
+
+    app = FastAPI(title="Poker Trainer", lifespan=lifespan)
 
     @app.middleware("http")
     async def no_cache(request: Request, call_next):
@@ -219,8 +230,10 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         }
 
     @app.get("/api/summary")
-    def summary():
-        return store.summary(DRILL_TYPE)
+    def summary(drill_type: str = Query(DRILL_TYPE)):
+        return store.summary(drill_type)
+
+    app.include_router(make_equity_router(store, equity_service, rng))
 
     app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="web")
     return app
