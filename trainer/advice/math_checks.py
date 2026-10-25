@@ -86,3 +86,16 @@ def run(name: str) -> tuple[bool, str]:
         return bool(ok), str(detail)  # numpy bools aren't JSON/loader friendly
     except Exception as e:  # a crashing check is a failed check
         return False, f"check raised {e!r}"
+
+
+@check("charts_open_wider_later")
+def _charts_open_wider_later() -> tuple[bool, str]:
+    """The imported real 6-max charts: each later seat (UTG -> BTN) opens at least as wide as the one before."""
+    from trainer.charts.loader import ChartLibrary
+    from trainer.charts.sources import range_width
+    from trainer.config import CHARTS_DIR
+    lib = ChartLibrary.from_directory(CHARTS_DIR / "nlhe" / "pokalab")
+    widths = {c.hero_pos: range_width(c.hands) for c in lib.find(spot_types=["rfi"]) if not c.is_sample}
+    order = [p for p in ("UTG", "HJ", "CO", "BTN") if p in widths]
+    ok = len(order) >= 3 and all(widths[a] <= widths[b] for a, b in zip(order, order[1:]))
+    return ok, "real 6-max charts open " + ", ".join(f"{p} {widths[p]:.0%}" for p in order)

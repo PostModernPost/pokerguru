@@ -79,6 +79,19 @@ the program computes itself.
 | Up to 3 tips per result | Narrowest scope first. | `AdviceLibrary.matching(limit=3)` |
 | First batch | Nine tips drafted with candidate sources from web searches on 2026-10-25, all `unverified` because the build environment's network policy blocked fetching the source pages. The math checks all pass. | Run `verify_tips.py` once network access allows it. |
 
+## Phase 7 (real preflop charts)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| Primary source | Pokalab's free 6-max charts: genuine solver output with stated assumptions (100bb, 2.5bb opens, SB 3bb, GGPoker NL50 rake). | The frequencies are embedded in the page HTML, so they're parsed, never transcribed. `trainer/charts/sources.py` |
+| Corroboration | HoldemPro's free charts (simplified from published solver outputs), rendered in Chromium because the page draws them with JavaScript. | `scripts/fetch_holdempro.js` |
+| Pass mark | The two must agree on the main action for at least 85% of the 169 hands, and the sanity checks must pass. | `AGREEMENT_MIN` in `scripts/import_real_charts.py`. Nine of ten charts passed; BB vs SB (73%) is contested and not shipped. |
+| Which numbers ship | Pokalab's, with HoldemPro's agreement figure in the notes. HoldemPro opens noticeably wider in early seats (it ignores rake), which is why agreement there is lower. | Each chart's `source.notes` |
+| Seat naming | Pokalab's "LJ" is the first seat at 6-max, shown as UTG to match the brief. | `POKALAB_POS` |
+| Samples retired | The 6-max raise-first-in and BB-defence samples were removed; samples remain only for spots with no real chart yet (9-handed, facing a 3-bet, other seats facing an open). | `scripts/make_sample_charts.py` |
+| Licensing | Pokalab's page says "All rights reserved". The charts are free and public and this is a personal trainer; the data is committed for convenience with full attribution. If the repository is public, consider making it private or re-running the importer locally instead of committing the files. | Delete `data/charts/nlhe/pokalab/*.json` and run `scripts/import_real_charts.py` on your machine. |
+| Other sources looked at | pokerdata.io (solver ranges as JSON) needs an account key, allows 25 free requests a month, personal use only, no redistribution: not enough for a chart set. pokerqz/preflopwizard/gtocharts: no frequencies in the page or binary charts. | `docs/roadmap.md` |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

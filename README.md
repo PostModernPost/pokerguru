@@ -20,7 +20,10 @@ with the tabs at the top of the screen:
 Only the cash preflop spots need outside charts. Everything else is computed, so those answers are
 real, not samples.
 
-For the cash preflop spots, the only charts included are
+For the 6-max cash preflop spots (raise first in from every seat, and the big blind facing an
+open), the app now has **real charts** imported from Pokalab's published solver output and
+cross-checked against a second publisher (see "Real preflop charts" below). The remaining cash spots
+(9-handed, facing a 3-bet, other seats facing an open) still use
 **SAMPLE charts with random made-up frequencies**. They exist to test the app. They are
 **not real strategy** and the app shows a red warning whenever one is in use. Add your own
 charts (see "Adding real charts" below) before you drill for real.
@@ -196,6 +199,24 @@ The Preflop drill uses this automatically: weak positions, spot types and hand c
 more often, and a spot you got wrong comes back after 5 more hands, then at doubling intervals
 until you've nailed it. **Drill my leaks** (in the Preflop filters) serves nothing but weak areas
 and due reviews.
+
+## Real preflop charts (phase 7)
+
+`data/charts/nlhe/pokalab/` holds nine 6-max 100bb charts read straight from
+[Pokalab's free preflop charts](https://www.pokalab.com/tools/preflop-charts) (solver output,
+opens to 2.5bb, SB to 3bb, GGPoker NL50 rake). They were verified the same way as advice:
+
+1. Both pages were downloaded and the exact per-hand frequencies parsed from the page itself.
+2. Sanity checks: premium hands always raise, earlier seats open fewer hands than later ones, nobody
+   folds aces to an open.
+3. Each chart was compared with [HoldemPro's](https://holdempro.app/tools/preflop-ranges) chart
+   for the same spot (simplified solver output). A chart ships only if the two agree on the main
+   action for at least 85% of hands; the agreement figures are written into each chart's source
+   notes and into `_verification.json`. The big blind vs small blind chart failed (73%) and is not shipped.
+
+`python scripts/import_real_charts.py` repeats the whole process (needs network and Node with
+Playwright, because HoldemPro draws its charts with JavaScript). The downloaded pages are kept in
+`_pages/` so the import can be audited offline.
 
 ## Advice and how it's verified (phase 6)
 

@@ -271,9 +271,15 @@
           "type": "corroborated",
           "passed": true,
           "detail": "3 independent publisher(s) confirmed (need 2)"
+        },
+        {
+          "type": "math_consistent",
+          "passed": true,
+          "detail": "real 6-max charts open UTG 18%, HJ 22%, CO 29%, BTN 44%"
         }
       ],
-      "notes": "Three publishers; Pokalab's figure is solver output (6-max, 100bb, GGPoker NL50 rake). Will also be checked against imported charts (chart_sanity) in phase 7."
+      "notes": "Three publishers; Pokalab's figure is solver output (6-max, 100bb, GGPoker NL50 rake). Will also be checked against imported charts (chart_sanity) in phase 7.",
+      "math_check": "charts_open_wider_later"
     },
     {
       "id": "pushfold-shorter-wider",

@@ -6,7 +6,7 @@ from trainer.charts.loader import ChartLibrary
 from trainer.config import CHARTS_DIR
 from trainer.drills.preflop import NoMatchingChart, next_spot, spot_from_chart
 
-LIB = ChartLibrary.from_directory(CHARTS_DIR / "nlhe" / "sample")
+LIB = ChartLibrary.from_directory(CHARTS_DIR / "nlhe")  # samples plus the real 6-max charts
 
 
 def test_next_spot_respects_filters():

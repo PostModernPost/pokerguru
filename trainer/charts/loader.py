@@ -208,8 +208,10 @@ class ChartLibrary:
     @classmethod
     def from_directory(cls, root: str | Path) -> "ChartLibrary":
         root = Path(root)
-        charts = [load_chart(p) for p in sorted(root.rglob("*.json"))]
-        return cls(charts)
+        # Files or folders starting with "_" are not charts (saved source pages, verification reports).
+        paths = [p for p in sorted(root.rglob("*.json"))
+                 if not any(part.startswith("_") for part in p.relative_to(root).parts)]
+        return cls([load_chart(p) for p in paths])
 
     def get(self, chart_id: str) -> Chart:
         try:

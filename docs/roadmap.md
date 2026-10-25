@@ -25,6 +25,10 @@ marked "computed" the program can work out from the rules and the math.
 
 ## Done since the brief
 
+- **Phase 6, advice library** and **Phase 7, real 6-max preflop charts**: see `docs/decisions.md`.
+  Still open from phase 7: 9-handed charts, facing a 3-bet, and seats other than the big blind
+  facing an open (no verifiable free source found yet).
+
 - **Glossary** (added after phase 5): every jargon word in the app is underlined with dots; tapping
   it opens a pop-up with a plain-language definition over the current screen, and closing it (or
   the phone's back button) returns you exactly where you were. "All terms" lists everything by

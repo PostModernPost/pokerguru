@@ -33,9 +33,10 @@ THREEBET = 8
 FOURBET = 20
 
 # (table size, spot type, hero, villain)
+# 6-max raise-first-in and big-blind defence now come from real charts
+# (data/charts/nlhe/pokalab), so no samples are made for those spots.
 SPOTS = (
-    [(6, "rfi", p, None) for p in POSITIONS[6][:-1]]
-    + [(6, "vs_open", h, v) for h, v in [("CO", "UTG"), ("BTN", "CO"), ("SB", "BTN"), ("BB", "BTN")]]
+    [(6, "vs_open", h, v) for h, v in [("CO", "UTG"), ("BTN", "CO"), ("SB", "BTN")]]
     + [(6, "vs_3bet", h, v) for h, v in [("UTG", "BB"), ("CO", "BTN"), ("BTN", "SB"), ("BTN", "BB")]]
     + [(9, "rfi", p, None) for p in POSITIONS[9][:-1]]
     + [(9, "vs_open", h, v) for h, v in [("HJ", "UTG"), ("BTN", "CO"), ("BB", "BTN")]]
