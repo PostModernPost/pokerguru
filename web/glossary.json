@@ -1,0 +1,134 @@
+{
+  "note": "Definitions only, in plain language. No strategy advice lives here (see CLAUDE.md ground rule 1). 'aliases' are other spellings the app should also link.",
+  "groups": [
+    {
+      "title": "The games",
+      "terms": [
+        {"term": "Hold'em", "aliases": ["Texas Hold'em", "NLHE", "No-Limit Hold'em"], "definition": "The most common poker game. Each player gets two private cards (hole cards) and shares five community cards (the board). Your hand is the best five cards out of those seven. 'No-Limit' means you may bet any amount up to your whole stack."},
+        {"term": "Omaha", "aliases": ["PLO", "Pot-Limit Omaha"], "definition": "Like Hold'em but you get four hole cards and must use exactly two of them plus exactly three board cards. 'Pot-Limit' means the most you can bet or raise is the size of the pot."},
+        {"term": "cash game", "aliases": ["cash"], "definition": "A game where chips are worth real money at face value and you can leave whenever you like. Compare tournament."},
+        {"term": "tournament", "aliases": ["MTT"], "definition": "Everyone buys in for the same amount, the blinds go up over time, and you play until one player has all the chips. Prizes are paid by finishing place, so chips are not worth exactly their face value (see ICM)."},
+        {"term": "heads-up", "definition": "Two players only. Heads-up, the small blind is also the button and acts first before the flop."},
+        {"term": "6-max", "definition": "A table with at most six players. Positions: UTG, HJ, CO, BTN, SB, BB."},
+        {"term": "9-handed", "aliases": ["full ring"], "definition": "A table with nine players. Positions: UTG, UTG1, UTG2, LJ, HJ, CO, BTN, SB, BB."},
+        {"term": "pot-limit", "definition": "A betting rule: the largest bet or raise you may make is the size of the pot after you call. The Pot limit drill practises that calculation."},
+        {"term": "no-limit", "definition": "A betting rule: you may bet or raise any amount up to all your chips."}
+      ]
+    },
+    {
+      "title": "Positions and blinds",
+      "terms": [
+        {"term": "position", "definition": "Where you sit relative to the dealer button, which decides when you act. Acting later is called having position; you see what others do first."},
+        {"term": "button", "aliases": ["BTN", "dealer"], "definition": "The seat with the dealer marker. It acts last on every street after the flop. The button moves one seat left after each hand."},
+        {"term": "small blind", "aliases": ["SB"], "definition": "The seat just left of the button. It must put in a forced bet (half a big blind here) before the cards are dealt."},
+        {"term": "big blind", "aliases": ["BB"], "definition": "The seat two left of the button. It posts a forced bet before the deal, and stack sizes and bets in this app are measured in big blinds. '10bb' means ten big blinds."},
+        {"term": "blinds", "definition": "The two forced bets (small blind and big blind) posted before each hand so there's something to play for."},
+        {"term": "ante", "definition": "A small forced bet from every player (or from one player on everyone's behalf) before the deal, common in tournaments. It makes the pot bigger before anyone acts."},
+        {"term": "UTG", "aliases": ["under the gun", "UTG1", "UTG2"], "definition": "'Under the gun': the first seat to act before the flop, just left of the big blind. At a 9-handed table the next two seats are UTG1 and UTG2."},
+        {"term": "LJ", "aliases": ["lojack"], "definition": "'Lojack': the seat three to the right of the button, used at 9-handed tables."},
+        {"term": "HJ", "aliases": ["hijack"], "definition": "'Hijack': the seat two to the right of the button."},
+        {"term": "CO", "aliases": ["cutoff"], "definition": "'Cutoff': the seat just right of the button."},
+        {"term": "hero", "definition": "You, the player whose decision is being drilled."},
+        {"term": "villain", "definition": "Any opponent. 'Villain bets 10' just means an opponent bet 10; it isn't personal."}
+      ]
+    },
+    {
+      "title": "The deal and the streets",
+      "terms": [
+        {"term": "hole cards", "aliases": ["hand"], "definition": "Your private cards: two in Hold'em, four in Omaha."},
+        {"term": "board", "aliases": ["community cards"], "definition": "The face-up shared cards in the middle: three on the flop, one more on the turn, one more on the river."},
+        {"term": "street", "definition": "A betting round. The four streets are preflop, flop, turn and river."},
+        {"term": "preflop", "definition": "The first betting round, after you get your hole cards and before any board cards are dealt."},
+        {"term": "flop", "definition": "The first three board cards, dealt together, and the betting round that follows."},
+        {"term": "turn", "definition": "The fourth board card and its betting round."},
+        {"term": "river", "definition": "The fifth and last board card and its betting round. After it, remaining players show their hands."},
+        {"term": "showdown", "definition": "The end of the hand, when the remaining players reveal their cards and the best hand wins the pot."},
+        {"term": "postflop", "definition": "Everything after the flop is dealt: the flop, turn and river betting rounds."},
+        {"term": "runout", "definition": "The board cards still to come. 'Any runout' means whatever the remaining cards turn out to be."}
+      ]
+    },
+    {
+      "title": "Actions",
+      "terms": [
+        {"term": "fold", "definition": "Give up your hand and any chips you've already put in. You can't win the pot."},
+        {"term": "check", "definition": "Pass the action without betting, allowed only when nobody has bet yet this round."},
+        {"term": "call", "definition": "Match the current bet to stay in the hand."},
+        {"term": "raise", "definition": "Increase the bet. 'Raise to 7' means your total bet this round becomes 7, not 7 more on top."},
+        {"term": "raise first in", "aliases": ["RFI", "open", "open-raise", "opens"], "definition": "Being the first player to put money in voluntarily, with a raise, after everyone before you folded. Also called opening the pot."},
+        {"term": "3-bet", "aliases": ["three-bet", "3-bets"], "definition": "A re-raise: the second raise in a betting round. Preflop, the big blind counts as the first bet, the open as the second, so the re-raise is the third, hence '3-bet'."},
+        {"term": "4-bet", "aliases": ["four-bet", "4-bets"], "definition": "A re-raise of a 3-bet: the third raise in the round."},
+        {"term": "all-in", "aliases": ["shove", "shoves", "push", "jam", "allin"], "definition": "Bet every chip you have. 'Shove', 'push' and 'jam' all mean the same thing."},
+        {"term": "limp", "aliases": ["limps"], "definition": "Just call the big blind preflop instead of raising."},
+        {"term": "bet", "definition": "Put chips in when nobody has yet this round. Later players must call, raise or fold."},
+        {"term": "to call", "aliases": ["amount to call"], "definition": "How many more chips you need to put in to match the current bet."},
+        {"term": "folded to you", "aliases": ["folded to"], "definition": "Everyone who acted before you folded, so you're the first with a real decision."}
+      ]
+    },
+    {
+      "title": "Hands and cards",
+      "terms": [
+        {"term": "hand class", "aliases": ["AKs", "AKo", "hand classes"], "definition": "Shorthand for a type of starting hand, ignoring exact suits. 'AKs' is ace-king suited (same suit), 'AKo' is ace-king offsuit, 'TT' is a pair of tens. T means ten. There are 169 classes in Hold'em."},
+        {"term": "suited", "definition": "Two cards of the same suit, written with an 's' (A5s). Suited hands can make flushes more easily."},
+        {"term": "offsuit", "definition": "Two cards of different suits, written with an 'o' (A5o)."},
+        {"term": "pocket pair", "aliases": ["pair", "pairs"], "definition": "Two hole cards of the same rank, like 8-8."},
+        {"term": "broadway", "aliases": ["broadways"], "definition": "Any of the cards ten through ace. A 'broadway straight' is ten-jack-queen-king-ace, the highest straight."},
+        {"term": "connector", "aliases": ["connectors", "suited connector"], "definition": "Two cards next to each other in rank, like 9-8. 'Suited connector' means they also share a suit."},
+        {"term": "kicker", "definition": "A card that doesn't make the hand itself but breaks ties. With a pair of aces, your other card is the kicker."},
+        {"term": "hand rankings", "aliases": ["straight flush", "four of a kind", "full house", "flush", "straight", "three of a kind", "two pair", "one pair", "high card"], "definition": "From best to worst: straight flush (five in a row, same suit; ace-high is a royal flush), four of a kind, full house (three of one rank plus a pair), flush (five of one suit), straight (five in a row), three of a kind, two pair, one pair, high card."},
+        {"term": "wheel", "definition": "The lowest straight: ace-2-3-4-5, where the ace counts as a one."},
+        {"term": "the nuts", "aliases": ["nuts", "nut", "nut hand"], "definition": "The best possible hand given the cards on the board. In this app it also takes your own cards into account: a hand nobody else can hold because you hold its cards doesn't count."},
+        {"term": "nut draw", "aliases": ["drawing to the nuts"], "definition": "A draw that, if it gets there, makes the best possible hand. A 'non-nut draw' would make a strong hand that could still lose to a better one."},
+        {"term": "draw", "aliases": ["drawing", "draws"], "definition": "A hand that isn't much yet but becomes strong if the right card comes, like four cards to a flush."},
+        {"term": "outs", "aliases": ["out"], "definition": "The cards still in the deck that would improve your hand to the one you're hoping for. Four cards to a flush have nine outs."},
+        {"term": "blocker", "aliases": ["blocks", "block"], "definition": "A card in your hand that makes certain opponent hands impossible or less likely. Holding the ace of spades means nobody else can have the ace-high spade flush."},
+        {"term": "two hole cards rule", "aliases": ["exactly two hole cards"], "definition": "The Omaha rule: your final hand must use exactly two of your four hole cards and exactly three board cards. A flush on the board is not your flush unless you hold two of that suit."},
+        {"term": "board plays", "aliases": ["the board plays"], "definition": "In Hold'em, when the best five cards are the five on the board, so everyone still in has the same hand. This never applies in Omaha because of the two-hole-cards rule."}
+      ]
+    },
+    {
+      "title": "Math and odds",
+      "terms": [
+        {"term": "equity", "definition": "Your share of the pot if the hand were played out many times from here: a 40% equity means you'd win about 40% of the time (ties count half). It's a fact about the cards, not a decision."},
+        {"term": "pot odds", "definition": "The price you're being offered: how much you must call compared with what's in the pot. If the pot is 100 and you must call 50, you're risking 50 to win 150."},
+        {"term": "required equity", "aliases": ["equity needed", "need"], "definition": "The break-even point for a call: call / (pot + bet + call). If your equity is at least this, calling at least breaks even on this street. The app computes it for you."},
+        {"term": "direct odds", "definition": "Pot odds counting only the chips already in the pot and the bet you face, nothing you might win later. The Equity drill uses direct odds only."},
+        {"term": "implied odds", "definition": "Extra chips you might win on later streets if your draw gets there. The Equity drill ignores these on purpose, and says so."},
+        {"term": "EV", "aliases": ["expected value", "chip EV"], "definition": "Expected value: the average result of a decision if you made it many times. 'Chip EV' measures it in chips, treating every chip as equal."},
+        {"term": "ICM", "definition": "Independent Chip Model: a way of valuing tournament chips in prize money rather than at face value, because finishing places pay out unevenly. Not used in this app yet; the push/fold charts are chip EV."},
+        {"term": "Monte Carlo", "aliases": ["simulated hands", "simulation"], "definition": "Estimating a probability by running the situation many times with random cards and counting the results. The app deals 2,500 random runouts to estimate equity, accurate to about one percentage point."},
+        {"term": "exploitability", "definition": "How much, per hand, a perfect opponent could gain against a strategy. Zero means the strategy can't be beaten in the long run (an equilibrium)."},
+        {"term": "Nash equilibrium", "aliases": ["equilibrium", "Nash"], "definition": "A pair of strategies where neither player can do better by changing only their own. The push/fold charts are an equilibrium: the shoving and calling ranges are each the best reply to the other."},
+        {"term": "indifferent", "aliases": ["indifference"], "definition": "When two actions have the same expected value, so it doesn't matter which you pick. Charts often mix such hands, playing them one way some of the time."}
+      ]
+    },
+    {
+      "title": "Ranges and charts",
+      "terms": [
+        {"term": "range", "definition": "All the hands a player could have in a situation, usually drawn as a 13-by-13 grid of the 169 hand classes. 'A tight range' means few hands; 'a wide range' means many."},
+        {"term": "chart", "aliases": ["charts"], "definition": "A table saying what to do with each starting hand in one specific situation (position, table size, stack depth, what happened before you). The Preflop drill grades you against one."},
+        {"term": "sample chart", "aliases": ["SAMPLE"], "definition": "A fake chart with random numbers, used only to build and test the app. Red banner, not real strategy, don't learn from it."},
+        {"term": "computed", "definition": "An answer the program worked out mathematically (equity, pot-limit sizes, push/fold ranges) rather than looked up in a chart someone wrote."},
+        {"term": "source", "aliases": ["chart source"], "definition": "Where a chart's numbers came from. Every chart in this app says, so you know what you're learning from."},
+        {"term": "frequency", "aliases": ["frequencies", "mixed strategy", "mixed"], "definition": "How often a chart takes an action with a hand. '60% raise, 40% fold' means the hand is a raise most of the time but not always. Mixed hands are usually ones that are close to indifferent."},
+        {"term": "stack depth", "aliases": ["stack", "stacks", "effective stack", "bb deep"], "definition": "How many big blinds a player has. '100bb deep' is a normal cash-game stack; under 15bb is short. With two players the smaller stack is what matters (the effective stack)."},
+        {"term": "push/fold", "aliases": ["push or fold", "shove or fold"], "definition": "Playing a short stack with only two choices preflop: all-in or fold. The tournament charts in this app cover that for heads-up play."},
+        {"term": "spot", "aliases": ["spots", "spot type"], "definition": "One decision point: the game, positions, stack sizes and action so far. 'Spot type' groups them: raise first in, facing an open, facing a 3-bet, push or fold, facing a shove."},
+        {"term": "facing", "aliases": ["facing an open", "facing a 3-bet", "facing a shove"], "definition": "What's been done to you before you act: an open means someone raised, a 3-bet means someone re-raised your raise, a shove means someone went all-in."},
+        {"term": "card removal", "definition": "The fact that cards you hold can't be in anyone else's hand, which changes how likely each opponent hand is. The solver accounts for it."}
+      ]
+    },
+    {
+      "title": "The app",
+      "terms": [
+        {"term": "correct", "definition": "Grade for choosing an action the chart takes at least 50% of the time (or the exact answer in a math drill)."},
+        {"term": "acceptable", "aliases": ["close enough"], "definition": "Grade for a mixed hand where the chart takes your action between 15% and 50% of the time, or for an equity answer within two points of the line. Not wrong, not the main line."},
+        {"term": "wrong", "definition": "Grade for an action the chart takes under 15% of the time, or an incorrect answer in a math drill."},
+        {"term": "leak", "aliases": ["leaks"], "definition": "A kind of spot you consistently get wrong. Here: a position, spot type or hand category you've answered at least five times with a score under 70%."},
+        {"term": "review", "aliases": ["due for review", "reviews"], "definition": "A specific spot you missed earlier that the app brings back after a few more hands, then at growing intervals, until you get it right repeatedly (spaced repetition)."},
+        {"term": "spaced repetition", "definition": "A learning method: things you got wrong come back soon, things you got right come back later and later. The app counts the gaps in hands played rather than days."},
+        {"term": "drill my leaks", "aliases": ["leak drill"], "definition": "A Preflop mode that serves only your weak areas and due reviews."},
+        {"term": "hand category", "aliases": ["hand categories"], "definition": "A group of starting hands used in the stats: pairs, suited aces, offsuit aces, suited broadways, offsuit broadways, suited connectors, other suited, other offsuit."}
+      ]
+    }
+  ]
+}
