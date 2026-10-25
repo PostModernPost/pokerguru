@@ -51,8 +51,13 @@ try {
     $inner = Get-ChildItem (Join-Path $tmp "x") | Where-Object { $_.PSIsContainer } | Select-Object -First 1
     if (-not $inner) { throw "download had no folder inside" }
 
-    # Copy everything over this folder. The download never contains .venv,
-    # data\progress.sqlite or update_token.txt, so those stay as they are.
+    # Replace the app folders wholesale so files removed upstream disappear too. Your own
+    # files are not in these folders: .venv, data\*.sqlite, .update_sha and update_token.txt
+    # all live elsewhere and are kept.
+    foreach ($dir in @("trainer", "web", "scripts", "tests", "docs", "data\charts", "data\advice", "data\equity_cache")) {
+        $target = Join-Path $Root $dir
+        if (Test-Path $target) { Remove-Item -Path $target -Recurse -Force -ErrorAction SilentlyContinue }
+    }
     Copy-Item -Path (Join-Path $inner.FullName "*") -Destination $Root -Recurse -Force
     Set-Content -Path $ShaFile -Value $sha
     Remove-Item -Path $tmp -Recurse -Force -ErrorAction SilentlyContinue

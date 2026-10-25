@@ -213,7 +213,16 @@ class ChartLibrary:
     """All charts found under a folder, searchable by spot."""
 
     def __init__(self, charts: list[Chart]):
-        self.charts = list(charts)
+        # A sample chart that describes the same spot as a real one is dropped (with a warning):
+        # this happens on a machine where an old sample file survived an update.
+        real_spots = {spot_key(c) for c in charts if not c.is_sample}
+        kept = []
+        for c in charts:
+            if c.is_sample and spot_key(c) in real_spots:
+                log.warning("%s: sample chart ignored, a real chart covers this spot (delete %s)", c.id, c.path)
+                continue
+            kept.append(c)
+        self.charts = kept
         self._by_id: dict[str, Chart] = {}
         seen_spots: dict[tuple, str] = {}
         for c in self.charts:

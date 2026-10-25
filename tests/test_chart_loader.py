@@ -165,3 +165,20 @@ def test_library_rejects_duplicates():
         ChartLibrary([c1, chart_from_dict(make())])
     with pytest.raises(ChartError, match="same spot"):
         ChartLibrary([c1, chart_from_dict(make(id="other"))])
+
+
+def test_leftover_sample_for_a_real_spot_is_ignored(tmp_path, caplog):
+    """An old sample file surviving an update must not stop the app."""
+    import json
+    import shutil
+    from trainer.charts.loader import ChartLibrary
+    from trainer.config import CHARTS_DIR
+    src = CHARTS_DIR / "nlhe" / "rangeconverter" / "rangeconverter-nlhe-cash-9max-100bb-rfi-BTN.json"
+    shutil.copy(src, tmp_path / "real.json")
+    d = json.load(open(src))
+    d["id"] = "SAMPLE-nlhe-cash-9max-100bb-rfi-BTN"
+    d["source"] = {"name": "SAMPLE - NOT REAL STRATEGY", "url": "", "notes": ""}
+    (tmp_path / "sample.json").write_text(json.dumps(d))
+    lib = ChartLibrary.from_directory(tmp_path)
+    assert [c.id for c in lib.charts] == ["rangeconverter-nlhe-cash-9max-100bb-rfi-BTN"]
+    assert "sample chart ignored" in caplog.text
