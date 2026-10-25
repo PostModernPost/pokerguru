@@ -208,3 +208,11 @@ def test_shipped_advice_shows_nothing_unverified(ctx):
     for cid, cards in (("rangeconverter-nlhe-cash-9max-100bb-rfi-CO", ["As", "Kd"]),):
         r = client.post("/api/preflop/answer", json={"chart_id": cid, "hero_cards": cards, "action": "fold"}).json()
         assert all(t["status"] in ("verified", "single_source", "contested") for t in r["tips"])
+
+
+def test_version_and_shutdown_guard(ctx):
+    client, _ = ctx
+    v = client.get("/api/version").json()["version"]
+    assert isinstance(v, str) and len(v) >= 8
+    # the test client is not 127.0.0.1, so shutdown is refused (and the test process survives)
+    assert client.post("/api/shutdown").status_code == 403

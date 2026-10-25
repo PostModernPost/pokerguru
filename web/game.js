@@ -83,7 +83,7 @@ function render() {
   $("attention").hidden = !(h.hero_turn && att.length);
   const al = $("attention-list"); al.replaceChildren();
   for (const a of att) al.append(el("div", { class: "att-tile" },
-    el("div", { class: "att-title" }, a.title), el("div", { class: "att-value" }, a.value), el("div", { class: "att-detail" }, a.detail || "")));
+    el("div", { class: "att-title" }, a.title), el("div", { class: "att-value" }, a.value ?? a.text ?? ""), el("div", { class: "att-detail" }, a.detail || "")));
 
   // actions
   const legal = h.legal || {};

@@ -21,6 +21,7 @@ from trainer import config
 from trainer.advice.library import AdviceLibrary
 from trainer.api.basics_routes import make_basics_router
 from trainer.api.game_routes import make_game_router
+from trainer.version import current_version
 from trainer.api.equity_routes import make_equity_router
 from trainer.api.plo_routes import make_plo_router
 from trainer.charts.loader import Chart, ChartLibrary
@@ -160,6 +161,22 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         response = await call_next(request)
         response.headers["Cache-Control"] = "no-cache"
         return response
+
+    running_version = current_version()
+
+    @app.get("/api/version")
+    def version():
+        return {"version": running_version}
+
+    @app.post("/api/shutdown")
+    def shutdown(request: Request):
+        """Lets a newer launcher replace this server. Only from this computer."""
+        if request.client is None or request.client.host not in ("127.0.0.1", "::1"):
+            raise HTTPException(403, "only from this computer")
+        import os
+        import threading
+        threading.Timer(0.5, lambda: os._exit(0)).start()
+        return {"ok": True}
 
     @app.get("/api/options")
     def options(include_samples: bool = False):

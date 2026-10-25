@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import socket
 import threading
@@ -14,6 +15,7 @@ import webbrowser
 import uvicorn
 
 from trainer.api.app import create_app
+from trainer.version import current_version
 
 
 def lan_ip() -> str | None:
@@ -33,6 +35,27 @@ def trainer_already_running(port: int) -> bool:
             return resp.status == 200 and b"spot_types" in resp.read()
     except (urllib.error.URLError, OSError, ValueError):
         return False
+
+
+def running_version(port: int) -> str | None:
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/version", timeout=2) as r:
+            return json.loads(r.read()).get("version")
+    except Exception:
+        return None
+
+
+def stop_running_trainer(port: int) -> None:
+    """Ask the old server (ours, on this computer) to exit, and wait for the port to free up."""
+    try:
+        req = urllib.request.Request(f"http://127.0.0.1:{port}/api/shutdown", method="POST")
+        urllib.request.urlopen(req, timeout=3).read()
+    except Exception:
+        pass
+    for _ in range(50):
+        if port_is_free(port):
+            return
+        time.sleep(0.2)
 
 
 def port_is_free(port: int) -> bool:
@@ -69,11 +92,14 @@ def main() -> None:
     port = args.port
     if trainer_already_running(port):
         url = f"http://localhost:{port}"
-        print(f"\n  Poker Trainer is already running at {url} (another window has it open).")
-        print("  Opening that one. Close this window; use the other window to stop the server.\n")
-        if not args.no_browser:
-            webbrowser.open(url)
-        return
+        if running_version(port) == current_version():
+            print(f"\n  Poker Trainer is already running at {url} (another window has it open).")
+            print("  Opening that one. Close this window; use the other window to stop the server.\n")
+            if not args.no_browser:
+                webbrowser.open(url)
+            return
+        print(f"\n  An older Poker Trainer is still running at {url}; replacing it with the updated one.")
+        stop_running_trainer(port)
     if not port_is_free(port):
         # Something else owns the port: move to the next free one and say so.
         for candidate in range(port + 1, port + 11):
