@@ -1,27 +1,27 @@
-# Roadmap: possible future phases
+# Roadmap
 
-Ordered by how much each would help a relatively new player, most useful first. Phases 1-5
-from the original brief are done, as are 6, 7 and the why-this-hand part of 8 (see `docs/decisions.md`).
+Ordered for Adam's actual situation: a monthly live cash game, 10 players, $200 buy-in, mostly
+Hold'em with multi-board hands, bomb pots (Hold'em and Omaha) and Pineapple later in the night,
+a mix of strong and loose players. He has played a lot but never studied. Phases 1-9 are done
+(see `docs/decisions.md`). Most useful next thing first.
 
 The one recurring constraint: **the program never invents strategy** (CLAUDE.md ground rule 1).
-Anything marked "needs a source" means Adam has to pick where the strategy comes from; anything
-marked "computed" the program can work out from the rules and the math.
+"Computed" means the program works it out from the rules and the math; "needs a source" means
+real published strategy has to be found and verified first; "AI opinion" is allowed only in the
+game mode and is always marked.
 
-| # | Phase | What it adds | Why it matters for a newer player | Strategy source |
+| # | Phase | What it adds | Why it comes here | Strategy source |
 |---|---|---|---|---|
-| 6 | **Real cash-game charts** | Replace the fake sample charts with real preflop ranges for 6-max and 9-handed, 100bb. The importer and the drill are ready; only the data is missing. | Preflop is the decision you make most often, and the only drill that currently can't teach you anything. Everything else in the app is already real. | **Needs a source** (a chart pack or book you trust). |
-| 7 | **Hand-strength and pot-odds basics drill** | Quick-fire questions: "what's your hand?" on a board (Hold'em and Omaha), "how many outs?", "what are the pot odds here?" with the math shown. | Reading your own hand fast and correctly is the first skill, and the equity drill assumes you already can. Counting outs is the bridge between "I have a draw" and "should I call". | Computed. |
-| 8 | **Why-this-hand explanations** (done) | On the result screen, show what the hand has going for it in plain words: pair, suited, connected, blockers, how it ranks against the rest of the range in this spot (top 10%, middle, bottom). Plus a one-tap glossary for every term (done: see below). | Charts tell you *what*; a beginner needs a sense of *why* so it transfers to spots the chart doesn't cover. This describes the hand, it doesn't invent advice. | Computed from the chart and the cards. |
-| 9 | **Multi-player push/fold** | 3-handed and full-table shove-or-fold charts, including facing a shove with players still to act behind you. | Short-stack tournament play is where new players bleed chips fastest, and heads-up charts only cover the very end of a tournament. | Computed (a real piece of work: multi-way equities and callers behind callers). |
-| 10 | **Hand reading: ranges, not hands** | In the equity drill, the villain holds a *range* (e.g. "the hands a button opener has") instead of a random hand. Start with ranges taken from the charts already in the app. | "Equity against a random hand" is a warm-up. Real decisions are against what an opponent would actually play. | Ranges come from the loaded charts, so no new strategy is invented. |
-| 11 | **Session mode and goals** | Timed or fixed-length sessions, a daily streak, "ten hands before work", a session summary screen. | Habit beats intensity. New players improve by drilling a little every day. | None needed. |
-| 12 | **Leak weighting for every drill** | Extend the phase-5 weighting (weak areas come up more often, misses return sooner) from the Preflop drill to the Equity, Nuts and Pot-limit drills. | Same learning engine everywhere; small job. | None needed. |
-| 13 | **Deeper and shallower stacks** | 40bb and 200bb cash charts, and 20-25bb tournament spots (where it's no longer just push or fold). | Live games are often deeper than 100bb; tournaments spend a long time at 20-40bb. | Needs a source for charts; some tournament spots can be computed. |
-| 14 | **ICM for tournaments** | Value tournament chips in prize money, so push/fold ranges tighten near the money and at final tables. | Matters a lot in the last 10% of a tournament; not much before. Lower priority until the basics are solid. | Computed (needs payout structures as input). |
-| 15 | **Postflop decision drills (Hold'em)** | Continuation bets, check-raises, bet sizing postflop, graded against solver output. | Postflop is where the money is, but trustworthy answers need a solver's output as the source, which is a large dependency. | Needs a solver or solver-output files. |
-| 16 | **Hand history import** | Load real hands you played (from an online site) and find the spots where you deviated from the charts. | Turns the trainer into a review tool for your own play. | Charts already in the app. |
-| 17 | **Deployment and sync** | Run it on a small server so it works away from home Wi-Fi, with progress synced across phone and computer. | Convenience, not learning. | None needed (hosting choice from Adam). |
-| 18 | **Play full hands against bots** | Explicitly out of scope in the brief. Listed only so it isn't forgotten. | Fun, but a trainer teaches more per minute than a game. | Needs real bot strategy. |
+| 10 | **Live full-ring preflop charts** | Real charts for 9- and 10-handed tables: open-raise, facing an open from every seat, facing a 3-bet. 10-handed is done by adding one early seat to the 9-handed ranges. Sample charts go off by default until each spot has a real chart. | Preflop at a full table is the decision Adam makes most often in his game, and today those spots are either missing or fake (the AQs screenshot). | **Needs a source**; same fetch-and-corroborate process as phase 7. |
+| 11 | **Game mode** | A continuous simulated game: Hold'em or Omaha, cash or tournament, 2-10 players, buy-in in big blinds. Feedback on every decision: charts preflop, pot odds and equity on calls, hand-strength facts, all computed or sourced; everything else from an AI model, marked as AI opinion. Bots play the charts preflop and a simple strength-and-odds policy after. Every graded decision feeds the leak tracker. | Adam expects to use this most. It only becomes trustworthy after phase 10 gives it real full-ring charts. | Charts and math where they exist; **AI opinion** (Claude API, Adam's own key, works without it but with no AI feedback) elsewhere. |
+| 12 | **Hand reading: ranges, not hands** | In the Equity drill the opponent holds a *range* taken from the charts in the app ("a button opener"), with loose and tight presets so Adam can practise against the kind of players actually at his table. | His table mixes strong and loose players; equity against a random hand is a warm-up for that. | Ranges come from loaded charts; the presets are widened or narrowed versions of them, labelled as such. |
+| 13 | **Home-game variants** | Computed drills for what his game plays after the first few hours: double-board nuts and "who scoops, who splits"; bomb-pot spots (everyone sees a multiway flop, Hold'em and Omaha) for hand strength, nut awareness and pot odds; Pineapple "which card do you discard?" graded by equity. | These are the hours where the pots get big and nobody at the table has studied. Published strategy is thin, so only computed drills. | Computed. Exact house rules from Adam. |
+| 14 | **Sessions, streaks and leak weighting everywhere** | Short fixed-length sessions ("twenty hands before the game"), a streak, a pre-game warm-up that serves the weak areas from every drill, and the phase-5 weighting extended to Equity, Nuts, Pot limit and the game mode. | A monthly game rewards steady drilling between games more than cramming. | None needed. |
+| 15 | **Deeper stacks** | 150bb and 200bb cash charts and spots, since live games run deeper than 100bb once people rebuy. | Depends on his blinds; a $200 buy-in at $0.50/$1 is already 200bb. | Needs a source. |
+| 16 | **Deployment and sync** | Fly.io with a passcode and a persistent disk so it works on his phone away from home, progress shared between phone and desktop. | Convenience; moves up whenever Adam wants it. | None needed. |
+| 17 | **Postflop decision drills (Hold'em)** | Continuation bets, check-raises, sizing, graded against solver output; would also replace AI opinion in the game mode with verified answers. | The biggest learning gain and the biggest job; needs solver output as the source. | Needs a solver or solver-output files. |
+| 18 | **Tournaments: multi-player push/fold, 20-25bb spots, ICM** | Full-table shove-or-fold, the stage where it's no longer just push or fold, and prize-money adjustments. | Only when Adam starts playing tournaments. | Computed. |
+| 19 | **Hand history import** | Load real online hands and find where play deviated from the charts. | Only useful if he plays online. | Charts already in the app. |
 
 ## Plan for remote access (not built yet)
 
@@ -44,10 +44,10 @@ Work when the time comes (about half a day):
 
 ## Done since the brief
 
-- **Phase 6, advice library**, **Phase 7, real 6-max preflop charts**, and **Phase 8, basics drill**
-  (hand naming, outs, price) plus a double-click Windows launcher: see `docs/decisions.md`.
-  Still open from phase 7: 9-handed charts, facing a 3-bet, and seats other than the big blind
-  facing an open (no verifiable free source found yet).
+- **Phase 6, advice library**, **Phase 7, real 6-max preflop charts**, **Phase 8, basics drill**
+  (hand naming, outs, price) plus a double-click Windows launcher, and **Phase 9, "Why this hand?"**:
+  see `docs/decisions.md`. Still open from phase 7 and now phase 10: 9-handed charts, facing a
+  3-bet, and seats other than the big blind facing an open.
 
 - **Glossary** (added after phase 5): every jargon word in the app is underlined with dots; tapping
   it opens a pop-up with a plain-language definition over the current screen, and closing it (or

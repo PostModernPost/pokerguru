@@ -4,9 +4,11 @@
 
 A drill-based poker trainer for No-Limit Texas Hold'em (NLHE) and Pot-Limit Omaha (PLO). The app shows a spot, the user makes a decision, and the app grades it immediately against a trusted answer key, then tracks weak areas and drills them more often.
 
-The user is Adam. He plays mostly cash games, wants tournaments too, and builds by vibe coding with Claude Code. He is not a professional developer, so explain decisions in plain language, keep the setup simple, and make every phase usable on its own before starting the next one.
+The user is Adam. He has played a decent amount of poker but never studied it. His main game is a monthly live cash game: $200 buy-in, 10 players, a professional dealer, a few strong players and several loose ones. It starts as Texas Hold'em and later opens up to multi-board hands, bomb pots (Hold'em and Omaha) and Pineapple. He may try other games and formats as he improves. He builds by vibe coding with Claude Code and is not a professional developer, so explain decisions in plain language, keep the setup simple, and make every phase usable on its own before starting the next one.
 
-This is a trainer, not a poker game. Playing full hands against bots is out of scope.
+Training priority: **live full-ring cash first** (9-10 players, 100bb and deeper), then the mixed games his home game plays, then tournaments.
+
+It is a trainer first. A simulated game mode (full hands against basic bots, with feedback as you play) is in scope since Adam asked for it (see ground rule 8); it must follow the same rules about where feedback comes from.
 
 ## Ground rules (read these first)
 
@@ -16,7 +18,9 @@ This is a trainer, not a poker game. Playing full hands against bots is out of s
    - **Contested**: sourced advice where credible sources disagree with each other or with the math. Shown, with a short footnote saying sources disagree and the evidence for each side available on tap.
    - **Single source**: confirmed from one reputable publisher only. Shown, with a short footnote saying so.
    - **Unverified**: nothing could be confirmed (source unreachable, quote not found). Stored, never shown.
+   - **AI opinion** (game mode only, roadmap phase): feedback from a language model on decisions where the app has no computed or sourced answer. Always marked as AI opinion, never mixed with or dressed up as the verified kinds, and never used in the drills. Adam chose this knowing it can be wrong; the mark is what makes it acceptable.
    Adam's preference: he'd rather see conflicting or single-source advice than none, and the indicators must not be intrusive: a footnote, never a banner.
+   Where the app has no trusted answer and no AI feedback is configured, it says so rather than guessing.
    Adam does not review advice himself; the verification standard is the gate.
 
    **Verification standard** (every item must pass all of it before it is shown):
@@ -27,10 +31,12 @@ This is a trainer, not a poker game. Playing full hands against bots is out of s
    5. *Reviewable.* Every piece of advice on screen offers "Why trust this?", showing sources, quotes, check date and the checks it passed.
    Where credible sources differ on a detail (for example open-raise sizes) the app says so and names each, rather than picking silently.
 2. **Every answer key records its source.** Chart files carry a `source` field. Computed answers are labeled `computed` with the method.
-3. **Do not write a hand evaluator or rules engine.** Use PokerKit for game rules, hand evaluation, and equity. Read its current docs and verify the API before using it rather than assuming function names.
+3. **Do not write a hand evaluator or rules engine.** Use PokerKit for game rules, hand evaluation, and equity. Read its current docs and verify the API before using it rather than assuming function names. If PokerKit genuinely lacks something (a home-game variant, for example), write the smallest possible piece, cover it with tests against known hands, and tell Adam.
 4. **Correctness is tested.** Anything that grades the user (pot-limit math, equity, chart lookup, grading thresholds) needs unit tests with known values before the UI depends on it.
-5. **Sample data is clearly fake.** To build and test the chart pipeline before real charts exist, create small sample charts marked `"source": {"name": "SAMPLE - NOT REAL STRATEGY"}` and show a visible note in the UI whenever one is in use. Adam wants every such indicator (sample data, single source, sources disagree, direct-odds-only) as an unobtrusive footnote with a mark like `*`, `†` or `‡`, never a banner.
-6. Ask Adam before adding a dependency, changing the stack, or making a strategy-related judgment call.
+5. **Sample data is clearly fake, and off by default.** Sample charts exist only to test the chart pipeline, marked `"source": {"name": "SAMPLE - NOT REAL STRATEGY"}`. The drills do not deal spots that only have a sample chart unless Adam switches samples on in the filters; when one is in use the UI shows a footnote. Adam wants every such indicator (sample data, single source, sources disagree, direct-odds-only, AI opinion) as an unobtrusive footnote with a mark like `*`, `†` or `‡`, never a banner.
+6. **Decide, then explain.** Adam has delegated dependency choices, stack details and strategy-related judgment calls. Make the call, record it in `docs/decisions.md`, and explain it in plain language in the phase summary. Do not block on a question when a sensible default exists.
+7. **Adam does not review advice.** He never approves sources or tips himself; the verification standard in rule 1 is the gate. Research and check, do not ask.
+8. **Game mode feedback.** In the simulated game, every decision gets feedback. It is graded against a trusted answer wherever one exists (charts preflop, pot odds and equity on calls, hand strength and nut facts), and otherwise comes from a configured AI model and is marked as AI opinion. Bots exist to keep the game moving, not to teach; they are labelled as basic opponents and their play is never presented as advice.
 
 ## Stack
 
@@ -180,21 +186,20 @@ Required tests:
 - Drill engine weights sampling toward categories with low accuracy, with simple spaced repetition so missed spots come back sooner.
 - "Drill my leaks" mode that only serves weak categories.
 
-## Out of scope for now
+## Later, not now
 
-- Playing full hands against bots
 - Hand history import from poker sites
 - Postflop solver integration for NLHE strategy
 - ICM
-- User accounts and deployment
+- User accounts and deployment (Fly.io when Adam asks; remote phone access is wanted eventually)
 
-These are likely future phases, so keep the layers clean enough that they could be added.
+These are planned later phases (`docs/roadmap.md`), so keep the layers clean enough that they slot in. The stack choices above are a default, not a rule: a clearly better option can replace one, with the reason recorded.
 
 ## Open questions for Adam
 
 Ask these when they become relevant, not all up front:
 
-- Which chart sources to use for NLHE cash (and PLO preflop, if any). Until then, sample charts only.
-- Open-raise sizes he wants to drill (6-max online usually differs from live 9-handed games)
-- Rake assumptions, if his chart source distinguishes them
-- Whether to add 40bb or 200bb stack depths after 100bb works
+- The blinds in his monthly game (sets the real stack depth: $200 at $1/$2 is 100bb, at $0.50/$1 it is 200bb)
+- The exact rules of the home-game variants (how many boards, how bomb pots are posted, when Pineapple discards)
+- Open-raise sizes his game actually uses (live games usually open bigger than online charts assume)
+- Which other games or formats he starts playing, when he does
