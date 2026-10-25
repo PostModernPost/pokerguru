@@ -23,8 +23,8 @@ from trainer.api.plo_routes import make_plo_router
 from trainer.charts.loader import Chart, ChartLibrary
 from trainer.drills.equity import EquityService
 from trainer.drills.plo import NutsService
-from trainer.drills.preflop import DRILL_TYPE, NoMatchingChart, next_spot, spot_from_chart
-from trainer.game.hand_classes import grid
+from trainer.drills.preflop import DRILL_TYPE, LeakProfile, NoMatchingChart, next_spot, review_key, spot_from_chart
+from trainer.game.hand_classes import HAND_CATEGORIES, grid, hand_category
 from trainer.game.positions import POSITIONS, SPOT_TYPES
 from trainer.graders.preflop_chart import action_label, format_pct, grade
 from trainer.progress.store import Attempt, AttemptStore
@@ -36,13 +36,19 @@ SPOT_TYPE_LABELS = {
     "rfi": "Raise first in",
     "vs_open": "Facing an open",
     "vs_3bet": "Facing a 3-bet",
+    "push": "Push or fold",
+    "vs_push": "Facing a shove",
 }
+FORMAT_LABELS = {"cash": "Cash", "tournament": "Tournament"}
 
 
 class NextRequest(BaseModel):
+    formats: list[str] = Field(default_factory=list)
     table_sizes: list[int] = Field(default_factory=list)
     hero_positions: list[str] = Field(default_factory=list)
     spot_types: list[str] = Field(default_factory=list)
+    stacks: list[float] = Field(default_factory=list)
+    leaks_only: bool = False
 
 
 class AnswerRequest(BaseModel):
@@ -59,6 +65,8 @@ def _history_text(spot: PreflopSpot) -> list[dict]:
         who = "You" if step.is_hero else step.pos
         if step.action == "fold":
             text = f"{who} fold" if step.is_hero else f"{who} folds"
+        elif spot.spot_type == "vs_push":
+            text = f"{who} shoves all-in for {step.to_bb:g}bb"
         else:
             raises += 1
             verb = {1: "raise", 2: "3-bet"}.get(raises, "raise")
@@ -92,8 +100,9 @@ def _seats(spot: PreflopSpot) -> list[dict]:
     return seats
 
 
-def _spot_payload(chart: Chart, spot: PreflopSpot) -> dict:
+def _spot_payload(chart: Chart, spot: PreflopSpot, reason: str = "random") -> dict:
     return {
+        "reason": reason,
         "chart_id": chart.id,
         "hero_cards": list(spot.hero_cards),
         "game": spot.game,
@@ -145,15 +154,29 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
 
     @app.get("/api/options")
     def options():
-        charts = library.find(game="nlhe", format="cash")
+        charts = library.find(game="nlhe")
         positions: dict[int, list[str]] = {}
         for size in POSITIONS:
             have = {c.hero_pos for c in charts if c.table_size == size}
             if have:
                 positions[size] = [p for p in POSITIONS[size] if p in have]
+        # Which table sizes / stacks / spot types exist for each format, so the
+        # filter screen can hide combinations that have no chart.
+        per_format = {}
+        for fmt in FORMAT_LABELS:
+            fc = [c for c in charts if c.format == fmt]
+            if fc:
+                per_format[fmt] = {
+                    "table_sizes": sorted({c.table_size for c in fc}),
+                    "stacks": sorted({c.stack_bb for c in fc}),
+                    "spot_types": [s for s in SPOT_TYPES if any(c.spot_type == s for c in fc)],
+                }
         return {
+            "formats": [{"id": f, "label": FORMAT_LABELS[f]} for f in per_format],
+            "per_format": per_format,
             "table_sizes": sorted(positions),
             "positions": positions,
+            "stacks": sorted({c.stack_bb for c in charts}),
             "spot_types": [{"id": s, "label": SPOT_TYPE_LABELS[s]}
                            for s in SPOT_TYPES if any(c.spot_type == s for c in charts)],
             "chart_count": len(charts),
@@ -164,15 +187,19 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
     @app.post("/api/preflop/next")
     def preflop_next(req: NextRequest):
         try:
-            chart, spot = next_spot(
+            chart, spot, reason = next_spot(
                 library, rng,
+                formats=req.formats or None,
                 table_sizes=req.table_sizes or None,
                 hero_positions=req.hero_positions or None,
                 spot_types=req.spot_types or None,
+                stacks=req.stacks or None,
+                store=store,
+                leaks_only=req.leaks_only,
             )
         except NoMatchingChart as e:
             raise HTTPException(404, str(e)) from None
-        return _spot_payload(chart, spot)
+        return _spot_payload(chart, spot, reason)
 
     @app.post("/api/preflop/answer")
     def preflop_answer(req: AnswerRequest):
@@ -210,6 +237,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
             chart_source=result.source_name,
             is_sample=chart.is_sample,
         ))
+        store.schedule_review(DRILL_TYPE, review_key(chart.id, spot.hand_class), result.grade)
 
         return {
             "grade": result.grade,
@@ -236,6 +264,55 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
     @app.get("/api/summary")
     def summary(drill_type: str = Query(DRILL_TYPE)):
         return store.summary(drill_type)
+
+    @app.get("/api/stats")
+    def stats():
+        """Everything the Stats screen shows."""
+        drills = {
+            "preflop_chart": "Preflop: chart decision",
+            "equity_estimate": "Equity: estimate",
+            "pot_odds_decision": "Equity: call or fold",
+            "plo_nut_hand": "Nuts: name the nuts",
+            "plo_has_nuts": "Nuts: do you have it",
+            "plo_nut_draw": "Nuts: your draw",
+            "plo_pot_limit": "Pot limit: max raise",
+        }
+        by_drill = {r["key"]: r for r in store.breakdown("drill_type")}
+        cats: dict[str, dict] = {}
+        for r in store.breakdown("hand_class", DRILL_TYPE):
+            c = cats.setdefault(hand_category(r["key"]), {"key": None, "total": 0, "correct": 0, "acceptable": 0, "wrong": 0})
+            for k in ("total", "correct", "acceptable", "wrong"):
+                c[k] += r[k]
+        cat_rows = []
+        for name in HAND_CATEGORIES:
+            if name in cats:
+                c = cats[name]
+                c["key"] = name
+                c["accuracy"] = round(c["correct"] / c["total"], 4)
+                c["score"] = round((c["correct"] + 0.5 * c["acceptable"]) / c["total"], 4)
+                cat_rows.append(c)
+        profile = LeakProfile.from_store(store)
+        return {
+            "drills": [dict(by_drill[d], label=label) for d, label in drills.items() if d in by_drill],
+            "preflop": {
+                "by_position": store.breakdown("hero_pos", DRILL_TYPE),
+                "by_spot_type": [dict(r, label=SPOT_TYPE_LABELS.get(r["key"], r["key"]))
+                                 for r in store.breakdown("spot_type", DRILL_TYPE)],
+                "by_category": cat_rows,
+                "by_format": store.breakdown("format", DRILL_TYPE),
+                "recent": store.recent_grades(DRILL_TYPE, 30),
+                "reviews": store.review_count(DRILL_TYPE),
+                "leaks": profile.summary(),
+            },
+            "equity": {
+                "by_street": store.breakdown("spot_type", "pot_odds_decision"),
+                "by_game": store.breakdown("game", "pot_odds_decision"),
+            },
+            "nuts": {"by_street": store.breakdown("spot_type", "plo_nut_hand")},
+            "pot_limit": {"by_stage": store.breakdown("spot_type", "plo_pot_limit")},
+            "total_attempts": sum(r["total"] for r in by_drill.values()),
+            "thresholds": {"min_attempts": 5, "weak_score": 0.7},
+        }
 
     app.include_router(make_equity_router(store, equity_service, rng))
     app.include_router(make_plo_router(store, nuts_service, rng))

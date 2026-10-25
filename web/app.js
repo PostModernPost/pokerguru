@@ -1,14 +1,14 @@
 // Preflop drill front end. Plain JavaScript, no build step. Shared helpers are in common.js.
 "use strict";
 
-const TABLE_LABELS = { 6: "6-max", 9: "9-handed" };
+const TABLE_LABELS = { 2: "Heads-up", 6: "6-max", 9: "9-handed" };
 const GRADE_TEXT = { correct: "Correct", acceptable: "Acceptable (mixed)", wrong: "Wrong" };
 const KIND_COLORS = { allin: "var(--allin)", raise: "var(--raise)", call: "var(--call)", fold: "var(--fold)" };
 const KIND_ORDER = ["allin", "raise", "call", "fold"]; // aggressive first in the range grid
 const FILTER_KEY = "pokerguru.preflopFilters";
 
 let options = null;
-let filters = { table_sizes: [], hero_positions: [], spot_types: [] };
+let filters = { formats: [], table_sizes: [], hero_positions: [], spot_types: [], stacks: [], leaks_only: false };
 let current = null; // the spot on screen
 let shownAt = 0;
 let busy = false;
@@ -36,16 +36,39 @@ function saveFilters() {
   try { localStorage.setItem(FILTER_KEY, JSON.stringify(filters)); } catch (_) { /* ignore */ }
 }
 
+// What the selected formats offer (all formats when none is selected).
+function offered(key) {
+  const fmts = filters.formats.length ? filters.formats : Object.keys(options.per_format);
+  const out = new Set();
+  for (const f of fmts) for (const v of (options.per_format[f] || {})[key] || []) out.add(v);
+  return [...out].sort((a, b) => a - b);
+}
+
 function availablePositions() {
-  const sizes = filters.table_sizes.length ? filters.table_sizes : options.table_sizes;
+  const sizes = filters.table_sizes.length ? filters.table_sizes : offered("table_sizes");
   const order = ["UTG", "UTG1", "UTG2", "LJ", "HJ", "CO", "BTN", "SB", "BB"];
   const have = new Set(sizes.flatMap((s) => options.positions[s] || []));
   return order.filter((p) => have.has(p));
 }
 
+function pruneFilters() {
+  const sizes = new Set(offered("table_sizes")), stacks = new Set(offered("stacks")), spots = new Set(offered("spot_types"));
+  filters.table_sizes = filters.table_sizes.filter((s) => sizes.has(s));
+  filters.stacks = filters.stacks.filter((s) => stacks.has(s));
+  filters.spot_types = filters.spot_types.filter((s) => spots.has(s));
+  const avail = new Set(availablePositions());
+  filters.hero_positions = filters.hero_positions.filter((p) => avail.has(p));
+}
+
 function renderFilters() {
+  const f = $("f-format"); f.replaceChildren();
+  for (const o of options.formats) {
+    f.append(chip(o.label, filters.formats.includes(o.id), () => {
+      toggle(filters.formats, o.id); pruneFilters(); renderFilters();
+    }));
+  }
   const t = $("f-table"); t.replaceChildren();
-  for (const size of options.table_sizes) {
+  for (const size of offered("table_sizes")) {
     t.append(chip(TABLE_LABELS[size] || `${size}-handed`, filters.table_sizes.includes(size), () => {
       toggle(filters.table_sizes, size);
       const avail = new Set(availablePositions());
@@ -59,12 +82,26 @@ function renderFilters() {
       toggle(filters.hero_positions, pos); renderFilters();
     }));
   }
+  const k = $("f-stack"); k.replaceChildren();
+  for (const stack of offered("stacks")) {
+    k.append(chip(`${stack}bb`, filters.stacks.includes(stack), () => {
+      toggle(filters.stacks, stack); renderFilters();
+    }));
+  }
   const s = $("f-spot"); s.replaceChildren();
-  for (const st of options.spot_types) {
+  const spotIds = new Set(offered("spot_types"));
+  for (const st of options.spot_types.filter((o) => spotIds.has(o.id))) {
     s.append(chip(st.label, filters.spot_types.includes(st.id), () => {
       toggle(filters.spot_types, st.id); renderFilters();
     }));
   }
+  const m = $("f-mode"); m.replaceChildren(
+    chip("Everything", !filters.leaks_only, () => { filters.leaks_only = false; renderFilters(); }),
+    chip("Drill my leaks", filters.leaks_only, () => { filters.leaks_only = true; renderFilters(); }),
+  );
+  $("leak-hint").textContent = filters.leaks_only
+    ? "Only positions, spot types and hand categories you score under 70% on, plus spots you missed that are due again. Needs a few hands of history first."
+    : "Missed spots come back sooner and weak areas come up more often either way. See the Stats tab.";
   $("filters-error").hidden = true;
 }
 
@@ -112,6 +149,8 @@ function renderSpot(spot) {
     el("span", { class: "tag" }, spot.format === "cash" ? "Cash" : "Tournament"),
     el("span", { class: "tag strong" }, spot.spot_label),
   );
+  if (spot.reason === "review") tags.append(el("span", { class: "tag review" }, "Review: you missed this before"));
+  else if (filters.leaks_only) tags.append(el("span", { class: "tag review" }, "Leak drill"));
 
   const seats = $("seats"); seats.replaceChildren();
   for (const seat of spot.seats) {
@@ -273,9 +312,9 @@ $("next-btn").addEventListener("click", nextSpot);
   setSampleWarning(options.sample_in_use);
   loadFilters();
   // Drop saved choices that no longer exist (e.g. charts were removed).
-  const avail = new Set(availablePositions());
-  filters.table_sizes = filters.table_sizes.filter((s) => options.table_sizes.includes(s));
-  filters.hero_positions = filters.hero_positions.filter((p) => avail.has(p));
-  filters.spot_types = filters.spot_types.filter((s) => options.spot_types.some((o) => o.id === s));
+  filters.formats = (filters.formats || []).filter((f) => options.per_format[f]);
+  filters.stacks = filters.stacks || [];
+  filters.leaks_only = Boolean(filters.leaks_only);
+  pruneFilters();
   nextSpot();
 })();

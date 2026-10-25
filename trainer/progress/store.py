@@ -14,7 +14,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS attempts (
@@ -43,7 +43,28 @@ CREATE TABLE IF NOT EXISTS attempts (
 );
 CREATE INDEX IF NOT EXISTS idx_attempts_created ON attempts(created_at);
 CREATE INDEX IF NOT EXISTS idx_attempts_drill ON attempts(drill_type, spot_type, hero_pos);
+
+-- Spaced repetition: one row per (drill, item) that has been missed or is being re-checked.
+-- Intervals are counted in attempts of that drill type, not in days.
+CREATE TABLE IF NOT EXISTS reviews (
+    drill_type   TEXT    NOT NULL,
+    item_key     TEXT    NOT NULL,   -- e.g. '<chart id>|<hand class>'
+    interval     INTEGER NOT NULL,
+    due_at       INTEGER NOT NULL,   -- attempt count of this drill type at which it's due
+    lapses       INTEGER NOT NULL DEFAULT 0,
+    last_grade   TEXT    NOT NULL,
+    PRIMARY KEY (drill_type, item_key)
+);
 """
+
+# Review intervals (in attempts): after a miss the item comes back soon; after a
+# correct answer the gap doubles; once it's long enough the item graduates.
+REVIEW_AFTER_WRONG = 5
+REVIEW_AFTER_ACCEPTABLE = 12
+REVIEW_MIN_AFTER_CORRECT = 25
+REVIEW_GRADUATE_AT = 200
+
+GROUPABLE = ("drill_type", "game", "format", "table_size", "spot_type", "hero_pos", "hand_class", "chart_id")
 
 
 @dataclass
@@ -117,6 +138,81 @@ class AttemptStore:
             out.append(d)
         return out
 
+    def count(self, drill_type: str) -> int:
+        with self._connect() as db:
+            return db.execute("SELECT COUNT(*) FROM attempts WHERE drill_type = ?", (drill_type,)).fetchone()[0]
+
+    def breakdown(self, group: str, drill_type: str | None = None, since_id: int = 0) -> list[dict]:
+        """Accuracy per value of `group` (a column name), most attempts first.
+
+        `score` counts an acceptable answer as half right; `accuracy` is correct only.
+        """
+        if group not in GROUPABLE:
+            raise ValueError(f"Can't group by {group!r}")
+        where = ["id > ?"]
+        args: list = [since_id]
+        if drill_type:
+            where.append("drill_type = ?")
+            args.append(drill_type)
+        q = (f"SELECT {group} AS key, COUNT(*) AS n, "
+             f"SUM(grade = 'correct') AS c, SUM(grade = 'acceptable') AS a, SUM(grade = 'wrong') AS w "
+             f"FROM attempts WHERE {' AND '.join(where)} AND {group} IS NOT NULL "
+             f"GROUP BY {group} ORDER BY n DESC, key")
+        with self._connect() as db:
+            rows = db.execute(q, args).fetchall()
+        return [_stats_row(r["key"], r["n"], r["c"], r["a"], r["w"]) for r in rows]
+
+    def recent_grades(self, drill_type: str, limit: int = 50) -> list[str]:
+        """Grades of the last `limit` attempts, newest first (for a trend line)."""
+        with self._connect() as db:
+            rows = db.execute("SELECT grade FROM attempts WHERE drill_type = ? ORDER BY id DESC LIMIT ?",
+                              (drill_type, limit)).fetchall()
+        return [r["grade"] for r in rows]
+
+    # ---- spaced repetition ----
+
+    def schedule_review(self, drill_type: str, item_key: str, grade: str) -> None:
+        """Update when this item should come back, based on the grade just earned."""
+        now = self.count(drill_type)
+        with self._connect() as db:
+            row = db.execute("SELECT interval, lapses FROM reviews WHERE drill_type = ? AND item_key = ?",
+                             (drill_type, item_key)).fetchone()
+            lapses = row["lapses"] if row else 0
+            if grade == "wrong":
+                interval, lapses = REVIEW_AFTER_WRONG, lapses + 1
+            elif grade == "acceptable":
+                interval = REVIEW_AFTER_ACCEPTABLE
+            else:
+                if row is None:
+                    return  # got it right first time: nothing to review
+                interval = max(row["interval"] * 2, REVIEW_MIN_AFTER_CORRECT)
+                if interval > REVIEW_GRADUATE_AT:
+                    db.execute("DELETE FROM reviews WHERE drill_type = ? AND item_key = ?", (drill_type, item_key))
+                    return
+            db.execute(
+                "INSERT INTO reviews (drill_type, item_key, interval, due_at, lapses, last_grade) "
+                "VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(drill_type, item_key) DO UPDATE SET "
+                "interval = excluded.interval, due_at = excluded.due_at, lapses = excluded.lapses, "
+                "last_grade = excluded.last_grade",
+                (drill_type, item_key, interval, now + interval, lapses, grade),
+            )
+
+    def due_reviews(self, drill_type: str) -> list[str]:
+        """Item keys that are due now, most overdue first."""
+        now = self.count(drill_type)
+        with self._connect() as db:
+            rows = db.execute("SELECT item_key FROM reviews WHERE drill_type = ? AND due_at <= ? "
+                              "ORDER BY due_at, lapses DESC", (drill_type, now)).fetchall()
+        return [r["item_key"] for r in rows]
+
+    def review_count(self, drill_type: str) -> dict:
+        now = self.count(drill_type)
+        with self._connect() as db:
+            total = db.execute("SELECT COUNT(*) FROM reviews WHERE drill_type = ?", (drill_type,)).fetchone()[0]
+            due = db.execute("SELECT COUNT(*) FROM reviews WHERE drill_type = ? AND due_at <= ?",
+                             (drill_type, now)).fetchone()[0]
+        return {"total": total, "due": due}
+
     def summary(self, drill_type: str | None = None) -> dict:
         """Counts by grade, optionally for one drill type."""
         q = "SELECT grade, COUNT(*) AS n FROM attempts"
@@ -134,3 +230,11 @@ class AttemptStore:
             "acceptable": counts.get("acceptable", 0),
             "wrong": counts.get("wrong", 0),
         }
+
+
+def _stats_row(key, n: int, c: int, a: int, w: int) -> dict:
+    return {
+        "key": key, "total": n, "correct": c, "acceptable": a, "wrong": w,
+        "accuracy": round(c / n, 4) if n else None,
+        "score": round((c + 0.5 * a) / n, 4) if n else None,
+    }

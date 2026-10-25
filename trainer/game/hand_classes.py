@@ -71,3 +71,30 @@ def hand_class_of(cards: Iterable[Card] | str) -> str:
     if ra == rb and a.suit == b.suit:
         raise ValueError("Duplicate card")
     return _class_name(ra, rb, a.suit == b.suit)
+
+
+BROADWAY = set("AKQJT")
+HAND_CATEGORIES = (
+    "pair", "suited ace", "offsuit ace", "suited broadway", "offsuit broadway",
+    "suited connector", "suited other", "offsuit other",
+)
+
+
+def hand_category(hand_class: str) -> str:
+    """Coarse bucket used by the stats screen and leak weighting."""
+    if not is_hand_class(hand_class):
+        raise ValueError(f"Not a hand class: {hand_class!r}")
+    if len(hand_class) == 2:
+        return "pair"
+    hi, lo, suited = hand_class[0], hand_class[1], hand_class[2] == "s"
+    if hi == "A":
+        return "suited ace" if suited else "offsuit ace"
+    if hi in BROADWAY and lo in BROADWAY:
+        return "suited broadway" if suited else "offsuit broadway"
+    if suited and RANK_VALUE[hi] - RANK_VALUE[lo] == 1:
+        return "suited connector"
+    return "suited other" if suited else "offsuit other"
+
+
+def hands_in_category(category: str) -> list[str]:
+    return [h for h in ALL_HAND_CLASSES if hand_category(h) == category]

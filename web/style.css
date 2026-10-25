@@ -275,3 +275,27 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 .key:active { background: var(--accent); color: #222; }
 .pl-answer { font-size: 1.1rem; margin-bottom: 8px; }
 .pl-answer b { color: var(--accent); }
+
+/* ---------- phase 4/5 ---------- */
+.tabs { grid-template-columns: repeat(5, 1fr); }
+.tabs a { font-size: .9rem; padding: 8px 2px; }
+.tag.review { background: var(--accent); color: #222; border-color: var(--accent); font-weight: 700; }
+
+.stat-section { margin-bottom: 22px; }
+.stat-section h2 { font-size: 1.05rem; margin: 0 0 8px; }
+.stat-rows { display: grid; gap: 6px; }
+.stat-row { display: grid; grid-template-columns: minmax(96px, 1.2fr) 2fr auto; align-items: center; gap: 8px; font-size: .92rem; }
+.stat-row .k { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stat-row .n { color: var(--muted); font-size: .8rem; text-align: right; min-width: 64px; font-variant-numeric: tabular-nums; }
+.stat-row.weak .k { color: #ffb4ad; font-weight: 700; }
+.stack-bar { height: 14px; border-radius: 7px; overflow: hidden; display: flex; background: var(--panel); }
+.stack-bar i { display: block; height: 100%; }
+.stack-bar .c { background: var(--correct); } .stack-bar .a { background: var(--acceptable); } .stack-bar .w { background: var(--wrong); }
+.trend { display: flex; gap: 3px; flex-wrap: wrap; }
+.trend i { width: 10px; height: 18px; border-radius: 2px; display: block; }
+.trend .correct { background: var(--correct); } .trend .acceptable { background: var(--acceptable); } .trend .wrong { background: var(--wrong); }
+.leak-box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; line-height: 1.5; }
+.leak-box b { color: var(--accent); }
+.empty { color: var(--muted); }
+#leak-hint, .leak-box .hint { margin: 8px 0 0; }
+.stat-row .k { white-space: normal; line-height: 1.2; }

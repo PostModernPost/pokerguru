@@ -16,6 +16,7 @@
       <a href="/equity.html">Equity</a>
       <a href="/nuts.html">Nuts</a>
       <a href="/potlimit.html">Pot limit</a>
+      <a href="/stats.html">Stats</a>
     </nav>
     <div class="score" id="score" title="Correct answers / hands played (all time)">–</div>
     <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
@@ -31,8 +32,16 @@
       <h2>What to drill</h2>
       <p class="hint">Tap to select. Nothing selected in a group means all of it.</p>
       <div class="filter-group">
+        <h3>Format</h3>
+        <div class="chips" id="f-format"></div>
+      </div>
+      <div class="filter-group">
         <h3>Table size</h3>
         <div class="chips" id="f-table"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Stack depth</h3>
+        <div class="chips" id="f-stack"></div>
       </div>
       <div class="filter-group">
         <h3>Your position</h3>
@@ -41,6 +50,11 @@
       <div class="filter-group">
         <h3>Spot type</h3>
         <div class="chips" id="f-spot"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Mode</h3>
+        <div class="chips" id="f-mode"></div>
+        <p class="hint" id="leak-hint"></p>
       </div>
       <p class="error" id="filters-error" hidden></p>
       <button class="big-btn primary" id="start-btn">Start drilling</button>

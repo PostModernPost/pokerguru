@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Trainer Stats</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Poker Trainer</h1>
+    <nav class="tabs" aria-label="Drills">
+      <a href="/">Preflop</a>
+      <a href="/equity.html">Equity</a>
+      <a href="/nuts.html">Nuts</a>
+      <a href="/potlimit.html">Pot limit</a>
+      <a href="/stats.html" aria-current="page">Stats</a>
+    </nav>
+    <div class="score" id="score">–</div>
+    <button class="icon-btn" id="refresh-btn" aria-label="Refresh">Refresh</button>
+  </header>
+
+  <main id="stats">
+    <p class="empty" id="loading">Loading…</p>
+  </main>
+
+  <script src="common.js"></script>
+  <script src="stats.js"></script>
+</body>
+</html>

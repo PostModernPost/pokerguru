@@ -30,3 +30,17 @@ def parse_cards(text: str) -> tuple[str, ...]:
     if len(set(cards)) != len(cards):
         raise ValueError(f"Bad cards {text!r}: duplicate card")
     return cards
+
+
+def deal_hand_class(rng: random.Random, hand_class: str) -> tuple[str, ...]:
+    """Two specific cards from a hand class, e.g. 'AKs' -> ('Ah', 'Kh')."""
+    suits = "cdhs"
+    r1, r2 = hand_class[0], hand_class[1]
+    if r1 == r2:
+        a, b = rng.sample(suits, 2)
+        return (r1 + a, r2 + b)
+    if hand_class[2] == "s":
+        a = rng.choice(suits)
+        return (r1 + a, r2 + a)
+    a, b = rng.sample(suits, 2)
+    return (r1 + a, r2 + b)

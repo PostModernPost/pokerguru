@@ -107,3 +107,37 @@ def test_answer_bad_input(ctx, body, status):
     client, store = ctx
     assert client.post("/api/preflop/answer", json=body).status_code == status
     assert store.summary()["total"] == 0
+
+
+def test_stats_and_leak_mode(ctx):
+    client, store = ctx
+    assert client.get("/stats.html").status_code == 200 and client.get("/stats.js").status_code == 200
+    s = client.get("/api/stats").json()
+    assert s["total_attempts"] == 0 and s["drills"] == []
+    # Leak mode with no history is a clear 404, not a crash.
+    r = client.post("/api/preflop/next", json={"leaks_only": True})
+    assert r.status_code == 404 and "No leaks found yet" in r.json()["detail"]
+
+    # Miss the same spot repeatedly, then it should show up as a leak and as a due review.
+    chart_id = "SAMPLE-nlhe-cash-6max-100bb-rfi-CO"
+    for cards in (["As", "Ah"], ["Ks", "Kh"], ["Qs", "Qh"], ["Js", "Jh"], ["Ts", "Th"], ["9s", "9h"]):
+        res = client.post("/api/preflop/answer", json={"chart_id": chart_id, "hero_cards": cards, "action": "fold"}).json()
+        if res["grade"] == "correct":  # make sure we have misses: answer the other way too
+            client.post("/api/preflop/answer", json={"chart_id": chart_id, "hero_cards": cards, "action": "raise_2.5"})
+    s = client.get("/api/stats").json()
+    assert s["total_attempts"] >= 6
+    assert s["preflop"]["by_position"][0]["key"] == "CO"
+    assert s["preflop"]["by_category"][0]["key"] == "pair"
+    assert s["preflop"]["reviews"]["total"] >= 1
+    assert "pair" in s["preflop"]["leaks"]["weak_categories"] or s["preflop"]["leaks"]["weak_positions"] == ["CO"]
+    spot = client.post("/api/preflop/next", json={"leaks_only": True}).json()
+    assert spot["reason"] in ("review", "category")
+
+
+def test_format_and_stack_filters(ctx):
+    client, _ = ctx
+    o = client.get("/api/options").json()
+    assert "cash" in o["per_format"] and o["per_format"]["cash"]["stacks"] == [100]
+    s = client.post("/api/preflop/next", json={"formats": ["cash"], "stacks": [100]}).json()
+    assert s["format"] == "cash" and s["stack_bb"] == 100
+    assert client.post("/api/preflop/next", json={"stacks": [37]}).status_code == 404

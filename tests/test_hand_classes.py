@@ -65,3 +65,29 @@ def test_is_hand_class():
     assert not is_hand_class("KAs")
     assert not is_hand_class("AA s")
     assert not is_hand_class("AAs")
+
+
+@pytest.mark.parametrize("hand,cat", [
+    ("AA", "pair"), ("22", "pair"), ("A5s", "suited ace"), ("A5o", "offsuit ace"), ("AKs", "suited ace"),
+    ("KQs", "suited broadway"), ("KTo", "offsuit broadway"), ("JTs", "suited broadway"),
+    ("98s", "suited connector"), ("97s", "suited other"), ("96s", "suited other"), ("T8s", "suited other"),
+    ("98o", "offsuit other"), ("72o", "offsuit other"),
+])
+def test_hand_category(hand, cat):
+    from trainer.game.hand_classes import hand_category
+    assert hand_category(hand) == cat
+
+
+def test_categories_cover_all_169():
+    from trainer.game.hand_classes import HAND_CATEGORIES, hands_in_category
+    assert sum(len(hands_in_category(c)) for c in HAND_CATEGORIES) == 169
+
+
+def test_deal_hand_class():
+    import random
+    from trainer.game.dealing import deal_hand_class
+    rng = random.Random(1)
+    for hc in ("AA", "AKs", "AKo", "72o", "32s"):
+        for _ in range(20):
+            cards = deal_hand_class(rng, hc)
+            assert hand_class_of("".join(cards)) == hc
