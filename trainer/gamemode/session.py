@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 
 from trainer.charts.loader import ChartLibrary
 from trainer.game.hand_classes import hand_category, hand_class_of
+from trainer.game.outs import current_hand
 from trainer.gamemode.bots import PRESETS, BotPolicy
 from trainer.gamemode.charts import ChartIndex
 from trainer.gamemode.engine import Hand
@@ -215,7 +216,16 @@ class Session:
             }
             if hand.finished and self.last_result:
                 r = self.last_result
-                out["result"] = {"payoffs": r["payoffs"], "winners": [self.seats[self.seat_of(i)].name for i in r["winners"]],
-                                 "hero_net": r["payoffs"][hand.hero_idx], "board": r["board"],
-                                 "shown": {self.seats[self.seat_of(i)].name: list(cs) for i, cs in r["shown"].items()}}
+                def describe(cards):
+                    if len(r["board"]) >= 3:
+                        return current_hand("nlhe", tuple(cards), tuple(r["board"])).description
+                    return hand_class_of("".join(cards))
+                shown = [{"name": self.seats[self.seat_of(i)].name, "is_hero": i == hand.hero_idx, "cards": list(cs),
+                          "hand": describe(cs), "won": r["payoffs"][i]} for i, cs in r["shown"].items()]
+                shown.sort(key=lambda x: -x["won"])
+                by_fold = not hand.showdown
+                winners = [{"name": self.seats[self.seat_of(i)].name, "is_hero": i == hand.hero_idx, "amount": r["payoffs"][i],
+                            "hand": None if by_fold else describe(hand.hole[i])} for i in r["winners"]]
+                out["result"] = {"payoffs": r["payoffs"], "winners": winners, "by_fold": by_fold,
+                                 "hero_net": r["payoffs"][hand.hero_idx], "board": r["board"], "shown": shown}
         return out

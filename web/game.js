@@ -156,8 +156,9 @@ function render() {
 
   // feedback for the last decision
   renderFeedback($("feedback"), state.feedback);
-  const notes = $("hand-notes"); notes.hidden = state.hand_feedback.length < 2;
+  const notes = $("hand-notes"); notes.hidden = false;
   const nl = $("hand-notes-list"); nl.replaceChildren();
+  if (!state.hand_feedback.length) nl.append(el("p", { class: "muted" }, "Nothing graded yet this hand."));
   for (const f of state.hand_feedback) { const d = el("div", { class: "note" }); renderFeedback(d, f); nl.append(d); }
 
   // result
@@ -168,10 +169,18 @@ function render() {
     const net = r.hero_net;
     box.append(el("div", { class: `grade-banner ${net > 0 ? "correct" : net < 0 ? "wrong" : "acceptable"}` },
       net > 0 ? `You won ${money(net)}` : net < 0 ? `You lost ${money(-net)}` : "No change"));
-    box.append(el("p", {}, `Winner: ${r.winners.join(", ")}.` + (r.board.length ? ` Board ${r.board.join(" ")}.` : "")));
-    for (const [name, cards] of Object.entries(r.shown)) {
-      const row = el("div", { class: "shown-row" }, el("span", {}, name + ": "));
-      const cc = el("div", { class: "cards small" }); renderCards(cc, cards); row.append(cc); box.append(row);
+    for (const w of r.winners) {
+      const who = w.is_hero ? "You" : w.name;
+      box.append(el("p", { class: "winner-line" }, el("b", {}, `${who} win${w.is_hero ? "" : "s"} ${money(w.amount)}`),
+        r.by_fold ? " (everyone else folded)." : ` with ${w.hand}.`));
+    }
+    if (r.board.length) box.append(el("p", { class: "muted" }, "Board: " + r.board.join(" ")));
+    for (const srow of r.shown) {
+      const row = el("div", { class: `shown-row${srow.won > 0 ? " won" : ""}` },
+        el("span", { class: "shown-name" }, (srow.is_hero ? "You" : srow.name) + ":"));
+      const cc = el("div", { class: "cards small" }); renderCards(cc, srow.cards); row.append(cc);
+      row.append(el("span", { class: "shown-hand" }, srow.hand + (srow.won > 0 ? ` · wins ${money(srow.won)}` : "")));
+      box.append(row);
     }
   }
 
@@ -240,6 +249,10 @@ $("btn-call").addEventListener("click", () => act(state.hand.legal.to_call ? "ca
 $("btn-raise").addEventListener("click", () => act("raise", Number($("raise-amount").value)));
 $("next-btn").addEventListener("click", nextHand);
 $("chart-close").addEventListener("click", () => $("chart-dialog").close());
+$("new-game-btn").addEventListener("click", () => {
+  if (!confirm("Start a new game? This table, its stacks and the running result are discarded. Your graded decisions stay in Stats.")) return;
+  session = null; state = null; save(); renderSetup(); showScreen("setup-screen");
+});
 $("raise-amount").addEventListener("input", () => state?.hand?.legal && updateRaiseHint(state.hand.legal));
 $("start-btn").addEventListener("click", startGame);
 $("setup-btn").addEventListener("click", () => { renderSetup(); showScreen("setup-screen"); });

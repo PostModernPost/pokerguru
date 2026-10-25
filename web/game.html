@@ -6,7 +6,7 @@
   <title>Poker Trainer: Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="game-page">
   <header class="topbar">
     <h1>Poker Trainer</h1>
     <nav class="tabs" aria-label="Drills">
@@ -44,6 +44,13 @@
     </section>
 
     <section id="game-screen" class="screen" hidden>
+      <aside class="side side-left">
+        <details class="why" id="log" open>
+          <summary>Hand so far (latest first)</summary>
+          <ol class="log-list" id="log-list"></ol>
+        </details>
+      </aside>
+      <div class="centre">
       <div class="table-wrap game-table" id="game-table"></div>
       <p class="footnote" id="bots-note"></p>
       <div class="hand-strip">
@@ -80,14 +87,14 @@
       <div id="result" class="hand-result" hidden></div>
       <button class="big-btn primary" id="next-btn" hidden>Next hand</button>
 
-      <details class="why" id="log">
-        <summary>Hand so far (latest first)</summary>
-        <ol class="log-list" id="log-list"></ol>
-      </details>
-      <details class="why" id="hand-notes" hidden>
-        <summary>All feedback this hand</summary>
-        <div id="hand-notes-list"></div>
-      </details>
+      <button class="big-btn ghost" id="new-game-btn">Start a new game</button>
+      </div>
+      <aside class="side side-right">
+        <details class="why" id="hand-notes" open>
+          <summary>All feedback this hand</summary>
+          <div id="hand-notes-list"></div>
+        </details>
+      </aside>
     </section>
 
     <section id="message-screen" class="screen" hidden>

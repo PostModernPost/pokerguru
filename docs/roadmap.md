@@ -23,6 +23,18 @@ game mode and is always marked.
 | 18 | **Tournaments: multi-player push/fold, 20-25bb spots, ICM** | Full-table shove-or-fold, the stage where it's no longer just push or fold, and prize-money adjustments. | Only when Adam starts playing tournaments. | Computed. |
 | 19 | **Hand history import** | Load real online hands and find where play deviated from the charts. | Only useful if he plays online. | Charts already in the app. |
 
+## Adam's notes for later (not scheduled yet)
+
+- **Rapid-fire preflop mode.** Pick one game setup (table size, your seat moves round, same stakes)
+  and get dealt preflop decision after preflop decision as if sitting in that game, instead of the
+  drill switching table size and spot type every hand. The current random mix forces a re-read of
+  the situation each time; he wants speed and repetition.
+- **Rethink the other modes.** Basics, Equity, Nuts and Pot limit are not self-explanatory to him.
+  Each needs a one-line "what this trains and why it matters at your table" and probably a simpler
+  first version; to be redesigned together, after the game mode settles.
+- Desktop is the main target for now; the phone layout is kept working but not polished further
+  until asked.
+
 ## Plan for remote access (not built yet)
 
 Adam wants the app on his phone away from home eventually; for now it runs on the desktop and
