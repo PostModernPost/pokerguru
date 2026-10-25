@@ -58,10 +58,25 @@ test checks it against `calculate_equities`.
 
 ## The easy way to run it (Windows)
 
-Double-click **`start.bat`** in the project folder. The first time it sets up Python packages
-(about a minute); every time, it starts the server and opens the app in your browser. The
-window it opens shows the address for your phone; close that window to stop. You still need
-Python installed once (step 1 below).
+Double-click **`start.bat`** in the project folder. Every time, it:
+
+1. **checks GitHub for a newer version** and updates itself if there is one (your progress file is
+   never touched),
+2. sets up Python packages the first time (about a minute),
+3. starts the server and opens the app in your browser. The window it opens shows the address for
+   your phone; close that window to stop.
+
+You still need Python installed once (step 1 below).
+
+**Updates and private repositories.** If the repository is public, updates need no login. If it's
+private, GitHub will refuse the download until you give the launcher a token, once:
+GitHub → your profile picture → Settings → Developer settings → Personal access tokens →
+Fine-grained tokens → Generate new token. Give it access to **only this repository**, with
+Repository permissions **Contents: Read-only**, and copy the token into a new file called
+`update_token.txt` next to `start.bat` (just the token, nothing else). That file is ignored by git
+and never leaves your PC. If updating ever fails, the launcher says so in one line and starts the
+version you have. Alternatively, install GitHub Desktop and clone the repository with it; the
+launcher then updates with git instead.
 
 ## Running it on Windows (step by step)
 

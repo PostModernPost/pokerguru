@@ -1,6 +1,7 @@
 @echo off
-REM Poker Trainer: double-click to run. Sets up Python packages on first run,
-REM starts the server, and opens the app in your browser. Close this window to stop.
+REM Poker Trainer: double-click to run. Checks GitHub for updates, sets up Python
+REM packages on first run, starts the server, and opens the app in your browser.
+REM Close this window to stop.
 cd /d "%~dp0"
 title Poker Trainer
 
@@ -11,6 +12,9 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
+
+REM Get the latest version from GitHub first (see update.ps1). Never blocks the start.
+if exist "update.ps1" powershell -NoProfile -ExecutionPolicy Bypass -File "update.ps1"
 
 if not exist ".venv\Scripts\python.exe" (
   echo First run: creating the Python environment ^(about a minute^)...
