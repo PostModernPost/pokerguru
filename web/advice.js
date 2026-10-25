@@ -35,7 +35,12 @@
       const ev = t.evidence;
       const frag = document.createDocumentFragment();
       frag.append(el("p", { class: "gd-def" }, t.text));
-      frag.append(el("p", { class: "gd-meta" }, `Status: ${ev.status}. Shown only because it passed every check below.`));
+      const STATUS_TEXT = {
+        verified: "Verified: two or more independent publishers say this, and any math check agrees.",
+        single_source: "One source only: confirmed on one publisher's page; no second publisher found yet.",
+        contested: "Sources disagree: the publishers below, or the program's own math, don't all agree. Treat it as one view.",
+      };
+      frag.append(el("p", { class: "gd-meta" }, STATUS_TEXT[ev.status] || `Status: ${ev.status}.`));
       frag.append(el("h3", {}, "Sources"));
       for (const s of ev.sources) {
         frag.append(el("div", { class: "gd-item" },
@@ -63,12 +68,25 @@
     if (!tips || !tips.length) { container.hidden = true; return; }
     container.hidden = false;
     container.append(el("h3", {}, "Advice for this spot"));
+    // Footnote marks: * one source only, † sources disagree. Explained once, at the bottom.
+    const MARK = { single_source: "*", contested: "†" };
+    const used = new Set();
     for (const t of tips) {
+      const mark = MARK[t.status] || "";
+      if (mark) used.add(t.status);
       container.append(el("div", { class: "tip" },
-        el("p", { class: "tip-text" }, t.text),
+        el("p", { class: "tip-text" }, t.text, mark ? el("sup", { class: "fn-mark" }, mark) : ""),
         el("div", { class: "tip-meta" },
           el("span", { class: "muted" }, `Sources: ${t.source_names.join(", ")}`),
           el("button", { type: "button", class: "link-btn", onclick: () => showEvidence(t.id) }, "Why trust this?"))));
     }
+    if (used.size) container.append(el("p", { class: "footnote" }, footnoteText(used)));
+  };
+
+  window.footnoteText = function (statuses) {
+    const parts = [];
+    if (statuses.has("single_source")) parts.push("* one source only");
+    if (statuses.has("contested")) parts.push("† sources disagree; shown as one view");
+    return parts.join("   ");
   };
 })();

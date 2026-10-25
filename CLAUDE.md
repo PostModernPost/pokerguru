@@ -13,7 +13,10 @@ This is a trainer, not a poker game. Playing full hands against bots is out of s
 1. **Never invent poker strategy, and never ship unverified advice.** Strategy and advice must never come from the AI's own memory: LLM poker strategy is unreliable and would train bad habits. Every piece of advice in the app is one of:
    - **Computed**: worked out mathematically by the program (equity, pot-limit math, push/fold equilibria, solver output), labelled with the method.
    - **Sourced and verified**: taken from named outside sources and passed the verification standard below, with the evidence stored next to it.
-   - **Contested / unverified**: anything that failed or hasn't finished verification. Stored, never shown as advice. The app may list it as "sources disagree" with the evidence.
+   - **Contested**: sourced advice where credible sources disagree with each other or with the math. Shown, with a short footnote saying sources disagree and the evidence for each side available on tap.
+   - **Single source**: confirmed from one reputable publisher only. Shown, with a short footnote saying so.
+   - **Unverified**: nothing could be confirmed (source unreachable, quote not found). Stored, never shown.
+   Adam's preference: he'd rather see conflicting or single-source advice than none, and the indicators must not be intrusive: a footnote, never a banner.
    Adam does not review advice himself; the verification standard is the gate.
 
    **Verification standard** (every item must pass all of it before it is shown):
@@ -26,7 +29,7 @@ This is a trainer, not a poker game. Playing full hands against bots is out of s
 2. **Every answer key records its source.** Chart files carry a `source` field. Computed answers are labeled `computed` with the method.
 3. **Do not write a hand evaluator or rules engine.** Use PokerKit for game rules, hand evaluation, and equity. Read its current docs and verify the API before using it rather than assuming function names.
 4. **Correctness is tested.** Anything that grades the user (pot-limit math, equity, chart lookup, grading thresholds) needs unit tests with known values before the UI depends on it.
-5. **Sample data is clearly fake.** To build and test the chart pipeline before real charts exist, create small sample charts marked `"source": {"name": "SAMPLE - NOT REAL STRATEGY"}` and show a visible warning in the UI whenever one is in use.
+5. **Sample data is clearly fake.** To build and test the chart pipeline before real charts exist, create small sample charts marked `"source": {"name": "SAMPLE - NOT REAL STRATEGY"}` and show a visible note in the UI whenever one is in use. Adam wants every such indicator (sample data, single source, sources disagree, direct-odds-only) as an unobtrusive footnote with a mark like `*`, `†` or `‡`, never a banner.
 6. Ask Adam before adding a dependency, changing the stack, or making a strategy-related judgment call.
 
 ## Stack

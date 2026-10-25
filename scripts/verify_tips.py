@@ -7,8 +7,10 @@ For each source URL the script downloads the page, strips the HTML, and
 looks for the recorded quote (whitespace and quote marks normalised). It
 records the access date, writes 'source_fetched' and 'corroborated' checks,
 runs any math check named in the tip's "math_check" field, and sets the
-status: 'verified' when everything passes, 'contested' when a check fails,
-'unverified' when a page could not be fetched. It never invents a quote: a
+status: 'verified' when everything passes; 'contested' when the sources and
+the math disagree; 'single_source' when only one publisher confirmed it
+(both shown in the app with a footnote); 'unverified' when nothing could be
+confirmed (page unreachable, quote not found), which is never shown. It never invents a quote: a
 source with an empty quote can only ever be 'unverified'.
 
 Needs network access to the source sites.
@@ -47,7 +49,10 @@ def fetch_text(url: str, timeout: int = 20) -> str:
 def normalise(text: str) -> str:
     text = text.replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')
     text = text.replace("–", "-").replace("—", "-").replace(" ", " ")
-    return re.sub(r"\s+", " ", text).strip().lower()
+    text = re.sub(r"\s+", " ", text)
+    # HTML stripping leaves spaces before punctuation ("AKs , is"); ignore those on both sides.
+    text = re.sub(r" ([,.;:!?)])", r"\1", text)
+    return text.strip().lower()
 
 
 def check_tip(tip: dict, today: str) -> dict:
@@ -79,13 +84,15 @@ def check_tip(tip: dict, today: str) -> dict:
         ok, detail = math_checks.run(tip["math_check"])
         checks.append({"type": "math_consistent", "passed": ok, "detail": detail})
     tip["checks"] = checks
+    math_failed = any(c["type"] == "math_consistent" and not c["passed"] for c in checks)
     if all(c["passed"] for c in checks):
         tip["status"] = "verified"
-    elif any(c["type"] == "math_consistent" and not c["passed"] for c in checks) or \
-            any("not found on the page" in c["detail"] for c in checks):
-        tip["status"] = "contested"
+    elif math_failed:
+        tip["status"] = "contested"  # a source and the math disagree: shown with a footnote
+    elif fetched_ok >= 1:
+        tip["status"] = "single_source"  # one publisher confirmed: shown with a footnote
     else:
-        tip["status"] = "unverified"
+        tip["status"] = "unverified"  # nothing confirmed (page unreachable, quote not found): hidden
     return tip
 
 
@@ -97,7 +104,7 @@ def main() -> int:
     path = Path(args.path)
     data = json.loads(path.read_text(encoding="utf-8"))
     today = date.today().isoformat()
-    summary = {"verified": 0, "contested": 0, "unverified": 0}
+    summary = {"verified": 0, "single_source": 0, "contested": 0, "unverified": 0}
     for tip in data["tips"]:
         if args.only and tip["id"] != args.only:
             continue

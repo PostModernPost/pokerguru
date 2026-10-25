@@ -284,7 +284,7 @@
     {
       "id": "pushfold-shorter-wider",
       "text": "The shorter your stack, the more hands you should be willing to shove: with few blinds left, the blinds you pick up are worth more relative to what you risk.",
-      "status": "unverified",
+      "status": "single_source",
       "math_check": "shorter_stacks_shove_wider",
       "scope": {
         "drills": [
@@ -476,7 +476,7 @@
     {
       "id": "suited-vs-offsuit",
       "text": "Suited versions of a hand carry a little more equity than the offsuit version (typically 2-3 points) because of the extra flush chances, so suited hands are generally played from more positions than the same hand offsuit.",
-      "status": "contested",
+      "status": "verified",
       "math_check": "suited_beats_offsuit",
       "scope": {
         "drills": [
@@ -504,7 +504,8 @@
           "name": "Offsuit in Poker: Meaning, Notation, and Offsuit vs Suited",
           "publisher": "PokerSkill",
           "url": "https://www.pokerskill.com/poker-glossary/offsuit/",
-          "quote": "The suited version, AKs, is usually stronger because both cards share a suit and can make a flush together."
+          "quote": "The suited version, AKs, is usually stronger because both cards share a suit and can make a flush together.",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
@@ -515,13 +516,13 @@
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokerskill.com/poker-glossary/offsuit/: fetched, but the recorded quote was not found on the page"
+          "passed": true,
+          "detail": "https://www.pokerskill.com/poker-glossary/offsuit/: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
-          "passed": false,
-          "detail": "1 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "2 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",

@@ -105,9 +105,9 @@ def test_scope_matching_and_ordering():
     assert lib.matching(drill="nuts") == []
 
 
-def test_only_verified_tips_match():
+def test_contested_tips_are_listed_and_shown():
     t = tip_from_dict(make(status="contested"))
-    assert AdviceLibrary([t]).matching(drill="equity") == []
+    assert AdviceLibrary([t]).matching(drill="equity", game="nlhe", street="flop") == [t]
     assert AdviceLibrary([t]).contested() == [t]
 
 
@@ -128,3 +128,28 @@ def test_shipped_tips_file_is_valid():
     assert lib.tips
     for t in lib.verified():
         assert len({s.url for s in t.sources}) >= 2
+
+
+def test_single_source_and_contested_are_shown_with_rules():
+    single = make(id="single", status="single_source")
+    single["sources"] = [single["sources"][0]]
+    single["checks"] = [{"type": "source_fetched", "passed": True, "detail": "ok"},
+                        {"type": "corroborated", "passed": False, "detail": "1 publisher"}]
+    t = tip_from_dict(single)
+    assert t.status == "single_source"
+    contested = make(id="contested", status="contested")
+    contested["checks"] = contested["checks"] + [{"type": "math_consistent", "passed": False, "detail": "disagrees"}]
+    c = tip_from_dict(contested)
+    v = tip_from_dict(make(id="v"))
+    lib = AdviceLibrary([c, t, v])
+    assert [x.id for x in lib.matching(drill="equity", game="nlhe", street="flop")] == ["v", "single", "contested"]
+    # single_source can't hide a failed math check, and needs a fetched source.
+    bad = make(id="bad", status="single_source")
+    bad["checks"] = [{"type": "source_fetched", "passed": True, "detail": "ok"},
+                     {"type": "math_consistent", "passed": False, "detail": "no"}]
+    with pytest.raises(AdviceError, match="contested, not single_source"):
+        tip_from_dict(bad)
+    bad["checks"] = []
+    with pytest.raises(AdviceError, match="source_fetched"):
+        tip_from_dict(bad)
+    assert AdviceLibrary([tip_from_dict(make(status="unverified"))]).matching(drill="equity") == []

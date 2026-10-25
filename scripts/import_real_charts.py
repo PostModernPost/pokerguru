@@ -11,8 +11,9 @@ What it does (the verification standard in CLAUDE.md, applied to charts):
 1. Downloads both pages and parses the exact frequencies from the HTML.
 2. Sanity checks (premiums always raise, earlier seats open fewer hands, ...).
 3. Compares each Pokalab chart with HoldemPro's chart for the same spot.
-   A chart is written only if the two agree on the main action for at least
-   AGREEMENT_MIN of the 169 hands; otherwise it is reported as contested.
+   A chart whose main action agrees with HoldemPro's for at least AGREEMENT_MIN
+   of the 169 hands is marked verified; below that it is still written but
+   marked contested, and the app flags it as "sources disagree".
 4. Writes data/charts/nlhe/pokalab/*.json with source, assumptions, fetch date
    and the comparison numbers in the notes, plus a verification report.
 """
@@ -84,7 +85,8 @@ def main() -> int:
         if not ok:
             contested += 1
             print(f"  contested: {entry['spot']} {stats}")
-            continue
+            if other is None or problems:
+                continue  # nothing to compare against, or the numbers fail a sanity check: don't ship
         vs = f"-vs-{c.villain_pos}" if c.villain_pos else ""
         chart_id = f"pokalab-nlhe-cash-6max-100bb-{c.spot_type}-{c.hero_pos}{vs}"
         facing = {"open_size_bb": c.open_size_bb or _opener_size(primary, c.villain_pos)} if c.spot_type == "vs_open" else None
@@ -95,12 +97,17 @@ def main() -> int:
             "source": {
                 "name": "Pokalab (solver output)",
                 "url": POKALAB_URL,
+                "status": "verified" if ok else "contested",
                 "notes": (f"Pokalab free 6-max preflop charts: '{c.title}'. Solved at 100bb, opens to 2.5bb (SB to 3bb, "
                           f"no SB limp), GGPoker NL50 rake. Seat names mapped LJ->UTG for 6-max. Fetched {today}. "
                           f"Corroboration: HoldemPro's chart for the same spot agrees on the main action for "
                           f"{stats['primary_action_agreement']:.0%} of hands (mean play-frequency difference "
                           f"{stats['mean_play_frequency_diff']:.1%}); HoldemPro's charts are simplified from published "
-                          f"solver outputs. Sanity checks passed. Where the two differ on a detail, these are Pokalab's numbers."),
+                          f"solver outputs. Sanity checks passed. "
+                          + (f"Where the two differ on a detail, these are Pokalab's numbers."
+                             if ok else
+                             f"Sources disagree: agreement is below the {AGREEMENT_MIN:.0%} bar, so treat this chart as one "
+                             f"solver's view. HoldemPro plays {stats['width_b']:.0%} of hands here vs Pokalab's {stats['width_a']:.0%}.")),
             },
             "hands": {h: c.hands[h] for h in c.hands},
         }

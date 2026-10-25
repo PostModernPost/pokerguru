@@ -16,7 +16,7 @@ def ctx(tmp_path):
 def test_equity_page_served(ctx):
     client, _ = ctx
     r = client.get("/equity.html")
-    assert r.status_code == 200 and "Direct odds only" in r.text
+    assert r.status_code == 200 and "direct odds only" in r.text.lower()
     assert client.get("/equity.js").status_code == 200
 
 

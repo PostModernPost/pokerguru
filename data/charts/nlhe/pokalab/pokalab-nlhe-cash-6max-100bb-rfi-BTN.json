@@ -17,6 +17,7 @@
   "source": {
     "name": "Pokalab (solver output)",
     "url": "https://www.pokalab.com/tools/preflop-charts",
+    "status": "verified",
     "notes": "Pokalab free 6-max preflop charts: 'BTN opening range'. Solved at 100bb, opens to 2.5bb (SB to 3bb, no SB limp), GGPoker NL50 rake. Seat names mapped LJ->UTG for 6-max. Fetched 2026-10-25. Corroboration: HoldemPro's chart for the same spot agrees on the main action for 91% of hands (mean play-frequency difference 9.8%); HoldemPro's charts are simplified from published solver outputs. Sanity checks passed. Where the two differ on a detail, these are Pokalab's numbers."
   },
   "hands": {

@@ -61,9 +61,13 @@ def test_agreement_and_sanity():
 def test_shipped_verification_report_matches_files():
     report = json.loads((CHARTS_DIR / "nlhe" / "pokalab" / "_verification.json").read_text())
     assert report["sanity_problems"] == []
-    verified = [c for c in report["charts"] if c["status"] == "verified"]
-    files = list((CHARTS_DIR / "nlhe" / "pokalab").glob("*.json"))
-    assert len(verified) == len([f for f in files if f.name != "_verification.json"])
+    shipped = [c for c in report["charts"] if c["status"] in ("verified", "contested")]
+    files = [f for f in (CHARTS_DIR / "nlhe" / "pokalab").glob("*.json") if not f.name.startswith("_")]
+    assert len(shipped) == len(files)
+    import json as _json
+    statuses = {_json.loads(f.read_text())["source"]["status"] for f in files}
+    assert statuses <= {"verified", "contested"}
+    verified = [c for c in shipped if c["status"] == "verified"]
     for c in verified:
         assert c["agreement"]["primary_action_agreement"] >= report["agreement_min"]
     assert all(c["status"] in ("verified", "contested") for c in report["charts"])

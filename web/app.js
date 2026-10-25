@@ -276,8 +276,14 @@ function renderResult(spot, r) {
 
   renderTips($("tips"), r.tips);
   const src = $("source"); src.replaceChildren();
+  const CHART_MARK = { contested: "†", single_source: "*" };
   const name = r.source.name || "unknown";
   src.append("Chart source: ", el("span", { class: r.is_sample ? "fake" : "" }, name));
+  if (r.is_sample) src.append(el("sup", { class: "fn-mark" }, "‡"), el("span", { class: "footnote" }, " ‡ sample chart: random test data, not real strategy"));
+  if (CHART_MARK[r.source.status]) {
+    src.append(el("sup", { class: "fn-mark" }, CHART_MARK[r.source.status]));
+    src.append(el("span", { class: "footnote" }, " " + footnoteText(new Set([r.source.status]))));
+  }
   if (r.source.url) src.append(" · ", el("a", { href: r.source.url, target: "_blank", rel: "noopener" }, "link"));
   if (r.source.notes) src.append(el("br"), r.source.notes);
 }

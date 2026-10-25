@@ -165,7 +165,8 @@ def test_tips_shown_only_in_scope_and_only_verified(tmp_path):
                                advice_path=tips)) as client:
         rfi = client.post("/api/preflop/answer", json={"chart_id": "SAMPLE-nlhe-cash-9max-100bb-rfi-CO",
                                                        "hero_cards": ["As", "Kd"], "action": "fold"}).json()
-        assert [t["id"] for t in rfi["tips"]] == ["t-preflop"]
+        assert [t["id"] for t in rfi["tips"]] == ["t-preflop", "t-bad"]  # contested shown too, after verified
+        assert rfi["tips"][1]["status"] == "contested"
         assert rfi["tips"][0]["source_names"] == ["Pub A", "Pub B"]
         vs3 = client.post("/api/preflop/answer", json={"chart_id": "SAMPLE-nlhe-cash-6max-100bb-vs_3bet-CO-vs-BTN",
                                                        "hero_cards": ["As", "Kd"], "action": "fold"}).json()
@@ -182,10 +183,10 @@ def test_tips_shown_only_in_scope_and_only_verified(tmp_path):
 
 
 def test_shipped_advice_shows_nothing_unverified(ctx):
-    """With the real tips file, every tip returned by the API is verified."""
+    """With the real tips file, every tip returned by the API has a shown status (never unverified)."""
     client, _ = ctx
     s = client.get("/api/advice").json()
     assert isinstance(s["verified"], int) and isinstance(s["unverified"], int)
     for cid, cards in (("SAMPLE-nlhe-cash-9max-100bb-rfi-CO", ["As", "Kd"]),):
         r = client.post("/api/preflop/answer", json={"chart_id": cid, "hero_cards": cards, "action": "fold"}).json()
-        assert all(t["status"] == "verified" for t in r["tips"])
+        assert all(t["status"] in ("verified", "single_source", "contested") for t in r["tips"])

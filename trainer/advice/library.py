@@ -1,10 +1,12 @@
 """The advice library: sourced, verified tips shown on result screens.
 
 One JSON file, ``data/advice/tips.json``. Every tip carries its scope, its
-sources with quotes, the checks it passed, and a status. Only tips with
-status ``verified`` are ever shown as advice (CLAUDE.md ground rule 1). The
-loader enforces the evidence requirements so a tip can't be marked verified
-without them.
+sources with quotes, the checks it passed, and a status. ``verified`` (two
+publishers agree), ``single_source`` (one publisher confirmed) and
+``contested`` (sources disagree with each other or with the math) are all
+shown, each with a short footnote saying which; ``unverified`` tips are never
+shown (CLAUDE.md ground rule 1). The loader enforces the evidence requirements
+so a tip can't carry a status its evidence doesn't support.
 """
 
 from __future__ import annotations
@@ -24,7 +26,8 @@ log = logging.getLogger(__name__)
 
 TIPS_PATH = Path(config.ADVICE_PATH)
 
-STATUSES = ("verified", "contested", "unverified")
+STATUSES = ("verified", "single_source", "contested", "unverified")
+SHOWN_STATUSES = ("verified", "single_source", "contested")
 DRILLS = ("preflop_chart", "equity", "nuts", "pot_limit")
 GAMES = ("nlhe", "plo")
 FORMATS = ("cash", "tournament")
@@ -111,8 +114,12 @@ class Tip:
         }
 
     def public(self) -> dict:
-        return {"id": self.id, "text": self.text, "status": self.status,
-                "source_names": [s.publisher or s.name for s in self.sources]}
+        names: list[str] = []
+        for src in self.sources:
+            n = src.publisher or src.name
+            if n not in names:
+                names.append(n)
+        return {"id": self.id, "text": self.text, "status": self.status, "source_names": names}
 
 
 def _fail(where: str, msg: str) -> None:
@@ -210,6 +217,13 @@ def tip_from_dict(d: Any, where: str = "<tip>") -> Tip:
             _fail(cw, "'detail' is required")
         checks.append(Check(c["type"], c["passed"], c["detail"]))
 
+    if status in ("contested", "single_source") and not sources:
+        _fail(where, f"a {status} tip is shown to the user, so it needs its sources")
+    if status == "single_source":
+        if not any(c.type == "source_fetched" and c.passed for c in checks):
+            _fail(where, "a single_source tip needs a passed 'source_fetched' check")
+        if any(c.type == "math_consistent" and not c.passed for c in checks):
+            _fail(where, "a tip that fails its math check is contested, not single_source")
     if status == "verified":
         publishers = {s.publisher.strip().lower() for s in sources}
         if len(publishers) < MIN_INDEPENDENT_SOURCES:
@@ -257,9 +271,14 @@ class AdviceLibrary:
         return [t for t in self.tips if t.status == "contested"]
 
     def matching(self, limit: int = 3, **ctx: Any) -> list[Tip]:
-        """Verified tips whose scope fits the context. Narrower scopes first."""
-        hits = [t for t in self.verified() if t.scope.matches(**ctx)]
-        hits.sort(key=lambda t: -_specificity(t.scope))
+        """Shown tips (verified, single_source, contested) whose scope fits the context.
+
+        Verified first, then single-source, then contested; narrower scopes
+        first within each. Unverified tips are never returned.
+        """
+        rank = {"verified": 0, "single_source": 1, "contested": 2}
+        hits = [t for t in self.tips if t.status in SHOWN_STATUSES and t.scope.matches(**ctx)]
+        hits.sort(key=lambda t: (rank[t.status], -_specificity(t.scope)))
         return hits[:limit]
 
 

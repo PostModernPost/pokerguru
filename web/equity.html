@@ -22,7 +22,6 @@
     <button class="icon-btn" id="filters-btn" aria-label="Choose what to drill">Filters</button>
   </header>
 
-  <div class="odds-note">Direct odds only: implied odds (money won on later streets) are ignored.</div>
 
   <main>
     <section id="filters-screen" class="screen" hidden>
@@ -46,6 +45,7 @@
       <h3 class="mt">Your hand</h3>
       <div class="cards" id="hero-cards"></div>
       <div class="bet-line" id="bet-line"></div>
+      <p class="footnote">* direct odds only: implied odds (money you might win on later streets) are ignored</p>
 
       <h3 class="mt">1. Your equity against a random hand?</h3>
       <div class="bucket-grid" id="buckets"></div>
@@ -66,6 +66,7 @@
       <div class="equity-meter" id="equity-meter"></div>
       <p class="explanation" id="bucket-expl"></p>
       <p class="explanation" id="decision-expl"></p>
+      <p class="footnote">* direct odds only: implied odds are ignored in this drill</p>
       <div class="tips" id="tips" hidden></div>
       <button class="big-btn primary" id="next-btn">Next hand</button>
       <div class="result-cards">

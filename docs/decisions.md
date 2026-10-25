@@ -92,6 +92,15 @@ the program computes itself.
 | Licensing | Pokalab's page says "All rights reserved". The charts are free and public and this is a personal trainer; the data is committed for convenience with full attribution. If the repository is public, consider making it private or re-running the importer locally instead of committing the files. | Delete `data/charts/nlhe/pokalab/*.json` and run `scripts/import_real_charts.py` on your machine. |
 | Other sources looked at | pokerdata.io (solver ranges as JSON) needs an account key, allows 25 free requests a month, personal use only, no redistribution: not enough for a chart set. pokerqz/preflopwizard/gtocharts: no frequencies in the page or binary charts. | `docs/roadmap.md` |
 
+## Footnotes instead of banners (Adam's request, after phase 7)
+
+| Decision | Choice |
+|---|---|
+| Single-source and contested advice | Shown like any other tip. `*` marks one-source tips, `†` marks ones where sources (or the math) disagree; one footnote line under the tips explains the marks. "Why trust this?" shows the evidence either way. Unverified tips (nothing confirmed) stay hidden. |
+| Contested charts | Shipped and drilled like any other chart, with `†` on the source line. BB vs SB (73% agreement with HoldemPro) is the one case today. |
+| Sample charts | The red banner became a one-line `‡` footnote on the drill screen and the result's source line. Still shown every time a sample chart is in use (ground rule 5), just quietly. |
+| Direct-odds note | The Equity tab's bar became a `*` footnote under the bet line and under the result. |
+
 ## Phase 1 decisions
 
 See `docs/phase1-summary.md`.

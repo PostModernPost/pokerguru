@@ -199,7 +199,7 @@
     const openBtn = document.getElementById("glossary-open");
     if (openBtn) openBtn.addEventListener("click", showList);
 
-    const roots = [document.querySelector("main"), ...document.querySelectorAll(".sample-warning, .odds-note")].filter(Boolean);
+    const roots = [document.querySelector("main"), ...document.querySelectorAll("#sample-warning")].filter(Boolean);
     for (const r of roots) linkAll(r);
     let timer = null;
     const observer = new MutationObserver(() => {
