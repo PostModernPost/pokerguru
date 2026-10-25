@@ -25,6 +25,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }  /* a hidden screen stays hidden whatever its layout style */
 
 /* Content is a phone-width column; on a desktop the header and footer line up with it. */
 :root { --page-w: 560px; --gutter: max(16px, calc((100vw - var(--page-w)) / 2)); }
