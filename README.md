@@ -237,6 +237,35 @@ this chart: how often the chart plays it, how many hands it plays more often, an
 hand of the same kind the chart still plays. Everything is computed from the cards and the chart;
 it is a description, not extra advice.
 
+## Game mode (phase 11)
+
+The **Game** tab deals a continuous no-limit Hold'em cash game: 2 to 9 players, your blinds and
+buy-in, stacks that carry over, the button moving each hand, automatic rebuys when someone busts.
+PokerKit runs the hands; nothing about the rules is home-made. Opponents are basic: before the
+flop they play the verified charts (sampling the mixed strategies, with a "loose" preset that
+calls too much), after the flop a simple strength-and-odds rule. They keep the game going and are
+labelled as such; nothing a bot does is presented as the right play.
+
+Two kinds of help, both switchable in Settings:
+
+- **Pay attention to**: a short checklist before each of your decisions. Your position and who is
+  still to act, the price (pot, amount to call, equity needed), what you hold and what you are
+  drawing to with the outs count, how many players are in and the effective stack against the pot,
+  and who the aggressor is. Before the flop it also says where your hand sits in your range for
+  this spot without giving the answer away. All computed.
+- **Feedback** after each decision, from the same answer keys as the drills:
+  - Preflop decisions covered by a chart are graded exactly like the Preflop drill (opening,
+    facing an open, facing a 3-bet), with the chart's frequencies.
+  - A call or fold facing a bet is judged on direct pot odds against the equity you had versus the
+    hands the bettor entered the pot with (their preflop chart range), marked with the usual
+    direct-odds footnote.
+  - Bets, raises and checks after the flop, and preflop spots no chart covers (limped pots, 4-bets,
+    squeezes), get the facts but no grade: the app says there is no verified answer key yet. The AI
+    coach planned for the next phase gives an opinion there, labelled as one.
+
+Graded decisions go into the same progress store as the drills (`game_preflop`, `game_call`).
+Sessions live in the server's memory; restarting the server starts a fresh game.
+
 ## Real 9-handed charts (phase 10)
 
 `data/charts/nlhe/rangeconverter/` holds 80 charts for a 9-handed 100bb cash game: opening from

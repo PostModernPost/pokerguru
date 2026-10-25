@@ -416,3 +416,39 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
   #result-screen:has(.range-grid) > .source { grid-area: source; }
   .cell { font-size: 11px; }
 }
+
+/* ---------- game mode ---------- */
+.row-fields { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-bottom: 8px; }
+.row-fields label { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; color: var(--muted); }
+.row-fields input, .raise-row input { font-size: 1.1rem; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--text); min-height: 44px; }
+.hand-strip { display: flex; align-items: center; gap: 14px; margin: 8px 0; }
+.hand-meta { line-height: 1.4; }
+.muted { color: var(--muted); }
+.game-actions { margin: 10px 0; }
+.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.action-row .big-btn[hidden] { display: none; }
+.big-btn.danger { background: #5b6c7a; color: #fff; }
+.big-btn.warn { background: var(--accent); color: #222; }
+.raise-box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.raise-row { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; margin-top: 8px; }
+.feedback { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; padding: 10px 12px; margin: 10px 0; }
+.feedback p { margin: 6px 0; line-height: 1.45; }
+.fb-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.grade-pill { padding: 3px 10px; border-radius: 999px; font-weight: 700; font-size: .85rem; }
+.grade-pill.correct { background: var(--correct); color: #fff; }
+.grade-pill.acceptable { background: var(--acceptable); color: #222; }
+.grade-pill.wrong { background: var(--wrong); color: #fff; }
+.grade-pill.none { background: var(--panel-2); color: var(--muted); }
+.hand-result { margin: 10px 0; }
+.hand-result .grade-banner { margin-bottom: 8px; }
+.shown-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.note { border-top: 1px solid var(--line); padding-top: 6px; margin-top: 6px; }
+.svg-card { fill: #fff; stroke: #c8c8c8; }
+.svg-card-rank { font-size: 15px; font-weight: 700; fill: #222; }
+.svg-card-suit { font-size: 14px; fill: #222; }
+.svg-card-rank.red, .svg-card-suit.red { fill: #c0392b; }
+.seat-g.acting .seat-box { stroke: var(--accent); stroke-width: 3; }
+.seat-g.allin .seat-box { stroke: var(--wrong); stroke-width: 2; }
+.game-table .seat-pos { font-size: 11px; }
+@media (max-width: 899px) { .tabs { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 900px) { .tabs { grid-template-columns: repeat(7, 1fr); } }

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poker Trainer: Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Poker Trainer</h1>
+    <nav class="tabs" aria-label="Drills">
+      <a href="/game.html" aria-current="page">Game</a>
+      <a href="/basics.html">Basics</a>
+      <a href="/">Preflop</a>
+      <a href="/equity.html">Equity</a>
+      <a href="/nuts.html">Nuts</a>
+      <a href="/potlimit.html">Pot limit</a>
+      <a href="/stats.html">Stats</a>
+    </nav>
+    <div class="score" id="score" title="Your result this session">–</div>
+    <button class="icon-btn" id="setup-btn" aria-label="Game settings">Settings</button>
+  </header>
+
+  <main>
+    <section id="setup-screen" class="screen" hidden>
+      <h2>New game</h2>
+      <h3>Players at the table</h3>
+      <div class="chips" id="s-players"></div>
+      <h3>Blinds and buy-in</h3>
+      <div class="row-fields">
+        <label>Small blind <input type="number" id="s-sb" min="1" value="1" inputmode="numeric"></label>
+        <label>Big blind <input type="number" id="s-bb" min="2" value="2" inputmode="numeric"></label>
+        <label>Buy-in (big blinds) <input type="number" id="s-buyin" min="20" max="500" value="100" inputmode="numeric"></label>
+      </div>
+      <h3>Opponents</h3>
+      <div class="chips" id="s-bots"></div>
+      <p class="hint">Opponents are basic: they play the verified charts before the flop and a simple strength-and-odds rule after. They keep the game going; they are not a model of good play.</p>
+      <h3>Help</h3>
+      <div class="chips" id="s-help"></div>
+      <p class="hint">"Pay attention" shows a short checklist before each of your decisions. "Feedback" grades what you did wherever the app has a trusted answer, and says so when it doesn't.</p>
+      <button class="big-btn primary" id="start-btn">Deal me in</button>
+      <p class="error" id="setup-error" hidden></p>
+    </section>
+
+    <section id="game-screen" class="screen" hidden>
+      <div class="table-wrap game-table" id="game-table"></div>
+      <p class="footnote" id="bots-note"></p>
+      <div class="hand-strip">
+        <div class="cards" id="hero-cards"></div>
+        <div class="hand-meta">
+          <div id="hand-line"></div>
+          <div id="hero-line" class="muted"></div>
+        </div>
+      </div>
+
+      <details class="why attention" id="attention" hidden>
+        <summary>Pay attention to</summary>
+        <ul id="attention-list"></ul>
+      </details>
+
+      <div id="actions" class="game-actions" hidden>
+        <div class="action-row">
+          <button class="big-btn danger" id="btn-fold">Fold</button>
+          <button class="big-btn primary" id="btn-call">Check</button>
+        </div>
+        <div class="raise-box" id="raise-box">
+          <div class="chips" id="size-chips"></div>
+          <div class="raise-row">
+            <input type="number" id="raise-amount" inputmode="numeric" aria-label="Raise to">
+            <button class="big-btn warn" id="btn-raise">Raise to</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="feedback" class="feedback" hidden></div>
+
+      <div id="result" class="hand-result" hidden></div>
+      <button class="big-btn primary" id="next-btn" hidden>Next hand</button>
+
+      <details class="why" id="log">
+        <summary>Hand so far</summary>
+        <ul id="log-list"></ul>
+      </details>
+      <details class="why" id="hand-notes" hidden>
+        <summary>All feedback this hand</summary>
+        <div id="hand-notes-list"></div>
+      </details>
+    </section>
+
+    <section id="message-screen" class="screen" hidden>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <button type="button" class="link-btn" id="glossary-open">Glossary: tap any dotted word for its meaning</button>
+  </footer>
+
+  <script src="common.js"></script>
+  <script src="glossary.js"></script>
+  <script src="table.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -121,6 +121,21 @@ the program computes itself.
 | Table drawing | The Preflop seat strip became a drawn table: seats in clockwise seating order with you at the bottom, dealer button, blinds and bets as chips, folded seats greyed, action order numbered. Pure SVG, no library. | `web/table.js` |
 | Glossary and the table | The glossary linker skips SVG, otherwise it wrapped position names inside the drawing and they vanished. | `SKIP` in `web/glossary.js` |
 
+## Phase 11 (game mode, computed core)
+
+| Decision | Choice | How to change / why |
+|---|---|---|
+| Rules engine | PokerKit's `NoLimitTexasHoldem` state runs every hand (blinds, betting, side pots, showdown). We deal from our own seedable deck and burn from it too, so no card is ever dealt twice. | `trainer/gamemode/engine.py` |
+| Seats and the button | Fixed seats, button rotates; PokerKit's index 0 is always the small blind, so a seat's index changes each hand. Heads-up the button posts the small blind and acts first preflop, per the brief. | `Session.idx_of` |
+| Bots preflop | Play the charts for this exact table size if one exists, else the 9-handed chart for the same seat counted from the button. Mixed strategies are sampled. "Loose" preset calls a quarter of its chart folds. | `trainer/gamemode/charts.py`, `bots.py` |
+| Bots postflop | Equity vs a random hand (fast numpy estimate on PokerKit's rank table), bet when strong, call when the price is right, occasional bluff; randomness added. Labelled "basic opponents" on screen with a ‡ footnote. Not strategy. | `BotPolicy._postflop`, `PRESETS` |
+| What gets a grade | Only decisions with a trusted answer key: chart-covered preflop spots (same grader as the drill) and calls/folds facing a bet (direct odds vs the bettor's preflop range). Everything else shows facts and says "no verified answer key". | `trainer/gamemode/feedback.py` |
+| Opponent ranges | A bot's range is what its chart did with each hand (action frequency times how often it holds the hand there). It is not narrowed by later streets; the footnote says so. | `BotPolicy.preflop_range` |
+| Showdown | Everyone still in when betting ends has their cards shown, even losers; a trainer should show you what you were up against. | `Hand.showdown` |
+| Rebuys | A busted player is topped up to a full buy-in before the next hand; buy-in count and net result are tracked per seat. | `Session.start_hand` |
+| Sessions | In memory, one per browser (id kept in local storage). Restarting the server means a new game; graded decisions are already in SQLite. | `trainer/api/game_routes.py` |
+| Out of this phase | Omaha and tournament structures, the AI coach, and the session debrief. | roadmap |
+
 ## Phase 10 (live full-ring charts)
 
 | Decision | Choice | How to change / why |

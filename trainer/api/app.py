@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 from trainer import config
 from trainer.advice.library import AdviceLibrary
 from trainer.api.basics_routes import make_basics_router
+from trainer.api.game_routes import make_game_router
 from trainer.api.equity_routes import make_equity_router
 from trainer.api.plo_routes import make_plo_router
 from trainer.charts.loader import Chart, ChartLibrary
@@ -353,6 +354,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
     app.include_router(make_equity_router(store, equity_service, rng, advice))
     app.include_router(make_plo_router(store, nuts_service, rng, advice))
     app.include_router(make_basics_router(store, rng, advice))
+    app.include_router(make_game_router(store, library, seed))
 
     app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="web")
     return app
