@@ -130,7 +130,10 @@
       if (seat.all_in) g.append(svgEl("text", { x: 0, y: 20, class: "seat-sub", "text-anchor": "middle" }, "all-in"));
       svg.append(g);
       if (seat.cards && !seat.is_hero) {
-        seat.cards.forEach((c, k) => svg.append(cardGroup(x - 10 + k * 20, y - 44, c, 0.7)));
+        // Seats in the top half show their cards below the name box (above would leave the drawing);
+        // the rest show them above.
+        const cy = Math.sin(a) < -0.2 ? y + 46 : y - 44;
+        seat.cards.forEach((c, k) => svg.append(cardGroup(x - 10 + k * 20, cy, c, 0.7)));
       }
       if (seat.bet) {
         const cx = CX + CHIP_RX * Math.cos(a), cy = CY + CHIP_RY * Math.sin(a);
