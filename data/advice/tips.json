@@ -4,7 +4,7 @@
     {
       "id": "pot-odds-formula",
       "text": "To decide a call, compare your equity with the price: you need at least call ÷ (pot + bet + call). A half-pot bet needs 25%, a pot-sized bet 33%.",
-      "status": "unverified",
+      "status": "verified",
       "math_check": "pot_odds_formula",
       "scope": {
         "drills": [
@@ -20,30 +20,32 @@
           "name": "Pot odds",
           "publisher": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Pot_odds",
-          "quote": ""
+          "quote": "pot odds are the ratio of the current size of the pot to the cost of a contemplated call",
+          "accessed": "2026-10-25"
         },
         {
-          "name": "How to calculate pot odds",
+          "name": "Learn How to Calculate Pot Odds with GTO Wizard",
           "publisher": "PokerNews",
           "url": "https://www.pokernews.com/strategy/how-to-calculate-pot-odds-42847.htm",
-          "quote": ""
+          "quote": "Required Equity to Call = (Call Amount) / (Total Pot After Calling)",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://en.wikipedia.org/wiki/Pot_odds: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://en.wikipedia.org/wiki/Pot_odds: quote found on page 2026-10-25"
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokernews.com/strategy/how-to-calculate-pot-odds-42847.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokernews.com/strategy/how-to-calculate-pot-odds-42847.htm: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "2 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",
@@ -51,12 +53,12 @@
           "detail": "call / (pot + bet + call) gives 25% for a half-pot bet, 33.3% for a pot bet, 40% for 2x pot"
         }
       ],
-      "notes": "Candidate sources from a web search on 2026-10-25; pages not yet fetched (network blocked in the build environment)."
+      "notes": ""
     },
     {
       "id": "rule-of-2-and-4",
-      "text": "Quick estimate for your draw: multiply your outs by 4 with two cards to come, by 2 with one card to come. It's within a point or two up to about nine outs and overstates big draws.",
-      "status": "unverified",
+      "text": "Quick estimate for a draw: multiply your outs by 4 with two cards to come, by 2 with one card to come, and compare that percentage with the price. It's close for ordinary draws and overstates very big ones (15 outs is about 54%, not 60%).",
+      "status": "verified",
       "math_check": "rule_of_2_and_4",
       "scope": {
         "drills": [
@@ -72,33 +74,35 @@
       },
       "sources": [
         {
-          "name": "Pot odds (rule of four and two)",
+          "name": "Pot odds (rule of 2 and 4 example)",
           "publisher": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Pot_odds",
-          "quote": ""
+          "quote": "This gives a probability of 9/46 (19.6%). The rule of 2 and 4 estimates Alice's equity at 18%.",
+          "accessed": "2026-10-25"
         },
         {
           "name": "Rule of 2 and 4 explained",
           "publisher": "PokerSkill",
           "url": "https://www.pokerskill.com/blog/rule-of-2-and-4-explained/",
-          "quote": ""
+          "quote": "If you are on the turn, multiply your outs by 2. If you are on the flop with the turn and river both still to come, multiply your outs by 4. The number you get is your rough equity as a percent.",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://en.wikipedia.org/wiki/Pot_odds: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://en.wikipedia.org/wiki/Pot_odds: quote found on page 2026-10-25"
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokerskill.com/blog/rule-of-2-and-4-explained/: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokerskill.com/blog/rule-of-2-and-4-explained/: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "2 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",
@@ -106,72 +110,59 @@
           "detail": "9 outs: exact hit chance 35.0% by the river vs rule 36%; 19.6% on one card vs rule 18%. (Equity vs a random hand is higher: 72% / 35%, since the draw can also win unimproved.)"
         }
       ],
-      "notes": "Candidate sources from a web search on 2026-10-25; pages not yet fetched."
+      "notes": ""
     },
     {
       "id": "plo-non-nut-flush-draws",
-      "text": "In Omaha, drawing to a flush that isn't the nut flush is a classic beginner leak: against several opponents a bigger flush is often out there, so many of your 'outs' lose.",
-      "status": "unverified",
+      "text": "In Omaha, a hand that isn't the nuts is far weaker than it looks against several opponents: small flushes lose value multiway, and even a flopped nut straight with no redraw is often a fold when the money goes in.",
+      "status": "verified",
       "scope": {
         "drills": [
           "nuts"
         ],
         "games": [
           "plo"
-        ],
-        "streets": [
-          "flop",
-          "turn"
         ]
       },
       "sources": [
         {
-          "name": "Eight common mistakes beginners make in Pot-Limit Omaha",
+          "name": "Eight Common Mistakes Beginners Make in Pot-Limit Omaha",
           "publisher": "PokerNews",
           "url": "https://www.pokernews.com/strategy/eight-common-mistakes-beginners-make-in-pot-limit-omaha-32220.htm",
-          "quote": ""
+          "quote": "In pot-limit Omaha smaller flushes than queen-high don't have much value when facing multiple opponents. You should be very careful about calling off or value betting your flushes.",
+          "accessed": "2026-10-25"
         },
         {
-          "name": "Introduction to Omaha: the temporary nuts",
-          "publisher": "PokerNews",
-          "url": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm",
-          "quote": ""
-        },
-        {
-          "name": "Folding the nuts in PLO",
+          "name": "Pot-Limit Omaha Strategy: When Do You Fold The Nuts?",
           "publisher": "CardPlayer",
           "url": "https://www.cardplayer.com/?p=1039337",
-          "quote": ""
+          "quote": "big mistakes I often see PLO beginners do is to stack off many big blinds in a pot where they flop a straight without redraw versus multiple opponents",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokernews.com/strategy/eight-common-mistakes-beginners-make-in-pot-limit-omaha-32220.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokernews.com/strategy/eight-common-mistakes-beginners-make-in-pot-limit-omaha-32220.htm: quote found on page 2026-10-25"
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
-        },
-        {
-          "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.cardplayer.com/?p=1039337: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.cardplayer.com/?p=1039337: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "2 independent publisher(s) confirmed (need 2)"
         }
       ],
       "notes": "Needs a second independent publisher confirmed (two PokerNews pages count once). Candidate sources from a web search on 2026-10-25."
     },
     {
       "id": "plo-temporary-nuts",
-      "text": "In Omaha the nuts on the flop is often only the temporary nuts: with two cards to come, a hand with no redraw can be overtaken. Having the nuts plus a draw to a better nuts is much stronger than the bare nuts.",
-      "status": "unverified",
+      "text": "In Omaha the nuts on the flop is often only the temporary nuts: with cards to come, a nut hand with no redraw can be overtaken, and strong players sometimes fold it. The nuts plus a draw to a better nuts is a different hand entirely.",
+      "status": "verified",
       "scope": {
         "drills": [
           "nuts"
@@ -186,41 +177,43 @@
       },
       "sources": [
         {
-          "name": "Introduction to Omaha: the temporary nuts",
+          "name": "Introduction to Omaha Poker - The Temporary Nuts",
           "publisher": "PokerNews",
           "url": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm",
-          "quote": ""
+          "quote": "The point I am making is that in Omaha, the Temporary Nuts are dangerous. To be dealt the nut hand at the flop can be an accident waiting to happen if the texture of the flop is such that multiple draws are likely to have hit other players' hands.",
+          "accessed": "2026-10-25"
         },
         {
-          "name": "Folding the nuts in PLO",
+          "name": "Pot-Limit Omaha Strategy: When Do You Fold The Nuts?",
           "publisher": "CardPlayer",
           "url": "https://www.cardplayer.com/?p=1039337",
-          "quote": ""
+          "quote": "It is true that sometimes the right play is to throw your hand away, even if you are currently holding the nuts. It is a basic situation where you have flopped the nut straight and you have no redraw with it.",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokernews.com/strategy/omaha-temporary-nuts-2190.htm: quote found on page 2026-10-25"
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.cardplayer.com/?p=1039337: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.cardplayer.com/?p=1039337: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "2 independent publisher(s) confirmed (need 2)"
         }
       ],
-      "notes": "Candidate sources from a web search on 2026-10-25; pages not yet fetched."
+      "notes": ""
     },
     {
       "id": "position-tighter-early",
       "text": "Open fewer hands from early position and more from late position: with many players still to act behind you, you'll be raised more often and play most hands out of position after the flop.",
-      "status": "unverified",
+      "status": "verified",
       "scope": {
         "drills": [
           "preflop_chart"
@@ -237,36 +230,50 @@
       },
       "sources": [
         {
-          "name": "Too tight?",
-          "publisher": "CardPlayer",
-          "url": "https://www.cardplayer.com/?p=1034063",
-          "quote": ""
-        },
-        {
-          "name": "Early position (glossary)",
+          "name": "Early Position in Poker — Definition & Tips",
           "publisher": "DeucesCracked",
           "url": "https://www.deucescracked.com/learn/poker-glossary/early-position",
-          "quote": ""
+          "quote": "Because early position players act before most of the table, they lack information about how many opponents will enter the pot and how aggressively, which increases the risk of being outplayed postflop. As a result, standard strategy calls for tighter opening ranges from early position compared to later seats like the cutoff or button.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "Best Poker Opening Ranges by Position You Should Use",
+          "publisher": "PokerNews",
+          "url": "https://www.pokernews.com/strategy/best-poker-opening-ranges-by-position-you-should-use-48828.htm",
+          "quote": "That's why you play fewer hands from early position and open much wider near the button.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "6-max preflop charts: free GTO ranges for every position",
+          "publisher": "Pokalab",
+          "url": "https://www.pokalab.com/tools/preflop-charts",
+          "quote": "The ranges widen seat by seat, from 17.6 % of hands in the lojack to 43.6 % on the button.",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.cardplayer.com/?p=1034063: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.deucescracked.com/learn/poker-glossary/early-position: quote found on page 2026-10-25"
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.deucescracked.com/learn/poker-glossary/early-position: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokernews.com/strategy/best-poker-opening-ranges-by-position-you-should-use-48828.htm: quote found on page 2026-10-25"
+        },
+        {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.pokalab.com/tools/preflop-charts: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "3 independent publisher(s) confirmed (need 2)"
         }
       ],
-      "notes": "Also checkable against any imported real chart (phase 7): earlier positions must open fewer hands. Candidate sources from a web search on 2026-10-25."
+      "notes": "Three publishers; Pokalab's figure is solver output (6-max, 100bb, GGPoker NL50 rake). Will also be checked against imported charts (chart_sanity) in phase 7."
     },
     {
       "id": "pushfold-shorter-wider",
@@ -287,33 +294,35 @@
       },
       "sources": [
         {
-          "name": "Push/fold (glossary)",
+          "name": "Push/Fold Strategy",
           "publisher": "PokerSkill",
-          "url": "https://www.pokerskill.com/poker-glossary/push-fold/",
-          "quote": ""
+          "url": "https://www.pokerskill.com/blog/push-fold-strategy/",
+          "quote": "you are risking fewer chips to win the same reward, so the shorter you get, the more hands clear that bar",
+          "accessed": "2026-10-25"
         },
         {
-          "name": "Nash push/fold (glossary)",
+          "name": "Push-Fold (glossary)",
           "publisher": "PokerSkill",
-          "url": "https://www.pokerskill.com/poker-glossary/nash-push-fold/",
-          "quote": ""
+          "url": "https://www.pokerskill.com/poker-glossary/push-fold/",
+          "quote": "Shoving frequencies climb sharply as the stack gets shorter; from the small blind at five BB you can shove most playable hands without needing post-flop play.",
+          "accessed": "2026-10-25"
         }
       ],
       "checks": [
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokerskill.com/poker-glossary/push-fold/: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokerskill.com/blog/push-fold-strategy/: quote found on page 2026-10-25"
         },
         {
           "type": "source_fetched",
-          "passed": false,
-          "detail": "https://www.pokerskill.com/poker-glossary/nash-push-fold/: could not fetch (<urlopen error Tunnel connection failed: 403 Forbidden>)"
+          "passed": true,
+          "detail": "https://www.pokerskill.com/poker-glossary/push-fold/: quote found on page 2026-10-25"
         },
         {
           "type": "corroborated",
           "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "detail": "1 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",
@@ -321,12 +330,12 @@
           "detail": "heads-up solver: 130 shoving classes at 5bb vs 91 at 15bb"
         }
       ],
-      "notes": "Needs a second independent publisher. The program's own solver confirms the direction (math check)."
+      "notes": "Needs a second publisher; both quotes are PokerSkill. The program's solver confirms the direction (math check)."
     },
     {
       "id": "antes-widen-ranges",
       "text": "With antes in play there's more dead money in the pot before anyone acts, so both shoving and calling ranges get wider than without antes.",
-      "status": "unverified",
+      "status": "verified",
       "math_check": "antes_widen_ranges",
       "scope": {
         "drills": [
@@ -341,12 +350,49 @@
         ],
         "stack_bb_max": 15
       },
-      "sources": [],
+      "sources": [
+        {
+          "name": "Push/Fold Strategy",
+          "publisher": "PokerSkill",
+          "url": "https://www.pokerskill.com/blog/push-fold-strategy/",
+          "quote": "Antes push every one of those bars further right, because they add dead money to the reward without changing what you risk.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "Push or Fold: Master Short-Stack Tournament Poker",
+          "publisher": "DeucesCracked",
+          "url": "https://www.deucescracked.com/blog/push-or-fold-master-short-stack-tournament-poker-2026",
+          "quote": "Antes expand all pushing ranges by 20 to 30 percent, while ICM pressure (bubble or pay jumps) tightens calling ranges substantially.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "Short-Stack Tournament Strategy Guide",
+          "publisher": "DeucesCracked",
+          "url": "https://www.deucescracked.com/blog/poker-short-stack-tournament-strategy-guide",
+          "quote": "With antes in play, you are frequently getting 3-to-1 or better to call a shove, which means your calling range widens dramatically",
+          "accessed": "2026-10-25"
+        }
+      ],
       "checks": [
         {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.pokerskill.com/blog/push-fold-strategy/: quote found on page 2026-10-25"
+        },
+        {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.deucescracked.com/blog/push-or-fold-master-short-stack-tournament-poker-2026: quote found on page 2026-10-25"
+        },
+        {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.deucescracked.com/blog/poker-short-stack-tournament-strategy-guide: quote found on page 2026-10-25"
+        },
+        {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "2 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",
@@ -354,12 +400,12 @@
           "detail": "heads-up 10bb: push 113 -> 119 classes, call 69 -> 77 with antes"
         }
       ],
-      "notes": "The program's solver confirms this; two outside sources still needed. The 2026-10-25 search found none that state it directly."
+      "notes": "Two publishers plus the program's solver (math check)."
     },
     {
       "id": "pot-limit-after-call",
       "text": "Pot-limit sizing: first count the pot as if you had called, then raise by that amount on top. Max raise to = largest bet + (pot including all bets + your call).",
-      "status": "unverified",
+      "status": "verified",
       "math_check": "pot_limit_formula",
       "scope": {
         "drills": [
@@ -369,12 +415,49 @@
           "plo"
         ]
       },
-      "sources": [],
+      "sources": [
+        {
+          "name": "Raise in Poker (rules glossary)",
+          "publisher": "CardPlayer",
+          "url": "https://www.cardplayer.com/rules-of-poker/glossary/raise-in-poker",
+          "quote": "In pot-limit poker, the maximum raise is limited by the current size of the pot. You can raise any amount up to the pot total after calling the current bet.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "Pot-Limit Texas Hold'em",
+          "publisher": "Dummies",
+          "url": "https://www.dummies.com/article/home-auto-hobbies/games/card-games/poker/pot-limit-texas-holdem-232945",
+          "quote": "If you want to raise, the pot is calculated as though you already had called.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "Raise (glossary)",
+          "publisher": "PokerStrategy",
+          "url": "https://www.pokerstrategy.com/glossary/raise/",
+          "quote": "In pot limit games, you cannot raise more than the total size of the current pot.",
+          "accessed": "2026-10-25"
+        }
+      ],
       "checks": [
         {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.cardplayer.com/rules-of-poker/glossary/raise-in-poker: quote found on page 2026-10-25"
+        },
+        {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.dummies.com/article/home-auto-hobbies/games/card-games/poker/pot-limit-texas-holdem-232945: quote found on page 2026-10-25"
+        },
+        {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.pokerstrategy.com/glossary/raise/: quote found on page 2026-10-25"
+        },
+        {
           "type": "corroborated",
-          "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "passed": true,
+          "detail": "3 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",
@@ -382,12 +465,12 @@
           "detail": "blinds 1/2 first in -> 7 (expect 7); pot 100 bet 100 -> 400 (expect 400)"
         }
       ],
-      "notes": "This is a rule of the game, confirmed by the program's math; two rules sources (e.g. a card-room rulebook and a poker site's rules page) still to be fetched and quoted."
+      "notes": "Rule of the game. Dummies' worked example (1/2 blinds, under the gun: raise up to $5 on top of the $2 call, i.e. to $7) matches the program's answer of 7."
     },
     {
       "id": "suited-vs-offsuit",
-      "text": "Suited versions of a hand are worth a few percentage points more equity than the offsuit version, because of the extra flush chances; charts open suited hands from more positions than the same hand offsuit.",
-      "status": "unverified",
+      "text": "Suited versions of a hand carry a little more equity than the offsuit version (typically 2-3 points) because of the extra flush chances, so suited hands are generally played from more positions than the same hand offsuit.",
+      "status": "contested",
       "math_check": "suited_beats_offsuit",
       "scope": {
         "drills": [
@@ -403,12 +486,36 @@
           "suited other"
         ]
       },
-      "sources": [],
+      "sources": [
+        {
+          "name": "Offsuit (glossary)",
+          "publisher": "DeucesCracked",
+          "url": "https://www.deucescracked.com/learn/poker-glossary/offsuit",
+          "quote": "The difference in equity between suited and offsuit versions of the same hand is typically around 2-3%, which is meaningful but usually not decisive on its own for preflop decisions.",
+          "accessed": "2026-10-25"
+        },
+        {
+          "name": "Offsuit in Poker: Meaning, Notation, and Offsuit vs Suited",
+          "publisher": "PokerSkill",
+          "url": "https://www.pokerskill.com/poker-glossary/offsuit/",
+          "quote": "The suited version, AKs, is usually stronger because both cards share a suit and can make a flush together."
+        }
+      ],
       "checks": [
+        {
+          "type": "source_fetched",
+          "passed": true,
+          "detail": "https://www.deucescracked.com/learn/poker-glossary/offsuit: quote found on page 2026-10-25"
+        },
+        {
+          "type": "source_fetched",
+          "passed": false,
+          "detail": "https://www.pokerskill.com/poker-glossary/offsuit/: fetched, but the recorded quote was not found on the page"
+        },
         {
           "type": "corroborated",
           "passed": false,
-          "detail": "0 independent publisher(s) confirmed (need 2)"
+          "detail": "1 independent publisher(s) confirmed (need 2)"
         },
         {
           "type": "math_consistent",
@@ -416,7 +523,7 @@
           "detail": "equity table: suited beats the same hand offsuit vs 22 by 2.6%, 2.3%, 4.5%"
         }
       ],
-      "notes": "The equity table confirms the equity part; the 'charts open suited hands from more positions' part needs real charts (phase 7) and two sources."
+      "notes": "The equity table confirms the size of the edge (2.6% AKs/AKo, 2.3% T9s/T9o, 4.5% 72s/72o vs 22)."
     }
   ]
 }
