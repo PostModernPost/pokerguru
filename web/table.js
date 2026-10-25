@@ -130,10 +130,11 @@
       if (seat.all_in) g.append(svgEl("text", { x: 0, y: 20, class: "seat-sub", "text-anchor": "middle" }, "all-in"));
       svg.append(g);
       if (seat.cards && !seat.is_hero) {
-        // Seats in the top half show their cards below the name box (above would leave the drawing);
-        // the rest show them above.
-        const cy = Math.sin(a) < -0.2 ? y + 46 : y - 44;
-        seat.cards.forEach((c, k) => svg.append(cardGroup(x - 10 + k * 20, cy, c, 0.7)));
+        // Shown cards sit beside the name box, away from the felt (and the dealer marker):
+        // to the right for seats on the left half of the table, to the left for the right half.
+        const side = Math.cos(a) <= 0 ? 1 : -1;
+        const cx = x + side * (40 + 18);
+        seat.cards.forEach((c, k) => svg.append(cardGroup(cx + side * k * 20, y, c, 0.7)));
       }
       if (seat.bet) {
         const cx = CX + CHIP_RX * Math.cos(a), cy = CY + CHIP_RY * Math.sin(a);
@@ -142,8 +143,11 @@
       }
       if (seat.is_button) {
         const bx = CX + (SEAT_RX - 54) * Math.cos(a + 0.3), by = CY + (SEAT_RY - 32) * Math.sin(a + 0.3);
-        svg.append(svgEl("circle", { cx: bx, cy: by, r: 10, class: "dealer" }));
-        svg.append(svgEl("text", { x: bx, y: by + 4, class: "dealer-text", "text-anchor": "middle" }, "D"));
+        const d = svgEl("g", { class: "dealer-g" });
+        d.append(svgEl("title", {}, "Dealer button: this seat is the button this hand"));
+        d.append(svgEl("circle", { cx: bx, cy: by, r: 10, class: "dealer" }));
+        d.append(svgEl("text", { x: bx, y: by + 4, class: "dealer-text", "text-anchor": "middle" }, "D"));
+        svg.append(d);
       }
     });
     container.replaceChildren(svg);
