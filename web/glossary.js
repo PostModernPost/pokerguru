@@ -3,7 +3,7 @@
 "use strict";
 
 (function () {
-  const SKIP = "button, a, input, select, textarea, dialog, svg, .table-wrap, .card, .cards, .range-grid, .seats, .num-display, .keypad, .trend, .stack-bar, .grade-banner, .footnote, [data-no-gloss]";
+  const SKIP = "button, a, input, select, textarea, dialog, svg, .table-wrap, .card, .cards, .range-grid, .seats, .num-display, .keypad, .trend, .stack-bar, .grade-banner, .footnote, .att-title, [data-no-gloss]";
   let entries = [];          // [{key, term, definition, group, names: [...]}]
   let byName = new Map();    // lowercase name -> entry
   let exactRe = null;        // case-sensitive, for all-caps abbreviations (UTG, EV, ...)

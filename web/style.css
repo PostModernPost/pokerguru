@@ -456,3 +456,14 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 #setup-screen .chips { margin-bottom: 14px; }
 #setup-screen .hint { margin: -4px 0 18px; }
 #setup-screen h3 { margin-top: 6px; }
+
+/* attention tiles */
+.attention { margin: 10px 0; }
+.attention h3 { margin: 0 0 8px; }
+.att-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.att-tile { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; min-height: 72px; }
+.att-title { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
+.att-value { font-size: 1.15rem; font-weight: 700; margin: 2px 0; line-height: 1.25; }
+.att-detail { color: var(--muted); font-size: .85rem; line-height: 1.35; }
+.game-table { margin-top: 12px; }
+@media (min-width: 900px) { .att-grid { grid-template-columns: repeat(3, 1fr); } }

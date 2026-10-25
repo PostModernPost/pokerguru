@@ -38,57 +38,58 @@ def required_equity(pot: int, to_call: int) -> float:
 # ---------------- before you act ----------------
 
 def attention(hand: Hand, idx: int, charts: ChartIndex) -> list[dict]:
-    """Short checklist items: {"title", "text"}."""
+    """Short checklist tiles: {"title", "value", "detail"}. Value is the one thing to read."""
     items = []
     pos = hand.positions[idx]
     legal = hand.legal()
     players = hand.players_in_hand()
-    behind = [i for i in players if i != idx and i not in hand.state.acted_player_indices] if hand.street == "preflop" else []
     agg = hand.aggression()
+    others = len(players) - 1
     # position
     if hand.street == "preflop":
-        yet = sum(1 for i in players if i != idx and hand.bets()[i] < max(hand.bets()) and i not in {agg["last_raiser"]})
-        items.append({"title": "Position", "text": f"You are {pos}. {len(players) - 1} other player{'s' if len(players) != 2 else ''} still in; "
-                      f"{yet} still to act after you this round."})
+        yet = sum(1 for i in players if i != idx and hand.bets()[i] < max(hand.bets()) and i != agg["last_raiser"])
+        items.append({"title": "Position", "value": pos,
+                      "detail": f"{yet} still to act after you · {others} other{'s' if others != 1 else ''} in"})
     else:
-        order = [i for i in players]
-        last = order[-1] if order else idx
-        items.append({"title": "Position", "text": f"You are {pos}, acting {'last' if idx == last else 'before ' + str(len([i for i in order if i > idx])) + ' player(s)'} on the {hand.street}."})
+        last = players[-1] if players else idx
+        after = len([i for i in players if i > idx])
+        items.append({"title": "Position", "value": pos,
+                      "detail": "you act last" if idx == last else f"{after} act{'s' if after == 1 else ''} after you"})
     # price
     pot, to_call = hand.pot, legal.get("to_call", 0)
     if to_call:
         req = required_equity(pot, to_call)
-        items.append({"title": "Price", "text": f"Pot {pot}, {to_call} to call: you need about {pct(req)} equity to break even on a call (direct odds only)."})
+        items.append({"title": "Price", "value": f"{pct(req)} to call", "detail": f"${to_call} into ${pot} · direct odds only"})
     else:
-        items.append({"title": "Price", "text": f"Pot {pot}; nothing to call yet."})
+        items.append({"title": "Price", "value": "Free to check", "detail": f"pot ${pot}"})
     # hand
     hole = hand.hole[idx]
     if hand.street == "preflop":
         hc = hand_class_of("".join(hole))
         rank = equity_rank_all()[hc]
-        items.append({"title": "Your hand", "text": f"{hc}: " + "; ".join(features(hc)[:2]) + f". Ranks {rank} of 169 against a random hand."})
+        feats = features(hc)
+        head = feats[0].split(":")[0].split(",")[0]
+        items.append({"title": "Your hand", "value": hc, "detail": f"{head} · ranks {rank} of 169"})
         match = charts.for_decision(hand, idx)
         if match:
             play = {h: 1 - f.get("fold", 0.0) for h, f in match.chart.hands.items()}
-            share = sum(1 for h, p in play.items() if p > play[hc] + 1e-9)
-            items.append({"title": "Your range here", "text": f"The chart for this spot plays {len([p for p in play.values() if p >= 0.5])} of the 169 hands at least half the time; "
-                          f"{share} hands are played more often than yours."})
+            played = len([p for p in play.values() if p >= 0.5])
+            better = sum(1 for h, p in play.items() if p > play[hc] + 1e-9)
+            items.append({"title": "Your range here", "value": f"{played} of 169 hands",
+                          "detail": f"played from this seat · {better} ranked above yours" if better else "played from this seat · yours is one of them"})
     else:
         now = current_hand("nlhe", hole, tuple(hand.board))
-        text = f"{now.description}."
+        detail = ""
         if hand.street != "river":
             o = improving_outs("nlhe", hole, tuple(hand.board))
-            if o.outs:
-                text += f" {len(o.outs)} outs to {o.best_outcome}: about {pct(o.hit_chance_next_card)} on the next card, {pct(o.hit_chance_by_river)} by the river."
-            else:
-                text += " No draw to a straight or better."
-        items.append({"title": "Your hand", "text": text})
+            detail = f"{len(o.outs)} outs to {o.best_outcome} · {pct(o.hit_chance_by_river)} by the river" if o.outs else "no draw to a straight or better"
+        items.append({"title": "Your hand", "value": now.description, "detail": detail})
     # table
     eff = min(hand.stacks_now()[i] + hand.bets()[i] for i in players) if players else 0
     spr = (eff / pot) if pot else 0
-    items.append({"title": "Table", "text": f"{len(players)} players in the pot. Effective stack {eff}, about {spr:.1f} times the pot."})
+    items.append({"title": "Table", "value": f"{len(players)} in the pot", "detail": f"effective stack ${eff} · {spr:.0f}× the pot"})
     if agg["last_raiser"] is not None and agg["last_raiser"] != idx:
-        items.append({"title": "Aggressor", "text": f"{hand.positions[agg['last_raiser']]} made the last raise this round, to {agg['last_to']}."})
+        items.append({"title": "Aggressor", "value": hand.positions[agg["last_raiser"]], "detail": f"raised to ${agg['last_to']} this round"})
     return items
 
 
