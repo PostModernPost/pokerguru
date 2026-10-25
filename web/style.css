@@ -452,3 +452,7 @@ h3 { font-size: .95rem; margin: 0 0 8px; color: var(--muted); font-weight: 600; 
 .game-table .seat-pos { font-size: 11px; }
 @media (max-width: 899px) { .tabs { grid-template-columns: repeat(4, 1fr); } }
 @media (min-width: 900px) { .tabs { grid-template-columns: repeat(7, 1fr); } }
+/* game setup: breathing room between chip rows, their hints and the next heading */
+#setup-screen .chips { margin-bottom: 14px; }
+#setup-screen .hint { margin: -4px 0 18px; }
+#setup-screen h3 { margin-top: 6px; }
