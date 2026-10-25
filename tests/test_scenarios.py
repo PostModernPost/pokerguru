@@ -169,3 +169,15 @@ def test_parse_cards():
     for bad in ["AsAs", "Xx", "??", "AsK"]:
         with pytest.raises(ValueError):
             parse_cards(bad)
+
+
+def test_push_and_vs_push_spots():
+    s = spot(table_size=2, spot_type="push", hero_pos="SB", stack_bb=10)
+    assert s.history == () and s.pot_bb == 1.5 and s.to_call_bb == 0.5
+    s = spot(table_size=2, spot_type="vs_push", hero_pos="BB", villain_pos="SB", stack_bb=10)
+    assert summary(s) == [("SB", "raise", 10)]  # the open is the whole stack
+    assert s.pot_bb == 11 and s.to_call_bb == 9 and s.open_size_bb == 10
+    with pytest.raises(ValueError):
+        spot(table_size=2, spot_type="push", hero_pos="BB", stack_bb=10)
+    assert valid_spots(2, "push") == [("SB", None)]
+    assert valid_spots(2, "vs_push") == [("BB", "SB")]

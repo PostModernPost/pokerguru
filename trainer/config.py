@@ -52,3 +52,10 @@ EQUITY_BET_FRACTIONS = {
 POT_LIMIT_BLINDS = [(1, 2), (2, 5), (5, 10)]
 POT_LIMIT_POSTFLOP_POTS = [5, 8, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100]
 POT_LIMIT_BET_FRACTIONS = [0.33, 0.5, 0.66, 0.75, 1.0]
+
+# ---- Phase 4: tournament push/fold ----
+
+# Stack depths (bb) and antes (bb per player) the heads-up solver is run for.
+PUSHFOLD_STACKS_BB = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+PUSHFOLD_ANTES_BB = [0, 0.125]  # 0.125bb per player is close to the common 12.5% ante
+PUSHFOLD_ITERATIONS = 600

@@ -16,3 +16,6 @@ data/*.sqlite-journal
 .idea/
 .DS_Store
 Thumbs.db
+
+# Regenerated in ~30 s on first run; the committed 169x169 table is what matters
+data/equity_cache/five_card_ranks.npy

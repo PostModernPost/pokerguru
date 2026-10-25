@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 POSITIONS: dict[int, tuple[str, ...]] = {
+    2: ("SB", "BB"),  # heads-up: the small blind is the button and acts first preflop
     6: ("UTG", "HJ", "CO", "BTN", "SB", "BB"),
     9: ("UTG", "UTG1", "UTG2", "LJ", "HJ", "CO", "BTN", "SB", "BB"),
 }
@@ -32,7 +33,12 @@ def acts_before(table_size: int, a: str, b: str) -> bool:
     return preflop_index(table_size, a) < preflop_index(table_size, b)
 
 
-SPOT_TYPES = ("rfi", "vs_open", "vs_3bet")
+# rfi / vs_open / vs_3bet are the cash-game spots. push / vs_push are the
+# tournament short-stack versions: "push" is folded-to-hero, shove or fold;
+# "vs_push" is hero facing an all-in shove, call or fold.
+SPOT_TYPES = ("rfi", "vs_open", "vs_3bet", "push", "vs_push")
+OPEN_LIKE = ("rfi", "push")
+FACING_OPEN_LIKE = ("vs_open", "vs_push")
 
 
 def spot_position_error(table_size: int, spot_type: str, hero: str, villain: str | None) -> str | None:
@@ -49,9 +55,9 @@ def spot_position_error(table_size: int, spot_type: str, hero: str, villain: str
         return f"spot type must be one of {list(SPOT_TYPES)}, got {spot_type!r}"
     if hero not in positions:
         return f"hero_pos {hero!r} is not a {table_size}-handed position {list(positions)}"
-    if spot_type == "rfi":
+    if spot_type in OPEN_LIKE:
         if villain is not None:
-            return "rfi spots must have villain_pos null"
+            return f"{spot_type} spots must have villain_pos null"
         if hero == "BB":
             return "BB can't raise first in (everyone folded means BB wins the blinds)"
         return None
@@ -59,8 +65,8 @@ def spot_position_error(table_size: int, spot_type: str, hero: str, villain: str
         return f"villain_pos {villain!r} is not a {table_size}-handed position"
     if villain == hero:
         return "hero and villain can't be the same position"
-    if spot_type == "vs_open" and not acts_before(table_size, villain, hero):
-        return f"vs_open: opener {villain} must act before hero {hero}"
+    if spot_type in FACING_OPEN_LIKE and not acts_before(table_size, villain, hero):
+        return f"{spot_type}: opener {villain} must act before hero {hero}"
     if spot_type == "vs_3bet":
         if hero == "BB":
             return "vs_3bet: BB can't be the opener"
@@ -72,7 +78,7 @@ def spot_position_error(table_size: int, spot_type: str, hero: str, villain: str
 def valid_spots(table_size: int, spot_type: str) -> list[tuple[str, str | None]]:
     """Every (hero, villain) pair that forms a valid spot of this type."""
     positions = positions_for(table_size)
-    villains: list[str | None] = [None] if spot_type == "rfi" else list(positions)
+    villains: list[str | None] = [None] if spot_type in OPEN_LIKE else list(positions)
     return [
         (h, v)
         for h in positions

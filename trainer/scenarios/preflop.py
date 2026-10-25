@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass
 from trainer.config import BIG_BLIND_BB, SMALL_BLIND_BB
 from trainer.game.dealing import deal, parse_cards
 from trainer.game.hand_classes import hand_class_of
-from trainer.game.positions import SPOT_TYPES, positions_for, spot_position_error, valid_spots
+from trainer.game.positions import FACING_OPEN_LIKE, OPEN_LIKE, SPOT_TYPES, positions_for, spot_position_error, valid_spots
 
 
 @dataclass(frozen=True)
@@ -88,10 +88,12 @@ def build_preflop_spot(
             raise ValueError("3-bet size must be bigger than the open size")
         if threebet_size_bb > stack_bb:
             raise ValueError("3-bet size can't exceed the stack")
-    if spot_type == "rfi" and (open_size_bb or threebet_size_bb):
-        raise ValueError("rfi spots face no bets")
-    if spot_type == "vs_open" and threebet_size_bb:
-        raise ValueError("vs_open spots face no 3-bet")
+    if spot_type in OPEN_LIKE and (open_size_bb or threebet_size_bb):
+        raise ValueError(f"{spot_type} spots face no bets")
+    if spot_type in FACING_OPEN_LIKE and threebet_size_bb:
+        raise ValueError(f"{spot_type} spots face no 3-bet")
+    if spot_type == "vs_push":
+        open_size_bb = stack_bb  # the opener is all-in
 
     order = positions_for(table_size)
     contrib: dict[str, float | None] = {p: _blind(p) for p in order}
@@ -106,9 +108,9 @@ def build_preflop_spot(
         history.append(ActionStep(p, "raise", size, is_hero=(p == hero_pos)))
 
     hero_i = order.index(hero_pos)
-    if spot_type == "rfi":
+    if spot_type in OPEN_LIKE:
         fold_range(0, hero_i)
-    elif spot_type == "vs_open":
+    elif spot_type in FACING_OPEN_LIKE:
         vil_i = order.index(villain_pos)
         fold_range(0, vil_i)
         raise_to(villain_pos, open_size_bb)
@@ -179,6 +181,6 @@ def random_preflop_spot(
         villain_pos=villain,
         hero_cards=deal(rng, 2),
         stack_bb=stack_bb,
-        open_size_bb=open_size_bb if st != "rfi" else None,
+        open_size_bb=open_size_bb if st not in OPEN_LIKE else None,
         threebet_size_bb=threebet_size_bb if st == "vs_3bet" else None,
     )

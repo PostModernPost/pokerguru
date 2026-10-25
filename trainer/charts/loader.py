@@ -226,6 +226,8 @@ class ChartLibrary:
         hero_positions: list[str] | None = None,
         spot_types: list[str] | None = None,
         stack_bb: float | None = None,
+        formats: list[str] | None = None,
+        stacks: list[float] | None = None,
     ) -> list[Chart]:
         """Charts matching every filter given. Empty or None filters match everything."""
         out = []
@@ -233,6 +235,10 @@ class ChartLibrary:
             if game and c.game != game:
                 continue
             if format and c.format != format:
+                continue
+            if formats and c.format not in formats:
+                continue
+            if stacks and c.stack_bb not in stacks:
                 continue
             if table_sizes and c.table_size not in table_sizes:
                 continue
