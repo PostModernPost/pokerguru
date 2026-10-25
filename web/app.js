@@ -8,7 +8,7 @@ const KIND_ORDER = ["allin", "raise", "call", "fold"]; // aggressive first in th
 const FILTER_KEY = "pokerguru.preflopFilters";
 
 let options = null;
-let filters = { formats: [], table_sizes: [], hero_positions: [], spot_types: [], stacks: [], leaks_only: false };
+let filters = { formats: [], table_sizes: [], hero_positions: [], spot_types: [], stacks: [], leaks_only: false, include_samples: false };
 let current = null; // the spot on screen
 let shownAt = 0;
 let busy = false;
@@ -102,7 +102,25 @@ function renderFilters() {
   $("leak-hint").textContent = filters.leaks_only
     ? "Only positions, spot types and hand categories you score under 70% on, plus spots you missed that are due again. Needs a few hands of history first."
     : "Missed spots come back sooner and weak areas come up more often either way. See the Stats tab.";
+  $("f-sample-wrap").hidden = !options.sample_count;
+  const sw = $("f-sample"); sw.replaceChildren(
+    chip("Real charts only", !filters.include_samples, () => { setSamples(false); }),
+    chip("Include sample charts \u2021", filters.include_samples, () => { setSamples(true); }),
+  );
   $("filters-error").hidden = true;
+}
+
+// Switching samples on or off changes which table sizes, positions and spot types exist,
+// so the option lists are reloaded.
+async function setSamples(on) {
+  filters.include_samples = on;
+  try {
+    options = await api("/api/options?include_samples=" + on);
+  } catch (e) {
+    $("filters-error").textContent = e.message; $("filters-error").hidden = false; return;
+  }
+  pruneFilters();
+  renderFilters();
 }
 
 function openFilters() {
@@ -297,7 +315,9 @@ $("next-btn").addEventListener("click", nextSpot);
 
 (async function init() {
   try {
-    options = await api("/api/options");
+    loadFilters();
+    filters.include_samples = Boolean(filters.include_samples);
+    options = await api("/api/options?include_samples=" + filters.include_samples);
     updateScore(await api("/api/summary"));
   } catch (e) {
     showMessage("Can't reach the trainer server: " + e.message);
@@ -308,7 +328,6 @@ $("next-btn").addEventListener("click", nextSpot);
     return;
   }
   setSampleWarning(options.sample_in_use);
-  loadFilters();
   // Drop saved choices that no longer exist (e.g. charts were removed).
   filters.formats = (filters.formats || []).filter((f) => options.per_format[f]);
   filters.stacks = filters.stacks || [];

@@ -12,7 +12,7 @@ LIB = ChartLibrary.from_directory(CHARTS_DIR / "nlhe")  # samples plus the real 
 def test_next_spot_respects_filters():
     rng = random.Random(0)
     for _ in range(200):
-        chart, spot, reason = next_spot(LIB, rng, table_sizes=[6], spot_types=["vs_3bet"])
+        chart, spot, reason = next_spot(LIB, rng, include_samples=True, table_sizes=[6], spot_types=["vs_3bet"])
         assert reason == "random"
         assert chart.table_size == 6 and chart.spot_type == "vs_3bet"
         assert spot.hero_pos == chart.hero_pos and spot.villain_pos == chart.villain_pos
@@ -23,13 +23,13 @@ def test_next_spot_respects_filters():
 def test_next_spot_covers_every_matching_chart():
     rng = random.Random(0)
     want = {c.id for c in LIB.find(table_sizes=[9])}
-    seen = {next_spot(LIB, rng, table_sizes=[9])[0].id for _ in range(2000)}
+    seen = {next_spot(LIB, rng, include_samples=True, table_sizes=[9])[0].id for _ in range(2000)}
     assert seen == want
 
 
 def test_no_matching_chart():
     with pytest.raises(NoMatchingChart):
-        next_spot(LIB, random.Random(0), hero_positions=["UTG1"], table_sizes=[6])
+        next_spot(LIB, random.Random(0), include_samples=True, hero_positions=["UTG1"], table_sizes=[6])
 
 
 def test_spot_from_chart_is_reproducible():
@@ -54,7 +54,7 @@ def _record(store, chart, hand_class, grade):
 def test_with_empty_store_still_serves_everything(tmp_path):
     store = _store(tmp_path)
     rng = random.Random(0)
-    seen = {next_spot(LIB, rng, table_sizes=[6], store=store)[0].id for _ in range(600)}
+    seen = {next_spot(LIB, rng, include_samples=True, table_sizes=[6], store=store)[0].id for _ in range(600)}
     assert seen == {c.id for c in LIB.find(table_sizes=[6])}
 
 
@@ -65,7 +65,7 @@ def test_due_review_comes_back(tmp_path):
     for _ in range(5):  # five more attempts make it due
         _record(store, chart, "AA", "correct")
     rng = random.Random(1)
-    reasons = [next_spot(LIB, rng, table_sizes=[6], spot_types=["rfi"], store=store) for _ in range(40)]
+    reasons = [next_spot(LIB, rng, include_samples=True, table_sizes=[6], spot_types=["rfi"], store=store) for _ in range(40)]
     reviews = [(c, s) for c, s, r in reasons if r == "review"]
     assert reviews, "a due review should be served sometimes"
     assert all(c.id == chart.id and s.hand_class == "72o" for c, s in reviews)
@@ -82,7 +82,7 @@ def test_weighting_favours_weak_position(tmp_path):
     rng = random.Random(2)
     counts = {"UTG": 0, "BTN": 0}
     for _ in range(600):
-        c, s, r = next_spot(LIB, rng, table_sizes=[6], spot_types=["rfi"], hero_positions=["UTG", "BTN"], store=store)
+        c, s, r = next_spot(LIB, rng, include_samples=True, table_sizes=[6], spot_types=["rfi"], hero_positions=["UTG", "BTN"], store=store)
         if r != "review":
             counts[c.hero_pos] += 1
     assert counts["UTG"] > counts["BTN"] * 1.5
@@ -92,7 +92,7 @@ def test_leaks_only_mode(tmp_path):
     from trainer.drills.preflop import LeakProfile
     store = _store(tmp_path)
     with pytest.raises(NoMatchingChart, match="No leaks found yet"):
-        next_spot(LIB, random.Random(0), store=store, leaks_only=True)
+        next_spot(LIB, random.Random(0), include_samples=True, store=store, leaks_only=True)
     chart = LIB.find(table_sizes=[6], spot_types=["vs_open"])[0]
     for h in ("A2s", "A3s", "A4s", "A5s", "A6s", "A7s"):   # suited aces are a leak
         _record(store, chart, h, "wrong")
@@ -101,7 +101,7 @@ def test_leaks_only_mode(tmp_path):
     assert profile.summary()["weak_positions"] == [chart.hero_pos]
     rng = random.Random(3)
     for _ in range(30):
-        c, s, r = next_spot(LIB, rng, store=store, leaks_only=True)
+        c, s, r = next_spot(LIB, rng, include_samples=True, store=store, leaks_only=True)
         if r == "review":
             assert c.id == chart.id
         else:

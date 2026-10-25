@@ -120,12 +120,16 @@ def next_spot(
     stacks: list[float] | None = None,
     store: AttemptStore | None = None,
     leaks_only: bool = False,
+    include_samples: bool = False,
 ) -> tuple[Chart, PreflopSpot, str]:
     """Returns (chart, spot, reason). reason is 'random', 'weighted', 'category' or 'review'."""
     charts = library.find(game=game, formats=formats, table_sizes=table_sizes,
-                          hero_positions=hero_positions, spot_types=spot_types, stacks=stacks)
+                          hero_positions=hero_positions, spot_types=spot_types, stacks=stacks,
+                          include_samples=include_samples)
     if not charts:
-        raise NoMatchingChart("No chart matches these filters. Try selecting more positions or spot types.")
+        raise NoMatchingChart("No chart matches these filters. Try selecting more positions or spot types"
+                              + ("" if include_samples else ", or switch on sample charts (test data only)")
+                              + ".")
     if store is None:
         chart = rng.choice(charts)
         return chart, spot_from_chart(chart, deal(rng, 2)), "random"

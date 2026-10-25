@@ -24,11 +24,13 @@ def test_home_page_served(ctx):
 
 def test_options(ctx):
     client, _ = ctx
-    o = client.get("/api/options").json()
+    o = client.get("/api/options?include_samples=true").json()
     assert o["table_sizes"] == [2, 6, 9]  # heads-up comes from the push/fold charts
     assert "UTG1" in o["positions"]["9"] and "UTG1" not in o["positions"]["6"]
     assert {s["id"] for s in o["spot_types"]} == {"rfi", "vs_open", "vs_3bet", "push", "vs_push"}
-    assert o["sample_in_use"] is True
+    assert o["sample_in_use"] is True and o["sample_count"] > 0
+    real = client.get("/api/options").json()
+    assert real["sample_in_use"] is False and real["chart_count"] < o["chart_count"]
     assert o["thresholds"] == {"correct": 0.5, "acceptable": 0.15}
 
 
@@ -36,7 +38,7 @@ def test_next_respects_filters(ctx):
     client, _ = ctx
     for _ in range(30):
         s = client.post("/api/preflop/next", json={"table_sizes": [6], "spot_types": ["vs_3bet"],
-                                                   "hero_positions": ["CO", "BTN"]}).json()
+                                                   "hero_positions": ["CO", "BTN"], "include_samples": True}).json()
         assert s["table_size"] == 6 and s["spot_type"] == "vs_3bet" and s["hero_pos"] in ("CO", "BTN")
         assert len(s["hero_cards"]) == 2
         assert s["is_sample"] is True
@@ -52,9 +54,21 @@ def test_next_no_match(ctx):
     assert r.status_code == 404 and "No chart" in r.json()["detail"]
 
 
+def test_samples_off_by_default(ctx):
+    client, _ = ctx
+    for _ in range(40):
+        s = client.post("/api/preflop/next", json={}).json()
+        assert s["is_sample"] is False
+    # 6-max facing a 3-bet only has sample charts today.
+    r = client.post("/api/preflop/next", json={"table_sizes": [6], "spot_types": ["vs_3bet"]})
+    assert r.status_code == 404 and "sample charts" in r.json()["detail"]
+    s = client.post("/api/preflop/next", json={"table_sizes": [6], "spot_types": ["vs_3bet"], "include_samples": True}).json()
+    assert s["is_sample"] is True
+
+
 def test_answer_grades_and_records(ctx):
     client, store = ctx
-    s = client.post("/api/preflop/next", json={}).json()
+    s = client.post("/api/preflop/next", json={"include_samples": True, "table_sizes": [6], "spot_types": ["vs_3bet"]}).json()
     r = client.post("/api/preflop/answer", json={
         "chart_id": s["chart_id"], "hero_cards": s["hero_cards"], "action": "fold",
         "response_time_ms": 1500,
@@ -140,7 +154,7 @@ def test_stats_and_leak_mode(ctx):
 
 def test_format_and_stack_filters(ctx):
     client, _ = ctx
-    o = client.get("/api/options").json()
+    o = client.get("/api/options?include_samples=true").json()
     assert "cash" in o["per_format"] and o["per_format"]["cash"]["stacks"] == [100]
     s = client.post("/api/preflop/next", json={"formats": ["cash"], "stacks": [100]}).json()
     assert s["format"] == "cash" and s["stack_bb"] == 100

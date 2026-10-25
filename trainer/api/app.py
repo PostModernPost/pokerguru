@@ -52,6 +52,7 @@ class NextRequest(BaseModel):
     spot_types: list[str] = Field(default_factory=list)
     stacks: list[float] = Field(default_factory=list)
     leaks_only: bool = False
+    include_samples: bool = False
 
 
 class AnswerRequest(BaseModel):
@@ -160,8 +161,8 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
         return response
 
     @app.get("/api/options")
-    def options():
-        charts = library.find(game="nlhe")
+    def options(include_samples: bool = False):
+        charts = library.find(game="nlhe", include_samples=include_samples)
         positions: dict[int, list[str]] = {}
         for size in POSITIONS:
             have = {c.hero_pos for c in charts if c.table_size == size}
@@ -188,6 +189,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
                            for s in SPOT_TYPES if any(c.spot_type == s for c in charts)],
             "chart_count": len(charts),
             "sample_in_use": any(c.is_sample for c in charts),
+            "sample_count": sum(c.is_sample for c in library.find(game="nlhe")),
             "thresholds": config.GRADE_THRESHOLDS,
         }
 
@@ -203,6 +205,7 @@ def create_app(charts_dir: str | Path = config.CHARTS_DIR,
                 stacks=req.stacks or None,
                 store=store,
                 leaks_only=req.leaks_only,
+                include_samples=req.include_samples,
             )
         except NoMatchingChart as e:
             raise HTTPException(404, str(e)) from None

@@ -4,9 +4,9 @@
 
 A drill-based poker trainer for No-Limit Texas Hold'em (NLHE) and Pot-Limit Omaha (PLO). The app shows a spot, the user makes a decision, and the app grades it immediately against a trusted answer key, then tracks weak areas and drills them more often.
 
-The user is Adam. He has played a decent amount of poker but never studied it. His main game is a monthly live cash game: $200 buy-in, 10 players, a professional dealer, a few strong players and several loose ones. It starts as Texas Hold'em and later opens up to multi-board hands, bomb pots (Hold'em and Omaha) and Pineapple. He may try other games and formats as he improves. He builds by vibe coding with Claude Code and is not a professional developer, so explain decisions in plain language, keep the setup simple, and make every phase usable on its own before starting the next one.
+The user is Adam. He has played a decent amount of poker but never studied it. His main game is a monthly live cash game: $200 buy-in at $1/$2 blinds (100bb), normally 9 players (10 was a one-off), a professional dealer, a few strong players and several loose ones. It starts as Texas Hold'em and later opens up to multi-board hands, bomb pots (Hold'em and Omaha) and Pineapple. He may try other games and formats as he improves. He builds by vibe coding with Claude Code and is not a professional developer, so explain decisions in plain language, keep the setup simple, and make every phase usable on its own before starting the next one.
 
-Training priority: **live full-ring cash first** (9-10 players, 100bb and deeper), then the mixed games his home game plays, then tournaments.
+Training priority: **live full-ring cash first** (9 players, 100bb; deeper after rebuys), then the mixed games his home game plays, then tournaments.
 
 It is a trainer first. A simulated game mode (full hands against basic bots, with feedback as you play) is in scope since Adam asked for it (see ground rule 8); it must follow the same rules about where feedback comes from.
 
@@ -199,7 +199,6 @@ These are planned later phases (`docs/roadmap.md`), so keep the layers clean eno
 
 Ask these when they become relevant, not all up front:
 
-- The blinds in his monthly game (sets the real stack depth: $200 at $1/$2 is 100bb, at $0.50/$1 it is 200bb)
 - The exact rules of the home-game variants (how many boards, how bomb pots are posted, when Pineapple discards)
 - Open-raise sizes his game actually uses (live games usually open bigger than online charts assume)
 - Which other games or formats he starts playing, when he does

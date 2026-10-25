@@ -230,10 +230,17 @@ class ChartLibrary:
         stack_bb: float | None = None,
         formats: list[str] | None = None,
         stacks: list[float] | None = None,
+        include_samples: bool = True,
     ) -> list[Chart]:
-        """Charts matching every filter given. Empty or None filters match everything."""
+        """Charts matching every filter given. Empty or None filters match everything.
+
+        include_samples=False leaves out sample (fake) charts; the drills use that
+        by default so a spot with no real chart is simply not dealt.
+        """
         out = []
         for c in self.charts:
+            if not include_samples and c.is_sample:
+                continue
             if game and c.game != game:
                 continue
             if format and c.format != format:
