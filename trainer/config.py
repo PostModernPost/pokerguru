@@ -26,3 +26,21 @@ SAMPLE_SOURCE_NAME = "SAMPLE - NOT REAL STRATEGY"
 # Blinds in big blinds. Cash games in phase 1 have no antes.
 SMALL_BLIND_BB = 0.5
 BIG_BLIND_BB = 1.0
+
+# ---- Phase 2: equity and pot odds drill ----
+
+# Monte Carlo samples per spot. 2,500 gives about +/-1% (one standard error).
+EQUITY_ITERATIONS = 2500
+
+# Monte Carlo isn't exact. When the computed equity is this close to a
+# bucket edge or to the call/fold line, the "other" answer is graded
+# acceptable instead of wrong, since the simulation can't tell them apart.
+EQUITY_TOLERANCE = 0.02
+
+# Pot sizes (bb, before villain's bet) and bet sizes (fraction of that pot)
+# the drill picks from. Practice values for math, not strategy.
+EQUITY_POT_SIZES_BB = [5, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 100]
+EQUITY_BET_FRACTIONS = {
+    "nlhe": [0.25, 0.33, 0.5, 0.66, 0.75, 1.0, 1.5, 2.0],
+    "plo": [0.25, 0.33, 0.5, 0.66, 0.75, 1.0],  # pot-limit: a bet can't exceed the pot
+}
